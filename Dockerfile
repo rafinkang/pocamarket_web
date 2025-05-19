@@ -1,6 +1,5 @@
 # Use the official Node.js runtime as a base image
 FROM node:22-bullseye
-# Set the working directory in the container
 WORKDIR /src
 
 # Copy package.json and package-lock.json to the container
