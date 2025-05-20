@@ -1,5 +1,5 @@
-export default function PokemonDetailPage({ params }) {
-  const { id } = params;
+export default async function PokemonDetailPage({ params }) {
+  const { id } = await params;
   return (
     <div>
       <h1>Pokemon Detail Page!!</h1>
