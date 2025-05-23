@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model pokemon_ability {
+  ability_id Int     @id @default(autoincrement())
+  card_code  String  @default("") @db.VarChar(50)
+  name       String? @db.VarChar(50)
+  name_ko    String? @db.VarChar(50)
+  effect     String? @db.VarChar(256)
+  effect_ko  String? @db.VarChar(512)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model pokemon_attack {
+  attack_id Int     @id @default(autoincrement())
+  card_code String  @default("") @db.VarChar(50)
+  name      String? @db.VarChar(50)
+  name_ko   String? @db.VarChar(50)
+  effect    String? @db.VarChar(256)
+  effect_ko String? @db.VarChar(512)
+  damage    String  @default("") @db.VarChar(50)
+  cost      String  @default("COLORLESS") @db.VarChar(100)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model pokemon_card {
+  card_id      Int     @id @default(autoincrement())
+  code         String  @unique(map: "idx_pokemon_card_code") @default("") @db.VarChar(50)
+  dex_id       Int?    @default(0)
+  dex_group    Int?    @default(0)
+  name         String? @db.VarChar(50)
+  name_ko      String? @db.VarChar(50)
+  element      String? @db.VarChar(50)
+  type         String  @default("POKEMON") @db.VarChar(50)
+  subtype      String  @default("BASIC") @db.VarChar(50)
+  health       Int?
+  pack_set     String  @default("") @db.VarChar(50)
+  pack         String? @default("") @db.VarChar(50)
+  retreat_cost Int?
+  weakness     String? @db.VarChar(50)
+  evolves_from String? @db.VarChar(50)
+  rarity       String? @default("COMMON") @db.VarChar(50)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model test_table {
+  id Int?
+
+  @@ignore
+}
