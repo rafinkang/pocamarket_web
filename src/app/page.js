@@ -1,6 +1,30 @@
 import Image from "next/image";
+import { createPokemonCard } from '@/lib/actions/pokemonCard.actions.js';
 
 export default function Home() {
+    // db insert example
+    const handleSubmit = async () => {
+        const newPost = await createPokemonCard({ 
+                code: "a1-007",
+                name: "Butterfree",
+                name_ko: "버터플",
+                element: "GRASS",
+                type: "POKEMON",
+                subtype: "STAGE_2",
+                health: 120,
+                pack_set: "Genetic Apex (A1)",
+                pack: "Pikachu",
+                retreat_cost: 1,
+                weakness: "FIRE",
+                evolves_from: "Metapod",
+                rarity: "RARE" });
+
+        console.log('newPost ::: ', newPost)
+    };
+
+//   handleSubmit()
+
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
