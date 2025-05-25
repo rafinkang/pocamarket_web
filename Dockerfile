@@ -4,6 +4,10 @@ WORKDIR /src
 
 # Copy package.json and package-lock.json to the container
 COPY package*.json ./
+
+# npm install전 prisma 스키마 파일을 먼저 복사
+COPY prisma ./prisma/
+
 # Install dependencies
 RUN npm install
 
