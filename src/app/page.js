@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { createPokemonCard } from '@/lib/actions/pokemonCard.actions.js';
 
+import {Button} from "@/components/ui/button"
+
 export default function Home() {
     // db insert example
     const handleSubmit = async () => {
@@ -36,6 +38,7 @@ export default function Home() {
           height={38}
           priority
         />
+        <Button variant="secondary" size="sm">테스트다아아아아</Button>
         <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
           <li className="mb-2 tracking-[-.01em]">
             Get started by editing{" "}
