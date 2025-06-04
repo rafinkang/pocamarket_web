@@ -7,7 +7,7 @@ import callApi from "@/lib/callApi";
 export const postLogin = async (data) => {
   return callApi({
     method: 'post',
-    url: '/users/login',
+    url: '/login',
     data,
   });
 };
@@ -18,7 +18,7 @@ export const postLogin = async (data) => {
 export const logout = async () => {
   return callApi({
     method: 'get',
-    url: '/users/logout',
+    url: '/logout',
   });
 };
 

@@ -3,7 +3,7 @@ import axios from 'axios';
 const baseURL = process.env.NEXT_PUBLIC_LOCAL_API_URL
 
 const axiosInstance = axios.create({
-  baseURL: `${baseURL}/api`,
+  baseURL: `${baseURL}`,
   timeout: 10000, // 요청 타임아웃 (10초)
   headers: {
     'Content-Type': 'application/json',

@@ -6,7 +6,7 @@ import callApi from "@/lib/callApi";
 export const getPokemonCardList = async (data) => {
     return callApi({
         method: 'get',
-        url: '/pokemon-card/list',
+        url: '/api/pokemon-card/list',
         data,
     });
 };
