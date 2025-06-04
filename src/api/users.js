@@ -7,6 +7,6 @@ import callApi from "@/lib/callApi";
 export const getMyInfo = async () => {
     return callApi({
         method: 'get',
-        url: '/api/user/me',
+        url: '/user/me',
     });
 };
