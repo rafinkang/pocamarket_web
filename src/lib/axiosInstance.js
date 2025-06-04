@@ -9,6 +9,7 @@ const axiosInstance = axios.create({
     'Content-Type': 'application/json',
     // 'Authorization': `Bearer YOUR_ACCESS_TOKEN` // 필요하다면 기본 인증 헤더 설정
   },
+  withCredentials: true // 쿠키 전송 허용
 });
 
 // 요청 인터셉터: 모든 요청 전에 특정 작업 수행
