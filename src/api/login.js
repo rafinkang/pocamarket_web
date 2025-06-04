@@ -12,6 +12,16 @@ export const postLogin = async (data) => {
   });
 };
 
+/**
+ * 로그아웃
+ */
+export const logout = async () => {
+  return callApi({
+    method: 'get',
+    url: '/users/logout',
+  });
+};
+
 //////////////////////////// 예시 ////////////////////////////
 
 /**

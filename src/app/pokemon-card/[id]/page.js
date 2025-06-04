@@ -1,4 +1,4 @@
-export default async function PokemonDetailPage({ params }) {
+export default async function PokemonCardDetailPage({ params }) {
   const { id } = await params;
   return (
     <div>
