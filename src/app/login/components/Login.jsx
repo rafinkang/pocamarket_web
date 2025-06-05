@@ -1,6 +1,8 @@
 'use client'
 import PropTypes from 'prop-types'; // components property 정의하기 위해 import
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { SIGNUP } from '@/constants/path';
 
 //api
 import { postLogin } from '@/api/login';
@@ -8,6 +10,14 @@ import { postLogin } from '@/api/login';
 // components
 import { Input } from '@/components/ui/input';
 import {Button} from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 
 // store
 import useAuthStore from '@/store/authStore';
@@ -42,7 +52,6 @@ export default function Login ({ test = null }) {
             loginAction(data); 
             setMsg('로그인 성공!')
         } catch (error) {
-            console.error('Error in postTest server action:', error);
             setMsg('로그인 실패!')
         } finally {
             setIsLoading(false)
@@ -50,21 +59,57 @@ export default function Login ({ test = null }) {
     }
 
     return (
-        <div className="flex items-center justify-center flex-col w-screen h-screen">
-            <form onSubmit={handleSubmit} className="w-3xs">
-                <Input type="text" name="id" placeholder="아이디" required />
-                <Input type="password" name="pwd" placeholder="비밀번호" className="mt-1" required />
-                <Button type="submit" variant="red" className="mt-1 w-full" disabled={isLoading}>
-                    {isLoading ? '로그인 중...' : '로그인'}
-                </Button>
-                {msg && <p>{msg}</p>}
-            </form>
+        <div className="flex flex-col gap-6">
             {currentIsLoggedIn && currentUser && (
                 <div className="mt-4 p-4 border rounded">
                     <p>현재 로그인된 사용자: {currentUser.nickname}</p>
                     <p>마지막 로그인 일시: {currentUser.lastLoginAt}</p>
                 </div>
             )}
+
+            <Card>
+                <CardHeader>
+                    <CardTitle>POCAMARKET</CardTitle>
+                    <CardDescription>
+                        로그인하고 다양한 서비스를 이용해보세요!
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+                        <div className="grid gap-3">
+                            <Label htmlFor="id">아이디</Label>
+                            <Input
+                                id="id"
+                                type="id"
+                                name="id"
+                                placeholder="아이디"
+                                required
+                            />
+                        </div>
+                        <div className="grid gap-3">
+                            <div className="flex items-center">
+                            <Label htmlFor="pwd">비밀번호</Label>
+                            <a
+                                href="#"
+                                className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                            >
+                                비밀번호 찾기
+                            </a>
+                            </div>
+                            <Input id="pwd" type="password" name="pwd" required />
+                        </div>
+                        <div className="flex flex-col gap-3">
+                            <Button type="submit" variant="red"  className="w-full" disabled={isLoading}>
+                                {isLoading ? '로그인 중...' : '로그인'}
+                            </Button>
+                        </div>
+                    </form>
+                    <div className="mt-4 text-center text-sm">
+                        아직 회원이 아니신가요?
+                        <Link href={SIGNUP} className="underline underline-offset-4">회원가입</Link>
+                    </div>
+                </CardContent>
+            </Card>
         </div>
     );
 };
