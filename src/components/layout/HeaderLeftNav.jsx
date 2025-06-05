@@ -15,7 +15,7 @@ import {
 
 export function HeaderLeftNav() {
   return (
-    <NavigationMenu viewport={false}>
+    <NavigationMenu viewport={false} className="max-w-[100%]">
       <NavigationMenuList>
 
         <NavigationMenuItem>
