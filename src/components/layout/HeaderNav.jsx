@@ -12,8 +12,12 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 
+import useAuthStore from '@/store/authStore'
 
-export function HeaderLeftNav() {
+
+export function HeaderNav() {
+    const isLogin = useAuthStore((state) => state.isLogin);
+    const user = useAuthStore((state) => state.user);
   return (
     <NavigationMenu viewport={false} className="max-w-[100%]">
       <NavigationMenuList>
@@ -43,12 +47,32 @@ export function HeaderLeftNav() {
           </NavigationMenuContent>
         </NavigationMenuItem>
       </NavigationMenuList>
+      
+      {/* 네비 우측 */}
       <div className="ml-auto">
       <NavigationMenuList>
         <NavigationMenuItem>
-          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <Link href="/login">로그인</Link>
-          </NavigationMenuLink>
+          {isLogin ? (
+            <>
+              <NavigationMenuTrigger>안녕하세요 {user.nickname}님😎</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="grid w-[200px] gap-4">
+                  <li>
+                    <NavigationMenuLink asChild>
+                      <Link href="/mypage">마이페이지</Link>
+                    </NavigationMenuLink>
+                    <NavigationMenuLink asChild>
+                      <button className="w-full text-left" onClick={() => useAuthStore.getState().logout()}>로그아웃</button>
+                    </NavigationMenuLink>
+                  </li>
+                </ul>
+              </NavigationMenuContent>
+            </>
+          ) : (
+            <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+              <Link href="/login">로그인</Link>
+            </NavigationMenuLink>
+          )}
         </NavigationMenuItem>
       </NavigationMenuList>
       </div>
