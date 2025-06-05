@@ -29,16 +29,16 @@ export default function Login ({ test = null }) {
     // login 액션 가져오기
     const loginAction = useAuthStore((state) => state.login);
     // 로그인 후 변경된 상태를 보려면, 컴포넌트 최상위에서 구독
-    const currentIsLoggedIn = useAuthStore((state) => state.isLoggedIn);
+    const currentIsLogin = useAuthStore((state) => state.isLogin);
     const currentUser = useAuthStore((state) => state.user);
 
     useEffect(() => {
         console.log('test ::: ', test)
 
         // TODO 로그인 성공 후 프로세스 정의
-        if (currentIsLoggedIn && currentUser) {
+        if (currentIsLogin && currentUser) {
         }
-    }, [test, currentIsLoggedIn, currentUser])
+    }, [test, currentIsLogin, currentUser])
 
     async function handleSubmit(event) {
         event.preventDefault(); // 기본 폼 제출 동작 방지
@@ -60,7 +60,7 @@ export default function Login ({ test = null }) {
 
     return (
         <div className="flex flex-col gap-6">
-            {currentIsLoggedIn && currentUser && (
+            {currentIsLogin && currentUser && (
                 <div className="mt-4 p-4 border rounded">
                     <p>현재 로그인된 사용자: {currentUser.nickname}</p>
                     <p>마지막 로그인 일시: {currentUser.lastLoginAt}</p>
