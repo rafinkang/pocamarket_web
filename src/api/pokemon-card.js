@@ -10,3 +10,14 @@ export const getPokemonCardList = async (params) => {
         params,
     });
 };
+
+/**
+ * 포켓몬 카드 상세 조회
+ */
+export const getPokemonCardDetail = async (code) => {
+    return callApi({
+        method: 'get',
+        url: `/pokemon-card/detail/${code}`,
+    });
+};
+
