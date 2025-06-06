@@ -63,7 +63,7 @@ export const rarity = Object.freeze([
 ]);
 
 export const defaultFilter = Object.freeze({
-    name: "",
+    nameKo: "",
     type: excludedValue,
     subtype: excludedValue,
     element: excludedValue,
@@ -80,7 +80,7 @@ export const defaultPageable = Object.freeze({
 });
 
 export const formSchema = z.object({
-    name: z.string().nullable()
+    nameKo: z.string().nullable()
         .refine(v => v === "" || (v.length >= 2 && v.length <= 20), {
             message: "이름은 2자 이상 20자 이하로 입력해주세요."
         })

@@ -39,7 +39,7 @@ export default function CardFilter({ onFilter }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      nameKo: "",
       type: excludedValue,
       subtype: excludedValue,
       element: excludedValue,
@@ -105,7 +105,6 @@ export default function CardFilter({ onFilter }) {
 
   // 필터 초기화
   const handleReset = () => {
-    defaultFilter.rarity = [];
     form.reset({ ...defaultFilter });
     form.setValue("rarity", []);
   };
@@ -122,7 +121,7 @@ export default function CardFilter({ onFilter }) {
         <div className="flex items-center gap-2 mb-2">
           <FormField
             control={form.control}
-            name="name"
+            name="nameKo"
             render={({ field }) => (
               <FormItem>
                 <FormControl>
