@@ -72,11 +72,10 @@ export const defaultFilter = Object.freeze({
     rarity: Object.freeze([]),
 });
 
-export const defaultPageable = Object.freeze({
+export const defaultPageInfo = Object.freeze({
     page: 0,
-    size: 30,
-    isLast: false,
-    totalPage: 0,
+    size: 30, // 백단에서 한번에 최대 30개로 제한 중 
+    totalPage: 1,
 });
 
 export const formSchema = z.object({
