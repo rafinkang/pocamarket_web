@@ -57,7 +57,7 @@ export const rarity = Object.freeze([
     Object.freeze({ name: "레어", value: "RARE" }),
     Object.freeze({ name: "레어 EX", value: "RARE EX" }),
     Object.freeze({ name: "풀 아트", value: "FULL ART" }),
-    Object.freeze({ name: "풀 아트 EX/서포터", value: "FULL ART EX/SUPPORTER" }),
+    Object.freeze({ name: "풀 아트 EX/서포터", value: "FULL ART EX/SUPPORT" }),
     Object.freeze({ name: "몰입형", value: "IMMERSIVE" }),
     Object.freeze({ name: "골드 크라운", value: "GOLD CROWN" }),
 ]);
