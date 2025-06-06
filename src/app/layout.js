@@ -35,9 +35,9 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} ${notoSansKr.className} antialiased`}
       >
         <Header />
-        <div className="items-center justify-items-center min-h-screen p-8 pb-20 sm:py-10 sm:px-20 font-[family-name:var(--font-geist-sans)]">
+        <main className="min-h-screen p-8 pb-20 sm:py-10 sm:px-20 font-[family-name:var(--font-geist-sans)] flex flex-col gap-[32px] row-start-2 items-center sm:items-start w-full h-full">
           {children}
-        </div>
+        </main>
         <Footer />
       </body>
     </html>
