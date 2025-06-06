@@ -17,7 +17,13 @@ const config = {
     "options": {}
   },
   "staticDirs": [
-    "..\\public"
-  ]
+    "../public"
+  ],
+  // async viteFinal(config) {
+  //   if (config.resolve.alias) {
+  //     config.resolve.alias['@'] = path.resolve(__dirname, '../src');
+  //   }
+  //   return config;
+  // },
 };
 export default config;

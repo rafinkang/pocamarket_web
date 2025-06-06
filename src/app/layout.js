@@ -1,6 +1,17 @@
+
+import { Noto_Sans_KR } from 'next/font/google';
+
 import { Geist, Geist_Mono } from "next/font/google";
 import "@/styles/globals.css";
 import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+
+// 폰트 설정
+const notoSansKr = Noto_Sans_KR({
+  // preload: true, // (선택) 미리 로드할지 여부
+  subsets: ['latin'], // 또는 'korean' (보통 Next.js가 알아서 최적화해줌)
+  weight: ['100', '400', '600', '700', '800'], // 사용할 폰트 두께
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,10 +32,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="ko" className="light layout-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${notoSansKr.className} antialiased`}
       >
         <Header />
-        {children}
+        <div className="items-center justify-items-center min-h-screen p-8 pb-20 sm:py-10 sm:px-20 font-[family-name:var(--font-geist-sans)]">
+          {children}
+        </div>
+        <Footer />
       </body>
     </html>
   );
