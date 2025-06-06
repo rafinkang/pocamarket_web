@@ -11,7 +11,7 @@ import { validateLoginId, validatePassword, validateName, validateNickname } fro
 import { useFormValidation } from '@/hooks/useFormValidation';
 
 // components
-import { ValidationInput } from '@/components/ui/ValidationInput';
+import { ValidationInput } from '@/components/input/ValidationInput';
 import {Button} from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import {

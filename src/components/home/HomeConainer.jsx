@@ -1,6 +1,6 @@
 // components
 import Image from "next/image";
-import ImageCarousel from "@/components/ui/ImageCarousel.jsx";
+import ImageCarousel from "@/components/carousel/ImageCarousel.jsx";
 
 export default function HomeContainer() {
   const images = ["/next.svg", "/next.svg", "/next.svg", "/next.svg", "/next.svg"]
