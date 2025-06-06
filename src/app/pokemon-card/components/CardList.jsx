@@ -17,7 +17,7 @@ async function handleLogout() {
 export default function CardList({ cardList, CardComponent }) {
   return (
     <>
-      <div className="flex items-center justify-center flex-col w-screen h-screen">
+      {/* <div className="flex items-center justify-center flex-col w-screen h-screen">
         <h1>Card List</h1>
         <h3>아래는 테스트용 버튼들이다.</h3>
         <Button className="mt-1" onClick={handleFetchMyInfo}>
@@ -26,7 +26,7 @@ export default function CardList({ cardList, CardComponent }) {
         <Button className="mt-1" onClick={handleLogout}>
           로그아웃
         </Button>
-      </div>
+      </div> */}
 
       <div className="flex flex-col items-center">
         <h1>Card List</h1>
