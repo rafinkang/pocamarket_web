@@ -33,7 +33,7 @@ export default function PokemonCard({ data }) {
           <CardTitle>{data?.nameKo ? data.nameKo : "포켓몬 이름"}</CardTitle>
           <CardDescription>
             <p>{data?.type ? data.type : "포켓몬 타입"}</p>
-            <p>{data?.setName ? data.setName : "확장팩 이름"}</p>
+            <p>{data?.packSet ? data.packSet : "확장팩 이름"}</p>
             <p>{data?.rarity ? data.rarity : "희귀도"}</p>
           </CardDescription>
         </CardContent>
