@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useState, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
+import PropTypes from 'prop-types';
 
 function ValidationInput({
     className,
@@ -110,3 +111,34 @@ function ValidationInput({
 ValidationInput.displayName = "ValidationInput";
 
 export { ValidationInput };
+
+ValidationInput.propTypes = {
+  /* input 요소에 적용할 추가적인 Tailwind CSS 클래스 */
+  className: PropTypes.string,
+  /* input의 타입 (예: "text", "password", "email") */
+  type: PropTypes.string,
+  /* 실시간 유효성 검사를 위한 함수. 
+  유효하면 true를, 유효하지 않으면 에러 메시지 문자열을 반환해야 합니다.*/
+  validation: PropTypes.func,
+  /* 부모 컴포넌트가 제어할 때 사용하는 값 (value) */
+  value: PropTypes.string,
+  /* 부모 컴포넌트가 제어할 때 사용하는 값 변경 핸들러 */
+  onChange: PropTypes.func,
+  /* 비제어 컴포넌트로 사용할 때의 초기값 */
+  defaultValue: PropTypes.string,
+  /* 부모 컴포넌트에서 직접 전달하는 에러 메시지. 
+  이 prop이 전달되면 내부 유효성 검사 결과보다 우선적으로 표시됩니다.*/
+  errorMessage: PropTypes.string,
+  /* input 요소의 name 속성. 폼 제출 시 필드를 식별하는 데 사용됩니다. name은 필수 prop으로 지정*/
+  name: PropTypes.string.isRequired, // 
+};
+
+ValidationInput.defaultProps = {
+  type: 'text',
+  className: '',
+  validation: null,
+  onChange: () => {},
+  value: undefined,
+  defaultValue: '',
+  errorMessage: undefined,
+};

@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils"; // cn 유틸리티 import
+import PropTypes from 'prop-types';
 
 // components
 import { Card, CardContent } from "@/components/ui/card"
@@ -33,3 +34,15 @@ export default function ImageCarousel ({images, className, ...props}) {
       </Carousel>
     )
 }
+
+ImageCarousel.propTypes = {
+  /** 이미지 src array */
+  images: PropTypes.images,
+  /** carousel class */
+  className: PropTypes.string
+};
+
+ImageCarousel.defaultProps = {
+  images: [],
+  className: "",
+};
