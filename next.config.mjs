@@ -1,4 +1,9 @@
 /** @type {import('next').NextConfig} */
+
+// 1. 위에서 생성한 상수 파일 가져오기
+import { S3_IMAGE_CONFIG } from './src/constants/config.js';
+
+
 const nextConfig = {
   reactStrictMode: true,
   output: 'standalone', // docker에서 읽을 빌드 결과물을 Standalone로 output
@@ -9,13 +14,14 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'pocamarket-burket.s3.ap-northeast-2.amazonaws.com',
+        protocol: S3_IMAGE_CONFIG.PROTOCOL,
+        hostname: S3_IMAGE_CONFIG.HOSTNAME,
         port: '',
-        pathname: '/images/**',
+        pathname: `${S3_IMAGE_CONFIG.IMAGES_PATH}/**`, // 상수와 와일드카드를 조합
       },
     ],
   },
 };
 
 export default nextConfig;
+// module.exports = nextConfig; 

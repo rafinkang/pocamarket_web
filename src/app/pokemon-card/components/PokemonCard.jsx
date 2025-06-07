@@ -8,6 +8,8 @@ import {
   CardDescription,
   CardTitle,
 } from "@/components/ui/card";
+import { S3_IMAGES_BASE_URL } from '@/constants/config'; // @/는 절대경로 설정 시 사용
+
 
 export default function PokemonCard({ data }) {
   return (
@@ -20,7 +22,7 @@ export default function PokemonCard({ data }) {
           <div className="relative w-full h-[400px]">
             <Image
               className="rounded-[12px]"
-              src={`https://pocamarket.s3.ap-southeast-2.amazonaws.com/images/${data?.code ? data.code : "a1-001"}.webp`}
+              src={`${S3_IMAGES_BASE_URL}/${data?.code ? data.code : "a1-001"}.webp`}
               alt="Pokemon Card"
               fill
               style={{ objectFit: "cover" }}
