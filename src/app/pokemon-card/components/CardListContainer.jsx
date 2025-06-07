@@ -9,7 +9,7 @@ import { getPokemonCardList } from "@/api/pokemon-card";
 import { defaultPageInfo } from "@/constants/pokemonCardFilter";
 import CardPagination from "./CardPagination";
 
-const parsingData = (res, pageInfo) => {
+const parsingData = (res, pageInfo, setTotalCount) => {
   // erorr 검사
   if (!res.success && res.errorCode == null && res.data == null) {
     console.error("Failed to fetch card list:", res.message);
@@ -22,6 +22,7 @@ const parsingData = (res, pageInfo) => {
   pageInfo.page = data.number;
   pageInfo.size = data.size;
   pageInfo.totalPage = data.totalPages;
+  setTotalCount(data.totalElements ?? 0);
 
   // content가 없거나 배열이 아닌 경우
   if (!data.content || !Array.isArray(data.content)) {
@@ -42,21 +43,25 @@ const parsingData = (res, pageInfo) => {
 const parseQueryString = (search) => {
   const params = {};
   if (!search) return params;
-  search.replace(/^\?/, "").split("&").forEach((pair) => {
-    if (!pair) return;
-    const [k, v] = pair.split("=");
-    params[decodeURIComponent(k)] = decodeURIComponent(v ?? "");
-  });
+  search
+    .replace(/^\?/, "")
+    .split("&")
+    .forEach((pair) => {
+      if (!pair) return;
+      const [k, v] = pair.split("=");
+      params[decodeURIComponent(k)] = decodeURIComponent(v ?? "");
+    });
   return params;
 };
 
 export default function CardListContainer() {
   const [cardList, setCardList] = useState([]);
-  const [pageInfo, setPageInfo] = useState({...defaultPageInfo})
+  const [pageInfo, setPageInfo] = useState({ ...defaultPageInfo });
+  const [totalCount, setTotalCount] = useState(0);
   const [filterQuery, setFilterQuery] = useState({});
   const isPopState = useRef(false);
 
-   // 쿼리스트링을 만들어주는 함수
+  // 쿼리스트링을 만들어주는 함수
   const makeQueryString = (params) => {
     const esc = encodeURIComponent;
     return (
@@ -71,7 +76,7 @@ export default function CardListContainer() {
   const createParams = () => {
     let page = pageInfo.page ?? 0;
     page = Math.min(page, pageInfo.totalPage);
-    return { 
+    return {
       ...filterQuery,
       page,
       size: defaultPageInfo.size,
@@ -106,10 +111,10 @@ export default function CardListContainer() {
 
   useEffect(() => {
     async function fetchCardList() {
-      const params = createParams()
+      const params = createParams();
       const res = await getPokemonCardList(params);
       if (res && res.data.content) {
-        let result = parsingData(res, pageInfo);
+        let result = parsingData(res, pageInfo, setTotalCount);
         // popstate로 인한 상태 변경이 아니면 pushState
         if (!isPopState.current) {
           const queryString = makeQueryString(params);
@@ -127,12 +132,21 @@ export default function CardListContainer() {
 
   return (
     <>
-      <CardFilter onFilter={(query) => { 
-        setFilterQuery(query); 
-        setPageInfo(pre => ({...pre, page: 0}))
-      }} />
-      <CardList cardList={cardList} CardComponent={PokemonCard} />
-      <CardPagination pageInfo={pageInfo} onPageInfo={page => setPageInfo((pre) => ({...pre, page}))} />
+      <CardFilter
+        onFilter={(query) => {
+          setFilterQuery(query);
+          setPageInfo((pre) => ({ ...pre, page: 0 }));
+        }}
+      />
+      <CardList
+        cardList={cardList}
+        CardComponent={PokemonCard}
+        totalCount={totalCount}
+      />
+      <CardPagination
+        pageInfo={pageInfo}
+        onPageInfo={(page) => setPageInfo((pre) => ({ ...pre, page }))}
+      />
     </>
   );
 }

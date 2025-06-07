@@ -14,7 +14,7 @@ async function handleLogout() {
   console.log(res);
 }
 
-export default function CardList({ cardList, CardComponent }) {
+export default function CardList({ cardList, CardComponent, totalCount }) {
   return (
     <>
       {/* <div className="flex items-center justify-center flex-col w-screen h-screen">
@@ -30,6 +30,11 @@ export default function CardList({ cardList, CardComponent }) {
 
       <div className="flex flex-col items-center">
         <h1>Card List</h1>
+        <div>
+          <span>
+            총 {totalCount ? totalCount : 0}개의 카드가 검색되었습니다.
+          </span>
+        </div>
         <ul>
           {cardList.map((card) => (
             <li key={card.code}>
