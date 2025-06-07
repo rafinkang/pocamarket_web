@@ -10,7 +10,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'pocamarket.s3.ap-southeast-2.amazonaws.com',
+        hostname: 'pocamarket-burket.s3.ap-northeast-2.amazonaws.com',
         port: '',
         pathname: '/images/**',
       },
