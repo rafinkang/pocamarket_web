@@ -37,7 +37,7 @@ export const pack = Object.freeze([
 ]);
 
 export const element = ([
-    Object.freeze({ name: "전체", value: excludedValue }),
+    // Object.freeze({ name: "전체", value: excludedValue }),
     Object.freeze({ name: "풀", value: "GRASS" }),
     Object.freeze({ name: "불", value: "FIRE" }),
     Object.freeze({ name: "물", value: "WATER" }),
@@ -52,23 +52,23 @@ export const element = ([
 
 export const rarity = Object.freeze([
     // { name: "전체", value: null },
-    Object.freeze({ name: "일반", value: "COMMON" }),
-    Object.freeze({ name: "언커먼", value: "UNCOMMON" }),
-    Object.freeze({ name: "레어", value: "RARE" }),
-    Object.freeze({ name: "레어 EX", value: "RARE EX" }),
-    Object.freeze({ name: "풀 아트", value: "FULL ART" }),
-    Object.freeze({ name: "풀 아트 EX/서포터", value: "FULL ART EX/SUPPORT" }),
-    Object.freeze({ name: "몰입형", value: "IMMERSIVE" }),
-    Object.freeze({ name: "골드 크라운", value: "GOLD CROWN" }),
+    Object.freeze({ name: "◇", value: "COMMON" }),
+    Object.freeze({ name: "◇◇", value: "UNCOMMON" }),
+    Object.freeze({ name: "◇◇◇", value: "RARE" }),
+    Object.freeze({ name: "◇◇◇◇", value: "RARE EX" }),
+    Object.freeze({ name: "☆", value: "FULL ART" }),
+    Object.freeze({ name: "☆☆", value: "FULL ART EX/SUPPORT" }),
+    Object.freeze({ name: "☆☆☆", value: "IMMERSIVE" }),
+    Object.freeze({ name: "♕", value: "GOLD CROWN" }),
 ]);
 
 export const defaultFilter = Object.freeze({
     nameKo: "",
     type: excludedValue,
     subtype: excludedValue,
-    element: excludedValue,
     packSet: excludedValue,
     pack: excludedValue,
+    element: Object.freeze([]),
     rarity: Object.freeze([]),
 });
 
@@ -95,9 +95,6 @@ export const formSchema = z.object({
     subtype: z.string().nullable().refine(v => subtype.some((item) => item.value === v || v === excludedValue), {
         message: "유효하지 않은 서브타입입니다."
     }),
-    element: z.string().nullable().refine(v => element.some((item) => item.value === v || v === excludedValue), {
-        message: "유효하지 않은 속성입니다."
-    }),
     packSet: z.string().nullable().refine(v => packSet.some((item) => item.value === v || v === excludedValue), {
         message: "유효하지 않은 확장팩입니다."
     }),
@@ -106,6 +103,11 @@ export const formSchema = z.object({
         return pack.some((item) => item.value === v);
     }, {
         message: "유효하지 않은 팩입니다."
+    }),
+
+    element: z.array(z.string()).refine(arr =>
+        arr.every((v) => element.some((item) => item.value === v || v === null)), {
+        message: "유효하지 않은 속성이 포함되어 있습니다."
     }),
     rarity: z.array(z.string()).refine(arr =>
         arr.every((v) => rarity.some((item) => item.value === v || v === null)), {
