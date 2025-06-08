@@ -8,26 +8,28 @@ import {
   CardDescription,
   CardTitle,
 } from "@/components/ui/card";
-import { S3_IMAGES_BASE_URL } from '@/constants/config'; // @/는 절대경로 설정 시 사용
+import { S3_IMAGES_BASE_URL } from "@/constants/config"; // @/는 절대경로 설정 시 사용
 
-
-export default function PokemonCard({ data }) {
+export default function PokemonCard({ data, priority = false }) {
   return (
     <a
       href={`/pokemon-card/${data?.code ? data.code : "a1-001"}`}
-      className="no-underline block w-[300px] h-[auto] my-2 bg-[#f8f9fa] shadow-lg"
+      className="no-underline block min-w-[200px] max-w-[400px] w-full h-[100%] my-2 bg-[#f8f9fa] shadow-lg"
     >
-      <Card className="flex flex-col items-center rounded-[12px] py-0 gap-0 overflow-hidden">
+      <Card className="flex flex-col items-center rounded-[12px] py-0 gap-0">
         <CardHeader className="p-0 w-full">
-          <div className="relative w-full h-[400px]">
+          <div className="relative w-full aspect-[366/512]">
             <Image
               className="rounded-[12px]"
-              src={`${S3_IMAGES_BASE_URL}/${data?.code ? data.code : "a1-001"}.webp`}
+              src={`${S3_IMAGES_BASE_URL}/${
+                data?.code ? data.code : "a1-001"
+              }.webp`}
               alt="Pokemon Card"
               fill
-              style={{ objectFit: "cover" }}
-              sizes="300px"
-              priority
+              sizes="(max-width: 400px) 100vw, 400px"
+              style={{ objectFit: "contain" }}
+              priority={priority} // lazy 로딩중에서 빨리 로드 되게 하고 싶은 옵션 (첫 화면에 출력 되는 이미지)
+              {...(!priority && { loading: "lazy" })}
             />
           </div>
         </CardHeader>
