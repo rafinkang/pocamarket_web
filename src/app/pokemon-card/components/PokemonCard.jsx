@@ -9,8 +9,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { S3_IMAGES_BASE_URL } from "@/constants/config"; // @/는 절대경로 설정 시 사용
+import { useState } from "react";
 
 export default function PokemonCard({ data, priority = false }) {
+  const [isError, setIsErorr] = useState(false);
+
+  const imageHandleError = (e) => {
+    setIsErorr(true);
+  };
+
   return (
     <a
       href={`/pokemon-card/${data?.code ? data.code : "a1-001"}`}
@@ -19,18 +26,31 @@ export default function PokemonCard({ data, priority = false }) {
       <Card className="flex flex-col items-center rounded-[12px] py-0 gap-0">
         <CardHeader className="p-0 w-full">
           <div className="relative w-full aspect-[366/512]">
-            <Image
-              className="rounded-[12px]"
-              src={`${S3_IMAGES_BASE_URL}/${
-                data?.code ? data.code : "a1-001"
-              }.webp`}
-              alt="Pokemon Card"
-              fill
-              sizes="(max-width: 400px) 100vw, 400px"
-              style={{ objectFit: "contain" }}
-              priority={priority} // lazy 로딩중에서 빨리 로드 되게 하고 싶은 옵션 (첫 화면에 출력 되는 이미지)
-              {...(!priority && { loading: "lazy" })}
-            />
+            {isError ? (
+              <div className="errorBox">
+                <img
+                  className="rounded-[12px]"
+                  src="https://placehold.co/367x512?text=no+image"
+                  alt="errorImg"
+                  style={{ objectFit: "contain" }}
+                  sizes="(max-width: 400px) 100vw, 400px"
+                />
+              </div>
+            ) : (
+              <Image
+                className="rounded-[12px]"
+                src={`${S3_IMAGES_BASE_URL}/${
+                  data?.code ? data.code : "a1-001"
+                }.webp`}
+                alt="Pokemon Card"
+                fill
+                sizes="(max-width: 400px) 100vw, 400px"
+                style={{ objectFit: "contain" }}
+                priority={priority} // lazy 로딩중에서 빨리 로드 되게 하고 싶은 옵션 (첫 화면에 출력 되는 이미지)
+                {...(!priority && { loading: "lazy" })}
+                onError={imageHandleError}
+              />
+            )}
           </div>
         </CardHeader>
         <CardContent className="w-full flex-1 flex flex-col justify-between">

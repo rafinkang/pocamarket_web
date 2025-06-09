@@ -78,6 +78,13 @@ export const defaultPageInfo = Object.freeze({
     totalPage: 1,
 });
 
+export const defaultSort = Object.freeze([
+    Object.freeze({ name: "코드순", value: "code" }),
+    Object.freeze({ name: "코드역순", value: "code,desc" }),
+    Object.freeze({ name: "이름순", value: "nameKo" }),
+    Object.freeze({ name: "이름역순", value: "nameKo,desc" }),
+])
+
 export const formSchema = z.object({
     nameKo: z.string().nullable()
         .refine(v => v === "" || (v.length >= 2 && v.length <= 20), {

@@ -54,7 +54,7 @@ export default function SelectBoxField({
               }}
               disabled={typeValue === excludedValue}
             >
-              <SelectTrigger className="w-[150px]">
+              <SelectTrigger className="w-[150px] bg-white">
                 <SelectValue placeholder="전체" />
               </SelectTrigger>
               <SelectContent>

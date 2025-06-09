@@ -104,7 +104,7 @@ export default function CardFilter({ onFilter }) {
                       <Input
                         {...field}
                         placeholder="카드명"
-                        className="w-[100%]"
+                        className="w-[100%] bg-white"
                       />
                     </FormControl>
                     <FormMessage />

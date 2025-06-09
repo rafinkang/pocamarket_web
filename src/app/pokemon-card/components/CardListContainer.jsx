@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import CardFilter from "./CardFilter";
 import CardList from "./CardList";
+import CardSort from "./CardSort";
 import PokemonCard from "./PokemonCard";
 
 import { getPokemonCardList } from "@/api/pokemon-card";
@@ -51,6 +52,7 @@ const parseQueryString = (search) => {
 export default function CardListContainer() {
   const [cardList, setCardList] = useState([]);
   const [pageInfo, setPageInfo] = useState({ ...defaultPageInfo });
+  const [sortInfo, setSortInfo] = useState("code");
   const [totalCount, setTotalCount] = useState(0);
   const [filterQuery, setFilterQuery] = useState({});
   const isPopState = useRef(false);
@@ -74,6 +76,7 @@ export default function CardListContainer() {
       ...filterQuery,
       page,
       size: defaultPageInfo.size,
+      sort: sortInfo,
     };
   };
 
@@ -81,6 +84,7 @@ export default function CardListContainer() {
     setCardList([]);
     setTotalCount(0);
     setPageInfo({ ...defaultPageInfo });
+    setSort("code");
   };
 
   useEffect(() => {
@@ -133,7 +137,7 @@ export default function CardListContainer() {
     }
 
     fetchCardList();
-  }, [filterQuery, pageInfo.page]);
+  }, [filterQuery, pageInfo.page, sortInfo]);
 
   return (
     <>
@@ -143,11 +147,12 @@ export default function CardListContainer() {
           setPageInfo((pre) => ({ ...pre, page: 0 }));
         }}
       />
-      <CardList
-        cardList={cardList}
-        CardComponent={PokemonCard}
+      <CardSort
         totalCount={totalCount}
+        sortInfo={sortInfo}
+        setSortInfo={setSortInfo}
       />
+      <CardList cardList={cardList} CardComponent={PokemonCard} />
       <CardPagination
         pageInfo={pageInfo}
         onPageInfo={(page) => setPageInfo((pre) => ({ ...pre, page }))}
