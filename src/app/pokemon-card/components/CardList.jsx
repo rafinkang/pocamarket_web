@@ -25,7 +25,7 @@ export default function CardList({ cardList, CardComponent, totalCount }) {
         </Button>
         <Button className="mt-1" onClick={handleLogout}>
           로그아웃
-        </Button>
+        </Button>  max-w-[300px]
       </div> */}
 
       <div className="flex flex-col items-center w-full">
@@ -36,9 +36,12 @@ export default function CardList({ cardList, CardComponent, totalCount }) {
           </span>
         </div>
         <div className="contentList w-full px-[20px]">
-          <ul className="grid items-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <ul className="grid items-center justify-items-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {cardList.map((card, index) => (
-              <li className="flex items-center justify-center" key={card.code}>
+              <li
+                className="flex items-center justify-center w-full max-w-[300px]"
+                key={card.code}
+              >
                 {CardComponent && (
                   <CardComponent data={card} priority={index < 15} />
                 )}
