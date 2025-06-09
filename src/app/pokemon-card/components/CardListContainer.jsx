@@ -10,12 +10,6 @@ import { defaultPageInfo } from "@/constants/pokemonCardFilter";
 import CardPagination from "./CardPagination";
 
 const parsingData = (res, pageInfo, setTotalCount) => {
-  // erorr 검사
-  if (!res.success && res.errorCode == null && res.data == null) {
-    console.error("Failed to fetch card list:", res.message);
-    return [];
-  }
-
   const data = res.data;
 
   // pageable 정보 설정
@@ -83,6 +77,12 @@ export default function CardListContainer() {
     };
   };
 
+  const reset = () => {
+    setCardList([]);
+    setTotalCount(0);
+    setPageInfo({ ...defaultPageInfo });
+  };
+
   useEffect(() => {
     // 마운트/새로고침/뒤로가기/앞으로가기 모두 처리
     const handlePopOrInit = () => {
@@ -112,18 +112,23 @@ export default function CardListContainer() {
   useEffect(() => {
     async function fetchCardList() {
       const params = createParams();
-      const res = await getPokemonCardList(params);
-      if (res && res.data.content) {
-        let result = parsingData(res, pageInfo, setTotalCount);
-        // popstate로 인한 상태 변경이 아니면 pushState
-        if (!isPopState.current) {
-          const queryString = makeQueryString(params);
-          window.history.pushState(null, "", queryString);
+      try {
+        const res = await getPokemonCardList(params);
+
+        if (res && res.data.content) {
+          let result = parsingData(res, pageInfo, setTotalCount);
+          // popstate로 인한 상태 변경이 아니면 pushState
+          if (!isPopState.current) {
+            const queryString = makeQueryString(params);
+            window.history.pushState(null, "", queryString);
+          }
+          isPopState.current = false; // 항상 리셋
+          setCardList(result);
+        } else {
+          throw new Error("CONTENT_UNDEFINED");
         }
-        isPopState.current = false; // 항상 리셋
-        setCardList(result);
-      } else {
-        setCardList([]);
+      } catch (error) {
+        reset();
       }
     }
 
