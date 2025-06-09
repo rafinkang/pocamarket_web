@@ -4,12 +4,12 @@ import { LOGIN } from './constants/path';
 /** @param {import('next/server').NextRequest} request */
 export function middleware(request) {
   // 1. 로그인 상태 확인 (오직 쿠키에서만 토큰을 가져옴.)
-  const accessToken = request.cookies.get('accessToken')?.value;
-  console.log('미들웨어에서 확인한 accessToken:', accessToken);
+  const refreshToken = request.cookies.get('refreshToken')?.value;
+  console.log('미들웨어에서 확인한 refreshToken:', refreshToken);
 
   // 2. 로그인이 필요한 페이지에 접근하는데, 토큰이 없는 경우
-  // isLogin 대신 accessToken의 존재 여부로 판단.
-  if (!accessToken) {
+  // isLogin 대신 refreshToken의 존재 여부로 판단.
+  if (!refreshToken) {
     const loginUrl = new URL(LOGIN, request.url);
     loginUrl.searchParams.set('redirect', request.nextUrl.pathname);
     
