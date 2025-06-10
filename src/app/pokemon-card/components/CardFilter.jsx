@@ -71,7 +71,7 @@ export default function CardFilter({ onFilter }) {
           delete result[key];
         }
       });
-      onFilter(result); // ✅ 객체로 넘김
+      onFilter(result); // 객체로 넘김
     }
   };
 

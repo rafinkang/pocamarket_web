@@ -8,13 +8,13 @@ import {
   CardDescription,
   CardTitle,
 } from "@/components/ui/card";
-import { S3_IMAGES_BASE_URL } from "@/constants/config"; // @/는 절대경로 설정 시 사용
+import { S3_IMAGES_BASE_URL, TEST_MODE } from "@/constants/config"; // @/는 절대경로 설정 시 사용
 import { useState } from "react";
 
 export default function PokemonCard({ data, priority = false }) {
   const [isError, setIsErorr] = useState(false);
 
-  const imageHandleError = (e) => {
+  const imageHandleError = () => {
     setIsErorr(true);
   };
 
@@ -30,7 +30,7 @@ export default function PokemonCard({ data, priority = false }) {
               <div className="errorBox">
                 <img
                   className="rounded-[12px]"
-                  src="https://placehold.co/367x512?text=no+image"
+                  src="/images/cardback.webp"
                   alt="errorImg"
                   style={{ objectFit: "contain" }}
                   sizes="(max-width: 400px) 100vw, 400px"
@@ -39,9 +39,13 @@ export default function PokemonCard({ data, priority = false }) {
             ) : (
               <Image
                 className="rounded-[12px]"
-                src={`${S3_IMAGES_BASE_URL}/${
-                  data?.code ? data.code : "a1-001"
-                }.webp`}
+                src={
+                  TEST_MODE
+                    ? "/images/cardback.webp"
+                    : `${S3_IMAGES_BASE_URL}/${
+                        data?.code ? data.code : "a1-001"
+                      }.webp`
+                }
                 alt="Pokemon Card"
                 fill
                 sizes="(max-width: 400px) 100vw, 400px"
