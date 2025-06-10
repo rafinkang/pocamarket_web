@@ -72,12 +72,6 @@ export const defaultFilter = Object.freeze({
     rarity: Object.freeze([]),
 });
 
-export const defaultPageInfo = Object.freeze({
-    page: 0,
-    size: 10, // 백단에서 한번에 최대 30개로 제한 중 
-    totalPage: 1,
-});
-
 export const defaultSort = Object.freeze([
     Object.freeze({ name: "코드순", value: "code" }),
     Object.freeze({ name: "코드역순", value: "code,desc" }),

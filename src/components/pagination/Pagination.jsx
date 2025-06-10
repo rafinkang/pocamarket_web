@@ -10,21 +10,37 @@ import {
 } from "@/components/ui/pagination";
 import { useState, useEffect } from "react";
 
-export default function CardPagination({ pageInfo, onPageInfo }) {
+/**
+ * @param {Int} page 현재 페이지
+ * @param {Int} totalPage 최대 페이지
+ * @param {Int} itemSize 출력 아이템 사이즈
+ * @param {Int} mobileItemSize 모바일에서 출력 사이즈
+ * @param {Int} switchWindowWidth 모바일 출력으로 전환될 가로 사이즈
+ * @param {useStateSetFunc} setPageInfo useState page set 메서드
+ * @returns
+ */
+export default function CommonPagination({
+  page = 0,
+  totalPage = 1,
+  itemSize = 10,
+  mobileItemSize = 5,
+  switchWindowWidth = 640,
+  onPageChange,
+}) {
   // pageInfo.page는 0부터 시작, 프론트에서는 1부터 보여줌
-  const currentPage = (pageInfo?.page ?? 0) + 1;
-  const totalPages = pageInfo?.totalPage ?? 1;
-  const [visiblePageNumbers, setVisiblePageNumbers] = useState(9); // 기본적으로 9개 숫자 표시
+  const currentPage = (page ?? 0) + 1;
+  const totalPages = totalPage ?? 1;
+  const [visiblePageNumbers, setVisiblePageNumbers] = useState(itemSize);
 
   useEffect(() => {
     // 윈도우 크기에 따라 표시할 페이지 번호 개수를 업데이트하는 함수
     const updateVisiblePageNumbers = () => {
-      if (window.innerWidth < 640) {
+      if (window.innerWidth < switchWindowWidth) {
         // 예를 들어, 640px보다 작으면 (모바일)
-        setVisiblePageNumbers(5);
+        setVisiblePageNumbers(mobileItemSize);
       } else {
         // 그 외 (데스크탑)
-        setVisiblePageNumbers(9);
+        setVisiblePageNumbers(itemSize);
       }
     };
 
@@ -57,7 +73,7 @@ export default function CardPagination({ pageInfo, onPageInfo }) {
     // 1보다 작거나, totalPages보다 크면 무시
     if (page < 1 || page > totalPages) return;
     // onPageInfo에 0부터 시작하는 값으로 전달
-    onPageInfo && onPageInfo(page - 1);
+    onPageChange && onPageChange(page - 1);
   };
 
   return (
@@ -68,7 +84,7 @@ export default function CardPagination({ pageInfo, onPageInfo }) {
           {currentPage !== 1 && (
             <PaginationItem>
               <PaginationPrevious
-                href={`/pokemon-card?page=${
+                href={`?page=${
                   currentPage - visiblePageNumbers > 1
                     ? currentPage - visiblePageNumbers
                     : 1
@@ -89,7 +105,7 @@ export default function CardPagination({ pageInfo, onPageInfo }) {
           {pageNumbers.map((page) => (
             <PaginationItem key={page}>
               <PaginationLink
-                href={`/pokemon-card?page=${page}`}
+                href={`?page=${page}`}
                 onClick={(e) => handlePageChange(page, e)}
                 isActive={currentPage === page}
               >
@@ -102,7 +118,7 @@ export default function CardPagination({ pageInfo, onPageInfo }) {
           {currentPage !== totalPages && (
             <PaginationItem>
               <PaginationNext
-                href={`/pokemon-card?page=${
+                href={`?page=${
                   currentPage + visiblePageNumbers < totalPages
                     ? currentPage + visiblePageNumbers
                     : totalPages

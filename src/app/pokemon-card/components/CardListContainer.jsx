@@ -7,16 +7,15 @@ import CardSort from "./CardSort";
 import PokemonCard from "./PokemonCard";
 
 import { getPokemonCardList } from "@/api/pokemon-card";
-import { defaultPageInfo } from "@/constants/pokemonCardFilter";
-import CardPagination from "./CardPagination";
+import CommonPagination from "../../../components/pagination/Pagination";
+import { parseQueryString, makeQueryString } from "@/utils/queryString";
 
-const parsingData = (res, pageInfo, setTotalCount) => {
+const parsingData = (res, setPage, setTotalPage, setTotalCount) => {
   const data = res.data;
 
   // pageable 정보 설정
-  pageInfo.page = data.number;
-  pageInfo.size = data.size;
-  pageInfo.totalPage = data.totalPages;
+  setPage(data?.number ?? 0);
+  setTotalPage(data?.totalPages ?? 1);
   setTotalCount(data.totalElements ?? 0);
 
   // content가 없거나 배열이 아닌 경우
@@ -34,48 +33,25 @@ const parsingData = (res, pageInfo, setTotalCount) => {
   return list;
 };
 
-// 쿼리스트링을 객체로 변환하는 함수
-const parseQueryString = (search) => {
-  const params = {};
-  if (!search) return params;
-  search
-    .replace(/^\?/, "")
-    .split("&")
-    .forEach((pair) => {
-      if (!pair) return;
-      const [k, v] = pair.split("=");
-      params[decodeURIComponent(k)] = decodeURIComponent(v ?? "");
-    });
-  return params;
-};
-
 export default function CardListContainer() {
   const [cardList, setCardList] = useState([]);
-  const [pageInfo, setPageInfo] = useState({ ...defaultPageInfo });
+
+  const [page, setPage] = useState(0);
+  const [totalPage, setTotalPage] = useState(1);
+  const pageSize = 10;
+
   const [sortInfo, setSortInfo] = useState("code");
   const [totalCount, setTotalCount] = useState(0);
   const [filterQuery, setFilterQuery] = useState({});
   const isPopState = useRef(false);
 
-  // 쿼리스트링을 만들어주는 함수
-  const makeQueryString = (params) => {
-    const esc = encodeURIComponent;
-    return (
-      "?" +
-      Object.entries(params)
-        .filter(([_, v]) => v !== undefined && v !== null && v !== "")
-        .map(([k, v]) => esc(k) + "=" + esc(v))
-        .join("&")
-    );
-  };
-
   const createParams = () => {
-    let page = pageInfo.page ?? 0;
-    page = Math.min(page, pageInfo.totalPage);
+    let tPage = page ?? 0;
+    tPage = Math.min(page, totalPage);
     return {
       ...filterQuery,
-      page,
-      size: defaultPageInfo.size,
+      page: tPage,
+      size: pageSize,
       sort: sortInfo,
     };
   };
@@ -83,7 +59,8 @@ export default function CardListContainer() {
   const reset = () => {
     setCardList([]);
     setTotalCount(0);
-    setPageInfo({ ...defaultPageInfo });
+    setPage(0);
+    setTotalPage(1);
     setSort("code");
   };
 
@@ -93,15 +70,11 @@ export default function CardListContainer() {
       isPopState.current = true;
       const params = parseQueryString(window.location.search);
       const page = params.page ? Number(params.page) : 0;
-      const size = params.size ? Number(params.size) : defaultPageInfo.size;
+      // const size = params.size ? Number(params.size) : pageSize;
       delete params.page;
       delete params.size;
       setFilterQuery(params);
-      setPageInfo((prev) => ({
-        ...prev,
-        page,
-        size,
-      }));
+      setPage(page);
     };
 
     // 최초 마운트 시 실행
@@ -120,7 +93,7 @@ export default function CardListContainer() {
         const res = await getPokemonCardList(params);
 
         if (res && res.data.content) {
-          let result = parsingData(res, pageInfo, setTotalCount);
+          let result = parsingData(res, setPage, setTotalPage, setTotalCount);
           // popstate로 인한 상태 변경이 아니면 pushState
           if (!isPopState.current) {
             const queryString = makeQueryString(params);
@@ -137,25 +110,26 @@ export default function CardListContainer() {
     }
 
     fetchCardList();
-  }, [filterQuery, pageInfo.page, sortInfo]);
+  }, [filterQuery, page, sortInfo]);
 
   return (
     <>
       <CardFilter
         onFilter={(query) => {
           setFilterQuery(query);
-          setPageInfo((pre) => ({ ...pre, page: 0 }));
+          setPage(0);
         }}
       />
       <CardSort
         totalCount={totalCount}
         sortInfo={sortInfo}
-        setSortInfo={setSortInfo}
+        onSortInfo={setSortInfo}
       />
       <CardList cardList={cardList} CardComponent={PokemonCard} />
-      <CardPagination
-        pageInfo={pageInfo}
-        onPageInfo={(page) => setPageInfo((pre) => ({ ...pre, page }))}
+      <CommonPagination
+        page={page}
+        totalPage={totalPage}
+        onPageChange={setPage}
       />
     </>
   );

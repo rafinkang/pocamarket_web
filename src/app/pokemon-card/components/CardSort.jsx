@@ -10,7 +10,7 @@ import {
 
 import { defaultSort } from "@/constants/pokemonCardFilter";
 
-export default function CardList({ totalCount, sortInfo, setSortInfo }) {
+export default function CardList({ totalCount, sortInfo, onSortInfo }) {
   return (
     <>
       <div className="CardListToolbar w-full flex flex-wrap justify-between items-center p-[20px] bg-[#eaeaea] rounded-md mb-4 gap-2">
@@ -20,7 +20,7 @@ export default function CardList({ totalCount, sortInfo, setSortInfo }) {
           </span>
         </div>
         <div className="flex flex-end items-center gap-4">
-          <Select value={sortInfo} onValueChange={(sort) => setSortInfo(sort)}>
+          <Select value={sortInfo} onValueChange={(sort) => onSortInfo(sort)}>
             <SelectTrigger className="w-[125px] bg-white">
               <SelectValue placeholder="코드순" />
             </SelectTrigger>
