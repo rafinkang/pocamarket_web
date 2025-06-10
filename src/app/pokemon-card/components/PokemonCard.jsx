@@ -8,10 +8,14 @@ import {
   CardDescription,
   CardTitle,
 } from "@/components/ui/card";
-import { S3_IMAGES_BASE_URL, TEST_MODE } from "@/constants/config"; // @/는 절대경로 설정 시 사용
+import { S3_IMAGES_BASE_URL } from "@/constants/config"; // @/는 절대경로 설정 시 사용
 import { useState } from "react";
 
-export default function PokemonCard({ data, priority = false }) {
+export default function PokemonCard({
+  data,
+  priority = false,
+  testMode = true,
+}) {
   const [isError, setIsErorr] = useState(false);
 
   const imageHandleError = () => {
@@ -40,7 +44,7 @@ export default function PokemonCard({ data, priority = false }) {
               <Image
                 className="rounded-[12px]"
                 src={
-                  TEST_MODE
+                  testMode
                     ? "/images/cardback.webp"
                     : `${S3_IMAGES_BASE_URL}/${
                         data?.code ? data.code : "a1-001"

@@ -38,21 +38,6 @@ export default function CardPagination({ pageInfo, onPageInfo }) {
     return () => window.removeEventListener("resize", updateVisiblePageNumbers);
   }, []); // 빈 의존성 배열로 한 번만 실행
 
-  // 페이지 번호 배열 생성 로직 (visiblePageNumbers를 기반으로)
-  const getPageNumbers = () => {
-    const pages = [];
-    const startPage = Math.max(
-      1,
-      currentPage - Math.floor(visiblePageNumbers / 2)
-    );
-    const endPage = Math.min(totalPages, startPage + visiblePageNumbers - 1);
-
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(i);
-    }
-    return pages;
-  };
-
   let startPage = Math.max(1, currentPage - Math.floor(visiblePageNumbers / 2));
   let endPage = startPage + visiblePageNumbers - 1;
 
