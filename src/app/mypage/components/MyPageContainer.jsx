@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import MyInfoPage from "./MyInfo"
-
+import TcgCode from "./TcgCode"
 
 
 export default function MyPageContainer() {
@@ -20,19 +20,7 @@ export default function MyPageContainer() {
     <>
       <MyInfoPage />
 
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle>친구 코드</CardTitle>
-          <CardDescription>Card Description</CardDescription>
-          <CardAction>Card Action</CardAction>
-        </CardHeader>
-        <CardContent>
-          <p>친구 코드 리스트</p>
-        </CardContent>
-        <CardFooter>
-          <p>Card Footer</p>
-        </CardFooter>
-      </Card>
+      <TcgCode />
 
       <Card className="w-full">
         <CardHeader>
