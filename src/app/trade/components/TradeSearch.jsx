@@ -1,17 +1,20 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 import { useTrade } from "./TradeProvider";
 import SelectedCard from "./SelectedCard";
 
+const selectCardInfo = {
+  code: null,
+  name: null,
+};
+
 export default function TradeSearch({ onSearch, onCardButton }) {
   // const [isSearchList, setIsSearchList] = useState(false);
-  const { handleCardClick } = useTrade();
-  let myCard = "";
-  let yourCard = "";
+  const { selectedCards, handleCardClick, addYourCards, resetSelectCard } =
+    useTrade();
 
   // 필터 제출
   const onSubmit = (data) => {
@@ -42,12 +45,13 @@ export default function TradeSearch({ onSearch, onCardButton }) {
     }
   };
 
+  const onAddYourCard = () => {
+    addYourCards({ ...selectCardInfo });
+  };
+
   // 필터 초기화
   const handleReset = () => {
-    // form.reset({ ...defaultFilter });
-    // arrData.forEach((v) => {
-    //   form.setValue(v, []);
-    // });
+    resetSelectCard();
   };
 
   return (
@@ -55,7 +59,7 @@ export default function TradeSearch({ onSearch, onCardButton }) {
       <div className="flex items-center gap-6">
         <div className="flex items-center flex-grow gap-2">
           <button
-            className="myCardZone"
+            className="myCardBtn"
             onClick={() => {
               onCardButton("my");
               handleCardClick("my");
@@ -65,16 +69,27 @@ export default function TradeSearch({ onSearch, onCardButton }) {
             <Input className="w-[100%] bg-white hidden" />
           </button>
 
-          <button
-            className="yourCardZone"
-            onClick={() => {
-              onCardButton("your");
-              handleCardClick("your");
-            }}
-          >
-            <SelectedCard type="your" subject="원하는 카드" cardName="없음" />
-            <Input className="w-[100%] bg-white hidden" />
-          </button>
+          {selectedCards.your.map((card, index) => (
+            <button
+              key={`your-${index}`}
+              className="yourCardBtn"
+              onClick={() => {
+                onCardButton(`your-${index}`);
+                handleCardClick(`your-${index}`);
+              }}
+            >
+              <SelectedCard
+                type={`your-${index}`}
+                subject="원하는 카드"
+                cardName="없음"
+              />
+              <Input className="w-[100%] bg-white hidden" />
+            </button>
+          ))}
+
+          {selectedCards.your.length < 5 && (
+            <button onClick={onAddYourCard}>카드 추가</button>
+          )}
         </div>
 
         <div className="buttonContainer flex items-right gap-4 justify-end">

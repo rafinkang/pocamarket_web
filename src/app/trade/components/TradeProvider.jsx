@@ -6,8 +6,27 @@ export function TradeProvider({ children }) {
   const [activeCard, setActiveCard] = useState(null);
   const [selectedCards, setSelectedCards] = useState({
     my: null,
-    your: null,
+    your: [],
   });
+
+  const addYourCards = (card) => {
+    setSelectedCards((prev) => {
+      // 최대 5개까지만 추가 가능
+      if (prev.your.length >= 5) {
+        return prev;
+      }
+
+      // 새 카드 추가
+      return {
+        ...prev,
+        your: [...prev.your, card],
+      };
+    });
+  };
+
+  const resetSelectCard = () => {
+    setSelectedCards({ my: null, your: [] });
+  };
 
   const handleCardClick = (type) => {
     setActiveCard(activeCard === type ? null : type);
@@ -18,6 +37,8 @@ export function TradeProvider({ children }) {
     selectedCards,
     setSelectedCards,
     handleCardClick,
+    addYourCards,
+    resetSelectCard,
   };
 
   // Provider를 통해 하위 컴포넌트들에게 상태와 핸들러 함수들을 전달
