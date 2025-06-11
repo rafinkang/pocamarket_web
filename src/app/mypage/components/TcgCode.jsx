@@ -3,16 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+
 
 
 import {
@@ -57,137 +48,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import TcgCodeDialog from "./TcgCodeDialog"
 
-const data = [
-  {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@example.com",
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@example.com",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@example.com",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@example.com",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@example.com",
-  },
-]
 
-// export const Payment = {
-//   id: string,
-//   amount: number,
-//   status: "pending" | "processing" | "success" | "failed",
-//   email: string
-// }
-
-export const columns = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
-    ),
-  },
-  {
-    accessorKey: "email",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <ArrowUpDown />
-        </Button>
-      )
-    },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
-  },
-  {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
-
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount)
-
-      return <div className="text-right font-medium">{formatted}</div>
-    },
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const payment = row.original
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    },
-  },
-]
 
 export default function TcgCode() {
 
@@ -195,6 +58,86 @@ export default function TcgCode() {
   const [columnFilters, setColumnFilters] = useState([])
   const [columnVisibility, setColumnVisibility] = useState({})
   const [rowSelection, setRowSelection] = useState({})
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [data, setData] = useState([{
+    tcgCode: "포켓몬카드게임코드번호이다",
+    uuid: 7211,
+    status: 1,
+    memo: "메모메모메모",
+  },
+  {
+    tcgCode: "포켓몬카드게임코드번호이다2",
+    uuid: 7212,
+    status: 0,
+    memo: "메모메모메모2",
+  },
+  {
+    tcgCode: "포켓몬카드게임코드번호이다3",
+    uuid: 7213,
+    status: 1,
+    memo: "메모메모메모3",
+  },])
+  const [editingRow, setEditingRow] = useState(null);
+
+  // 수정 버튼 클릭 핸들러
+  const handleEditClick = (rowData) => {
+    setEditingRow(rowData);
+    setIsDialogOpen(true);
+  };
+
+  // 다이얼로그가 닫힐 때 초기화
+  const handleDialogOpenChange = (open) => {
+    if (!open) {
+      setEditingRow(null);
+    }
+    setIsDialogOpen(open);
+  };
+
+  const columns = [
+    {
+      accessorKey: "tcgCode",
+      header: () => <div className="text-center">TCG Code</div>,
+      cell: ({ row }) => (
+        <div className="text-center">{row.getValue("tcgCode")}</div>
+      ),
+    },
+    {
+      accessorKey: "memo",
+      header: () => <div className="text-center">Memo</div>,
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("memo")}</div>
+      ),
+    },
+    {
+      id: "actions",
+      enableHiding: false,
+      cell: ({ row }) => {
+        const rowData = row.original
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0 float-right">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(rowData.tcgCode)}
+              >
+                TCG Code 복사하기
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => { handleEditClick(rowData) }}
+              >수정</DropdownMenuItem>
+              <DropdownMenuItem>삭제</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )
+      },
+    },
+  ]
 
   const table = useReactTable({
     data,
@@ -215,7 +158,9 @@ export default function TcgCode() {
     },
   })
 
+
   return (
+
     <Card className="w-full">
       <CardHeader>
         <CardTitle>친구 코드</CardTitle>
@@ -268,7 +213,7 @@ export default function TcgCode() {
                       colSpan={columns.length}
                       className="h-24 text-center"
                     >
-                      No results.
+                      등록된 친구 코드가 없습니다.
                     </TableCell>
                   </TableRow>
                 )}
@@ -279,40 +224,11 @@ export default function TcgCode() {
         </div>
       </CardContent>
       <CardFooter>
-
-        <Dialog>
-          <form>
-            <DialogTrigger asChild>
-              <Button variant="outline">Open Dialog</Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>Edit profile</DialogTitle>
-                <DialogDescription>
-                  Make changes to your profile here. Click save when you&apos;re
-                  done.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4">
-                <div className="grid gap-3">
-                  <Label htmlFor="name-1">Name</Label>
-                  <Input id="name-1" name="name" defaultValue="Pedro Duarte" />
-                </div>
-                <div className="grid gap-3">
-                  <Label htmlFor="username-1">Username</Label>
-                  <Input id="username-1" name="username" defaultValue="@peduarte" />
-                </div>
-              </div>
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button variant="outline">Cancel</Button>
-                </DialogClose>
-                <Button type="submit">Save changes</Button>
-              </DialogFooter>
-            </DialogContent>
-          </form>
-        </Dialog>
-
+        <TcgCodeDialog
+          open={isDialogOpen}
+          onOpenChange={handleDialogOpenChange}
+          initialData={editingRow}
+        />
       </CardFooter>
     </Card>
   )
