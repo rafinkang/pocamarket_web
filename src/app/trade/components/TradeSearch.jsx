@@ -13,7 +13,7 @@ const selectCardInfo = {
 
 export default function TradeSearch({ onSearch, onCardButton }) {
   // const [isSearchList, setIsSearchList] = useState(false);
-  const { selectedCards, handleCardClick, addYourCards, resetSelectCard } =
+  const { selectedCard, handleCardClick, addYourCard, resetSelectCard } =
     useTrade();
 
   // 필터 제출
@@ -46,7 +46,7 @@ export default function TradeSearch({ onSearch, onCardButton }) {
   };
 
   const onAddYourCard = () => {
-    addYourCards({ ...selectCardInfo });
+    addYourCard({ ...selectCardInfo });
   };
 
   // 필터 초기화
@@ -69,7 +69,7 @@ export default function TradeSearch({ onSearch, onCardButton }) {
             <Input className="w-[100%] bg-white hidden" />
           </button>
 
-          {selectedCards.your.map((card, index) => (
+          {selectedCard.your.map((card, index) => (
             <button
               key={`your-${index}`}
               className="yourCardBtn"
@@ -87,7 +87,7 @@ export default function TradeSearch({ onSearch, onCardButton }) {
             </button>
           ))}
 
-          {selectedCards.your.length < 5 && (
+          {selectedCard.your.length < 5 && (
             <button onClick={onAddYourCard}>카드 추가</button>
           )}
         </div>

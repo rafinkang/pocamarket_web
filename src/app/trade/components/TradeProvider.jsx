@@ -4,13 +4,13 @@ const TradeContext = createContext();
 
 export function TradeProvider({ children }) {
   const [activeCard, setActiveCard] = useState(null);
-  const [selectedCards, setSelectedCards] = useState({
+  const [selectedCard, setSelectedCard] = useState({
     my: null,
     your: [],
   });
 
-  const addYourCards = (card) => {
-    setSelectedCards((prev) => {
+  const addYourCard = (card) => {
+    setSelectedCard((prev) => {
       // 최대 5개까지만 추가 가능
       if (prev.your.length >= 5) {
         return prev;
@@ -25,7 +25,7 @@ export function TradeProvider({ children }) {
   };
 
   const resetSelectCard = () => {
-    setSelectedCards({ my: null, your: [] });
+    setSelectedCard({ my: null, your: [] });
   };
 
   const handleCardClick = (type) => {
@@ -34,10 +34,10 @@ export function TradeProvider({ children }) {
 
   const value = {
     activeCard,
-    selectedCards,
-    setSelectedCards,
+    selectedCard,
+    setSelectedCard,
     handleCardClick,
-    addYourCards,
+    addYourCard,
     resetSelectCard,
   };
 
