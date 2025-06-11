@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import CardFilter from "./CardFilter";
+import CardSearch from "./CardSearch";
 import CardList from "./CardList";
 import CardSort from "./CardSort";
 import PokemonCard from "./PokemonCard";
@@ -114,7 +114,7 @@ export default function CardListContainer() {
 
   return (
     <>
-      <CardFilter
+      <CardSearch
         onFilter={(query) => {
           setFilterQuery(query);
           setPage(0);

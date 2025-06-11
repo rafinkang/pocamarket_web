@@ -19,7 +19,7 @@ import { useWatch } from "react-hook-form";
 
 import { excludedValue } from "@/constants/pokemonCardFilter";
 
-export default function SelectBoxField({
+export default function SelectBoxOption({
   form,
   fieldName,
   labelValue,

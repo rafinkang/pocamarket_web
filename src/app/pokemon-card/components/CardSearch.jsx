@@ -26,10 +26,10 @@ import {
   formSchema,
 } from "@/constants/pokemonCardFilter";
 
-import SelectBoxFilter from "./filter/SelectBoxField";
-import CheckBoxFilter from "./filter/CheckBoxField";
+import SelectBoxOption from "../../../components/searchOption/SelectBoxOption";
+import CheckBoxOption from "../../../components/searchOption/CheckBoxOption";
 
-export default function CardFilter({ onFilter }) {
+export default function CardSearch({ onSearch }) {
   const arrData = ["element", "rarity"];
   const [isDetailFilter, setIsDetailFilter] = useState(false);
 
@@ -48,7 +48,7 @@ export default function CardFilter({ onFilter }) {
 
   // 필터 제출
   const onSubmit = (data) => {
-    if (onFilter) {
+    if (onSearch) {
       const result = { ...data };
 
       arrData.forEach((field) => {
@@ -71,7 +71,7 @@ export default function CardFilter({ onFilter }) {
           delete result[key];
         }
       });
-      onFilter(result); // 객체로 넘김
+      onSearch(result); // 객체로 넘김
     }
   };
 
@@ -84,7 +84,7 @@ export default function CardFilter({ onFilter }) {
   };
 
   return (
-    <div id="formBody" className="w-full">
+    <section id="formBody" className="w-full">
       <Form {...form}>
         <form
           method="GET"
@@ -112,9 +112,6 @@ export default function CardFilter({ onFilter }) {
                 )}
               />
               <div className="buttonBox flex gap-2">
-                {/* <Button type="submit" className="px-3 py-1">
-                🔍
-              </Button> */}
                 <Button
                   type="button"
                   className="px-3 py-1 bg-gray-300 text-black"
@@ -131,7 +128,7 @@ export default function CardFilter({ onFilter }) {
               <div className="selectBox flex flex-wrap gap-6">
                 <div className="flex flex-wrap items-center gap-4">
                   {/* {포켓몬 타입} */}
-                  <SelectBoxFilter
+                  <SelectBoxOption
                     form={form}
                     fieldName={"type"}
                     labelValue={"카드 타입"}
@@ -139,7 +136,7 @@ export default function CardFilter({ onFilter }) {
                     resetField={"subtype"}
                   />
                   {/* {포켓몬 서브타입} */}
-                  <SelectBoxFilter
+                  <SelectBoxOption
                     form={form}
                     fieldName={"subtype"}
                     labelValue={"세부 타입"}
@@ -150,7 +147,7 @@ export default function CardFilter({ onFilter }) {
 
                 <div className="flex flex-wrap items-center gap-6">
                   {/* {포켓몬 확장팩} */}
-                  <SelectBoxFilter
+                  <SelectBoxOption
                     form={form}
                     fieldName={"packSet"}
                     labelValue={"확장팩"}
@@ -158,7 +155,7 @@ export default function CardFilter({ onFilter }) {
                     resetField={"pack"}
                   />
                   {/* {포켓몬 팩} */}
-                  <SelectBoxFilter
+                  <SelectBoxOption
                     form={form}
                     fieldName={"pack"}
                     labelValue={"팩"}
@@ -172,7 +169,7 @@ export default function CardFilter({ onFilter }) {
                 <div className="checkBox flex">
                   <div className="flex flex-col gap-4 w-full">
                     {/* {포켓몬 레어도} */}
-                    <CheckBoxFilter
+                    <CheckBoxOption
                       control={form.control}
                       fieldName={"rarity"}
                       labelValue={"희귀도"}
@@ -180,7 +177,7 @@ export default function CardFilter({ onFilter }) {
                     />
 
                     {/* {포켓몬 속성} */}
-                    <CheckBoxFilter
+                    <CheckBoxOption
                       control={form.control}
                       fieldName={"element"}
                       labelValue={"속성"}
@@ -206,6 +203,6 @@ export default function CardFilter({ onFilter }) {
           </div>
         </form>
       </Form>
-    </div>
+    </section>
   );
 }

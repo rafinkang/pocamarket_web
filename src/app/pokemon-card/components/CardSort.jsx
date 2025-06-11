@@ -13,7 +13,7 @@ import { defaultSort } from "@/constants/pokemonCardFilter";
 export default function CardList({ totalCount, sortInfo, onSortInfo }) {
   return (
     <>
-      <div className="CardListToolbar w-full flex flex-wrap justify-between items-center p-[20px] bg-[#eaeaea] rounded-md mb-4 gap-2">
+      <section className="CardListToolbar w-full flex flex-wrap justify-between items-center p-[20px] bg-[#eaeaea] rounded-md mb-4 gap-2">
         <div className="totalCount mb-10px">
           <span>
             총 {totalCount ? totalCount : 0}개의 카드가 검색되었습니다.
@@ -34,7 +34,7 @@ export default function CardList({ totalCount, sortInfo, onSortInfo }) {
           </Select>
           <div>보기 형태</div>
         </div>
-      </div>
+      </section>
     </>
   );
 }

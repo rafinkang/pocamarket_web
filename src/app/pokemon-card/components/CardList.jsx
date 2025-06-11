@@ -3,7 +3,7 @@
 export default function CardList({ cardList, CardComponent }) {
   return (
     <>
-      <div className="flex flex-col items-center w-full">
+      <section className="flex flex-col items-center w-full">
         <div className="contentList w-full px-[20px]">
           {cardList && cardList.length > 0 ? (
             <ul className="grid items-center justify-items-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
@@ -24,7 +24,7 @@ export default function CardList({ cardList, CardComponent }) {
             </div>
           )}
         </div>
-      </div>
+      </section>
     </>
   );
 }
