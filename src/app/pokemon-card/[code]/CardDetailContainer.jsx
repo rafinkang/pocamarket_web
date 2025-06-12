@@ -2,7 +2,7 @@
 
 import { getPokemonCardDetail } from "@/api/pokemon-card";
 import { useState, useEffect } from "react";
-import PokemonCard from "../components/PokemonCard";
+import PokemonCard from "@/components/list/PokemonCard";
 
 export default function CardDetailContainer({ code }) {
     const [cardDetail, setCardDetail] = useState(null);
