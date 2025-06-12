@@ -59,25 +59,22 @@ export default function TcgCode() {
   const [columnVisibility, setColumnVisibility] = useState({})
   const [rowSelection, setRowSelection] = useState({})
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [editingRow, setEditingRow] = useState(null);
   const [data, setData] = useState([{
+    tcgCodeId: 1,
     tcgCode: "포켓몬카드게임코드번호이다",
-    uuid: 7211,
-    status: 1,
     memo: "메모메모메모",
   },
   {
+    tcgCodeId: 2,
     tcgCode: "포켓몬카드게임코드번호이다2",
-    uuid: 7212,
-    status: 0,
     memo: "메모메모메모2",
   },
   {
+    tcgCodeId: 3,
     tcgCode: "포켓몬카드게임코드번호이다3",
-    uuid: 7213,
-    status: 1,
     memo: "메모메모메모3",
   },])
-  const [editingRow, setEditingRow] = useState(null);
 
   // 수정 버튼 클릭 핸들러
   const handleEditClick = (rowData) => {
@@ -91,6 +88,58 @@ export default function TcgCode() {
       setEditingRow(null);
     }
     setIsDialogOpen(open);
+  };
+
+  const handleFormSubmit = async (formData) => {
+    try {
+      if (editingRow) {
+        // 항목수정 API 호출
+        // 기존 항목 수정
+        setData(prevData =>
+          prevData.map(item =>
+            item.tcgCodeId === editingRow.tcgCodeId
+              ? {
+                ...item,
+                tcgCode: formData.tcgCode,
+                memo: formData.memo
+              }
+              : item
+          )
+        );
+      } else {
+        // 신규추가 API 호출
+        // 새 항목 추가
+        const newItem = {
+          tcgCodeId: 99,
+          tcgCode: formData.tcgCode,
+          memo: formData.memo,
+        };
+        setData(prevData => [...prevData, newItem]);
+      }
+      setIsDialogOpen(false);
+      return true; // 성공 시 true 반환
+    } catch (error) {
+      console.error('데이터 저장 오류:', error);
+      return false; // 실패 시 false 반환
+    }
+  };
+
+  // 삭제 핸들러 함수
+  const handleDelete = async (rowData) => {
+    if (!window.confirm('정말로 이 TCG 코드를 삭제하시겠습니까?')) {
+      return;
+    }
+
+    try {
+      // await deleteTcgCode(rowData.tcgCodeId);
+      // 성공 시 로컬 상태에서 제거
+      setData(prevData =>
+        prevData.filter(item => item.tcgCodeId !== rowData.tcgCodeId)
+      );
+    } catch (error) {
+      console.error('삭제 중 오류 발생:', error);
+      // 에러 처리 (예: 토스트 메시지)
+    }
   };
 
   const columns = [
@@ -131,7 +180,10 @@ export default function TcgCode() {
               <DropdownMenuItem
                 onClick={() => { handleEditClick(rowData) }}
               >수정</DropdownMenuItem>
-              <DropdownMenuItem>삭제</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => handleDelete(rowData)}
+                className="text-red-600 focus:text-red-600"
+              >삭제</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         )
@@ -165,7 +217,6 @@ export default function TcgCode() {
       <CardHeader>
         <CardTitle>친구 코드</CardTitle>
         <CardDescription>친구 코드를 복사하여 친구에게 공유할 수 있습니다.</CardDescription>
-        <CardAction>Card Action</CardAction>
       </CardHeader>
       <CardContent>
         <div className="w-full">
@@ -228,6 +279,7 @@ export default function TcgCode() {
           open={isDialogOpen}
           onOpenChange={handleDialogOpenChange}
           initialData={editingRow}
+          onSubmit={handleFormSubmit}
         />
       </CardFooter>
     </Card>
