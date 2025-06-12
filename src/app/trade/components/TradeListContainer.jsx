@@ -92,6 +92,7 @@ export default function TradeListContainer() {
       setWho(select);
       setIsCardSearch(true);
       setPlaceholder(select == "my" ? "내가 가진 카드" : "원하는 카드");
+      // setActiveCard(select);
     }
   };
 

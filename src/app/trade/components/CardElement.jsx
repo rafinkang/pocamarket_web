@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-
+import { useTrade } from "./TradeProvider";
 import PokemonCard from "@/components/list/PokemonCard";
 
 export default function CardElement({
@@ -9,16 +8,16 @@ export default function CardElement({
   priority = false,
   testMode = true,
 }) {
-  const [isError, setIsErorr] = useState(false);
-
-  const imageHandleError = () => {
-    setIsErorr(true);
-  };
+  const { updateSelectCardInfo, activeCard } = useTrade();
 
   const onClickHandler = () => {
-    // 누르면 카드 선택 카드 반영
-    console.log("카드 버튼 눌림");
-    console.log(data);
+    // activeCard가 없으면 아무것도 하지 않음
+    if (!activeCard) return;
+    updateSelectCardInfo({
+      code: data.code,
+      name: data.nameKo,
+      type: activeCard,
+    });
   };
 
   return (

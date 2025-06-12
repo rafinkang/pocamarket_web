@@ -1,19 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 import { useTrade } from "./TradeProvider";
 import SelectedCard from "./SelectedCard";
 
-const selectCardInfo = {
-  code: null,
-  name: null,
-};
 
 export default function TradeSearch({ onSearch, onCardButton }) {
-  // const [isSearchList, setIsSearchList] = useState(false);
-  const { selectedCard, handleCardClick, addYourCard, resetSelectCard } =
+  const { selectedCardList, setActiveCard, resetSelectCard } =
     useTrade();
 
   // 필터 제출
@@ -45,9 +39,9 @@ export default function TradeSearch({ onSearch, onCardButton }) {
     }
   };
 
-  const onAddYourCard = () => {
-    addYourCard({ ...selectCardInfo });
-  };
+  // const onAddYourCard = () => {
+  //   addYourCard({ ...selectCardInfo });
+  // };
 
   // 필터 초기화
   const handleReset = () => {
@@ -58,38 +52,26 @@ export default function TradeSearch({ onSearch, onCardButton }) {
     <section id="formBody" className="w-full">
       <div className="flex items-center gap-6">
         <div className="flex items-center flex-grow gap-2">
-          <button
-            className="myCardBtn"
-            onClick={() => {
-              onCardButton("my");
-              handleCardClick("my");
-            }}
-          >
-            <SelectedCard type="my" cardName="없음" />
-            <Input className="w-[100%] bg-white hidden" />
-          </button>
-
-          {selectedCard.your.map((card, index) => (
+          {selectedCardList.map(card => (
             <button
-              key={`your-${index}`}
-              className="yourCardBtn"
+              key={card.type}
+              className="tradeCardBtn"
               onClick={() => {
-                onCardButton(`your-${index}`);
-                handleCardClick(`your-${index}`);
+                onCardButton(card.type);
+                setActiveCard(card.type);
               }}
             >
               <SelectedCard
-                type={`your-${index}`}
-                subject="원하는 카드"
-                cardName="없음"
+                code={card.code}
+                name={card.name}
+                type={card.type}
               />
-              <Input className="w-[100%] bg-white hidden" />
             </button>
           ))}
 
-          {selectedCard.your.length < 5 && (
+{/*           {selectedCardList.your.length < 5 && (
             <button onClick={onAddYourCard}>카드 추가</button>
-          )}
+          )} */}
         </div>
 
         <div className="buttonContainer flex items-right gap-4 justify-end">

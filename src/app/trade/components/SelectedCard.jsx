@@ -2,25 +2,28 @@
 
 import { useTrade } from "./TradeProvider";
 import Image from "next/image";
+import { S3_IMAGES_BASE_URL } from "@/constants/config";
 
-/*
-testMode
-    ? "/images/cardback.webp"
-    : `${S3_IMAGES_BASE_URL}/${
-        data?.code ? data.code : "a1-001"
-    }.webp`
-*/
-
-export default function SelectedCard({
-  type,
-  subject = "내가 가진 카드",
-  imgSrc = "/images/cardback.webp",
-  cardName = "선택된 카드 없음",
-}) {
+export default function SelectedCard({ code = null, name = null, type }) {
   const { activeCard } = useTrade();
+  const subject = type === "my" ? "내가 가진 카드" : "원하는 카드";
   const isActive = activeCard === type;
 
   let isError = false;
+
+  const handleSelectCard = (type, card, index = null) => {
+    // setSelectedCardInfo((prev) => {
+    //   if (type === "my") {
+    //     return { ...prev, my: card }
+    //   } else if (type === "your" && index !== null) {
+    //     const newYour = [...prev.your]
+    //     newYour[index] = card
+    //     return { ...prev, your: newYour }
+    //   }
+    //   return prev
+    // })
+  }
+
   return (
     <>
       <div
@@ -44,7 +47,9 @@ export default function SelectedCard({
             ) : (
               <Image
                 className="rounded-[12px]"
-                src={imgSrc}
+                src={code 
+                  ? `${S3_IMAGES_BASE_URL}/${code}.webp`
+                  : "/images/cardback.webp"}
                 alt="Pokemon Card"
                 fill
                 sizes="(max-width: 400px) 100vw, 400px"
@@ -54,7 +59,7 @@ export default function SelectedCard({
               />
             )}
           </div>
-          <p>{cardName}</p>
+          <p>{name || "선택된 카드 없음"}</p>
         </div>
       </div>
     </>
