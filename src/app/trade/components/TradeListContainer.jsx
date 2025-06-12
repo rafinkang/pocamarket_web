@@ -2,17 +2,13 @@
 
 import { useState, useEffect, useRef } from "react";
 
-// API
-// import { getTradeList } from "@/api/pokemon-card"; 교환 리스트
-
 // 공용 컴포넌트
 import { TradeProvider } from "./TradeProvider";
 
 import TradeSearch from "./TradeSearch";
 import TradeList from "./TradeList";
 
-import CardSearch from "./CardSearch";
-import CardList from "@/app/pokemon-card/components/CardList";
+import CardList from "./CardList";
 
 import CommonPagination from "../../../components/pagination/Pagination";
 import { parseQueryString, makeQueryString } from "@/utils/queryString";
@@ -28,6 +24,7 @@ export default function TradeListContainer() {
   const [who, setWho] = useState(false);
 
   const [filterQuery, setFilterQuery] = useState({});
+  const [placeholder, setPlaceholder] = useState("내가 원하는 카드");
   const isPopState = useRef(false);
 
   useEffect(() => {
@@ -94,6 +91,7 @@ export default function TradeListContainer() {
     } else {
       setWho(select);
       setIsCardSearch(true);
+      setPlaceholder(select == "my" ? "내가 가진 카드" : "원하는 카드");
     }
   };
 
@@ -104,10 +102,7 @@ export default function TradeListContainer() {
 
         {isCardSearch && (
           <div className="cardWrap">
-            <CardSearch
-              placeholder={who == "my" ? "내가 가진 카드" : "원하는 카드"}
-            />
-            <CardList />
+            <CardList placeholder={placeholder}/>
           </div>
         )}
 
