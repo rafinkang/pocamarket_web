@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card"
 import MyInfoPage from "./MyInfo"
 import TcgCode from "./TcgCode"
+import MyReport from "./MyReport"
 
 
 export default function MyPageContainer() {
@@ -49,7 +50,9 @@ export default function MyPageContainer() {
           <p>Card Footer</p>
         </CardFooter>
       </Card>
-    </>
 
+      <MyReport />
+      
+    </>
   )
 }

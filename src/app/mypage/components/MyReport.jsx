@@ -1,0 +1,150 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
+export default function MyReport() {
+  const [reportList, setReportList] = useState([
+    {
+      id: 1,
+      tradeId: 1,
+      reporterNickname: "test",
+      content: "사기는 안돼요.",
+      createdAt: "2025-01-01",
+      status: 1,
+      resultAt: null,
+    },
+    {
+      id: 2,
+      tradeId: 2,
+      reporterNickname: "test2",
+      content: "나한테 가져간 피카츄 돌려줘",
+      createdAt: "2025-01-02",
+      status: 2,
+      resultAt: "2025-01-03",
+    },
+    {
+      id: 3,
+      tradeId: 3,
+      reporterNickname: "test3",
+      content: "사기꾼33333",
+      createdAt: "2025-01-03",
+      status: 3,
+      resultAt: "2025-01-04",
+    },
+    {
+      id: 4,
+      tradeId: 4,
+      reporterNickname: "test4",
+      content: "제발 정지좀",
+      createdAt: "2025-01-04",
+      status: 1,
+      resultAt: null,
+    },
+    {
+      id: 5,
+      tradeId: 5,
+      reporterNickname: "test5",
+      content: "왜 하늘은 나를 낳고 사기꾼을 낳았는가",
+      createdAt: "2025-01-05",
+      status: 2,
+      resultAt: "2025-01-06",
+    },
+    {
+      id: 6,
+      tradeId: 6,
+      reporterNickname: "test6",
+      content: "GEN vs HEL",
+      createdAt: "2025-01-06",
+      status: 3,
+      resultAt: "2025-01-07",
+    },
+    {
+      id: 7,
+      tradeId: 7,
+      reporterNickname: "test7",
+      content:
+        "마작이 하고 싶어요오오오오오오오오오오오오오오오오오오오옹\n오오오오오오오오오오오오오",
+      createdAt: "2025-01-07",
+      status: 1,
+      resultAt: null,
+    },
+  ]);
+
+  const statusList = {
+    1: "처리 중",
+    2: "처리 완료",
+    3: "처리 보류",
+  };
+
+  useEffect(() => {
+    setReportList((prev) => {
+      return prev.map((report) => {
+        return { ...report, status: statusList[report.status] };
+      });
+    });
+  }, []);
+
+  return (
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle>나의 신고페이지</CardTitle>
+        <CardDescription>신고 내역을 확인할 수 있습니다.</CardDescription>
+        {/* <CardAction>신고 내역 확인</CardAction> */}
+      </CardHeader>
+      <CardContent>
+        <p>교환 목록 출력</p>
+        {reportList.length > 0 ? (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>번호</TableHead>
+                <TableHead>신고대상</TableHead>
+                <TableHead>신고 사유</TableHead>
+                <TableHead>신고 일시</TableHead>
+                <TableHead>신고 상태</TableHead>
+                <TableHead>신고 처리 일시</TableHead>
+                <TableHead>신고 페이지</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {reportList.map((report) => (
+                <TableRow key={report.id}>
+                  <TableCell>{report.id}</TableCell>
+                  <TableCell>{report.reporterNickname}</TableCell>
+                  <TableCell className="truncate max-w-[200px]">
+                    {report.content}
+                  </TableCell>
+                  <TableCell>{report.createdAt}</TableCell>
+                  <TableCell>{report.status}</TableCell>
+                  <TableCell>{report.resultAt}</TableCell>
+                  <TableCell>
+                    <a href={`/trade/${report.tradeId}`}>이동</a>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        ) : (
+          <p>신고 내역이 없습니다.</p>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
