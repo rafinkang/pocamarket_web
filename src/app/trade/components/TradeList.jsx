@@ -8,7 +8,7 @@ export default function TradeList({ tradeList }) {
       <section className="flex flex-col items-center w-full">
         <div className="contentList w-full px-[20px]">
           {tradeList && tradeList.length > 0 ? (
-            <ul className="grid items-center justify-items-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              <ul className="flex flex-col items-center justify-items-center w-full">
               {tradeList.map((card, index) => (
                 <li
                   className="flex items-center justify-center w-full max-w-[300px]"
@@ -20,9 +20,23 @@ export default function TradeList({ tradeList }) {
             </ul>
           ) : (
             <div>
-              <ul>
-                <li className="flex items-center justify-center w-full max-w-[300px]">
-                  <TradeElement />
+              <ul className="flex flex-col items-center justify-items-center w-full">
+                <li className="flex items-center justify-center w-full min-w-[300px]">
+                  <TradeElement myCard={{code: "a1-001", name: "테스트 마이 카드 나중에 코드 지워주세요"}} wantedCards={[{code: "a1-002", name: "테스트 원하는 카드"}]} />
+                </li>
+                <li className="flex items-center justify-center w-full min-w-[300px]">
+                  <TradeElement myCard={{code: "a1-001", name: "테스트 마이 카드 나중에 코드 지워주세요"}} 
+                  wantedCards={[{code: "a1-002", name: "테스트 원하는 카드"}, {code: "a1-003", name: "테스트 원하는 카드2"}]} />
+                </li>
+                <li className="flex items-center justify-center w-full min-w-[300px]">
+                  <TradeElement myCard={{code: "a1-001", name: "테스트 마이 카드 나중에 코드 지워주세요"}} 
+                  wantedCards={[
+                      {code: "a1-001", name: "테스트 원하는 카드1"}, 
+                      {code: "a1-002", name: "테스트 원하는 카드2"},
+                      {code: "a1-003", name: "테스트 원하는 카드3"},
+                      {code: "a1-004", name: "테스트 원하는 카드4"},
+                      {code: "a1-005", name: "테스트 원하는 카드5"},
+                    ]} />
                 </li>
               </ul>
               <div className="py-10 text-gray-400 text-lg text-center">
