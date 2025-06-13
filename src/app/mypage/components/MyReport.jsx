@@ -96,7 +96,10 @@ export default function MyReport() {
   useEffect(() => {
     setReportList((prev) => {
       return prev.map((report) => {
-        return { ...report, status: statusList[report.status] };
+        return {
+          ...report,
+          status: { key: report.status, value: statusList[report.status] },
+        };
       });
     });
   }, []);
@@ -109,33 +112,38 @@ export default function MyReport() {
         {/* <CardAction>신고 내역 확인</CardAction> */}
       </CardHeader>
       <CardContent>
-        <p>교환 목록 출력</p>
+        <p>신고 내역</p>
         {reportList.length > 0 ? (
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>번호</TableHead>
-                <TableHead>신고대상</TableHead>
-                <TableHead>신고 사유</TableHead>
-                <TableHead>신고 일시</TableHead>
-                <TableHead>신고 상태</TableHead>
-                <TableHead>신고 처리 일시</TableHead>
-                <TableHead>신고 페이지</TableHead>
+                <TableHead className="text-center">번호</TableHead>
+                <TableHead className="text-center">신고대상</TableHead>
+                <TableHead className="text-center">신고 사유</TableHead>
+                <TableHead className="text-center">신고 일시</TableHead>
+                <TableHead className="text-center">신고 상태</TableHead>
+                <TableHead className="text-center">신고 처리 일시</TableHead>
+                <TableHead className="text-center">신고 페이지</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody>
+            <TableBody className={"text-center"}>
               {reportList.map((report) => (
                 <TableRow key={report.id}>
                   <TableCell>{report.id}</TableCell>
                   <TableCell>{report.reporterNickname}</TableCell>
-                  <TableCell className="truncate max-w-[200px]">
+                  <TableCell className="text-left truncate max-w-[200px]">
                     {report.content}
                   </TableCell>
                   <TableCell>{report.createdAt}</TableCell>
-                  <TableCell>{report.status}</TableCell>
+                  <TableCell>{report.status?.value}</TableCell>
                   <TableCell>{report.resultAt}</TableCell>
                   <TableCell>
-                    <a href={`/trade/${report.tradeId}`}>이동</a>
+                    <a
+                      className="text-blue-500 hover:underline hover:text-blue-600"
+                      href={`/trade/${report.tradeId}`}
+                    >
+                      이동
+                    </a>
                   </TableCell>
                 </TableRow>
               ))}
