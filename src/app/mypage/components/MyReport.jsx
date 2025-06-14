@@ -22,8 +22,6 @@ import {
 export default function MyReport() {
   const [reportList, setReportList] = useState([
     {
-      id: 1,
-      tradeId: 1,
       reporterNickname: "test",
       content: "사기는 안돼요.",
       createdAt: "2025-01-01",
@@ -31,8 +29,6 @@ export default function MyReport() {
       resultAt: null,
     },
     {
-      id: 2,
-      tradeId: 2,
       reporterNickname: "test2",
       content: "나한테 가져간 피카츄 돌려줘",
       createdAt: "2025-01-02",
@@ -40,8 +36,6 @@ export default function MyReport() {
       resultAt: "2025-01-03",
     },
     {
-      id: 3,
-      tradeId: 3,
       reporterNickname: "test3",
       content: "사기꾼33333",
       createdAt: "2025-01-03",
@@ -49,8 +43,6 @@ export default function MyReport() {
       resultAt: "2025-01-04",
     },
     {
-      id: 4,
-      tradeId: 4,
       reporterNickname: "test4",
       content: "제발 정지좀",
       createdAt: "2025-01-04",
@@ -58,8 +50,6 @@ export default function MyReport() {
       resultAt: null,
     },
     {
-      id: 5,
-      tradeId: 5,
       reporterNickname: "test5",
       content: "왜 하늘은 나를 낳고 사기꾼을 낳았는가",
       createdAt: "2025-01-05",
@@ -67,8 +57,6 @@ export default function MyReport() {
       resultAt: "2025-01-06",
     },
     {
-      id: 6,
-      tradeId: 6,
       reporterNickname: "test6",
       content: "GEN vs HEL",
       createdAt: "2025-01-06",
@@ -76,8 +64,6 @@ export default function MyReport() {
       resultAt: "2025-01-07",
     },
     {
-      id: 7,
-      tradeId: 7,
       reporterNickname: "test7",
       content:
         "마작이 하고 싶어요오오오오오오오오오오오오오오오오오오오옹\n오오오오오오오오오오오오오",
@@ -117,26 +103,16 @@ export default function MyReport() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-center">번호</TableHead>
-                <TableHead className="text-center">신고대상</TableHead>
+                <TableHead className="text-center">신고 페이지</TableHead>
                 <TableHead className="text-center">신고 사유</TableHead>
                 <TableHead className="text-center">신고 일시</TableHead>
                 <TableHead className="text-center">신고 상태</TableHead>
                 <TableHead className="text-center">신고 처리 일시</TableHead>
-                <TableHead className="text-center">신고 페이지</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody className={"text-center"}>
               {reportList.map((report) => (
                 <TableRow key={report.id}>
-                  <TableCell>{report.id}</TableCell>
-                  <TableCell>{report.reporterNickname}</TableCell>
-                  <TableCell className="text-left truncate max-w-[200px]">
-                    {report.content}
-                  </TableCell>
-                  <TableCell>{report.createdAt}</TableCell>
-                  <TableCell>{report.status?.value}</TableCell>
-                  <TableCell>{report.resultAt}</TableCell>
                   <TableCell>
                     <a
                       className="text-blue-500 hover:underline hover:text-blue-600"
@@ -145,6 +121,12 @@ export default function MyReport() {
                       이동
                     </a>
                   </TableCell>
+                  <TableCell className="text-left truncate max-w-[200px]">
+                    {report.content}
+                  </TableCell>
+                  <TableCell>{report.createdAt}</TableCell>
+                  <TableCell>{report.status?.value}</TableCell>
+                  <TableCell>{report.resultAt}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

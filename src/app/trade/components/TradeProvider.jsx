@@ -5,15 +5,13 @@ import { createContext, useContext, useState } from "react";
 const TradeContext = createContext();
 
 export function TradeProvider({ children }) {
-  const cardInfo = {code: null, name: null, type: null};
+  const cardInfo = { code: null, name: null, type: null };
   const [activeCard, setActiveCard] = useState(null);
   const [selectedCardList, setSelectedCardList] = useState([
-    {...cardInfo, type: "my"},
-    {...cardInfo, type: "your-0"},
-    {...cardInfo, type: "your-1"},
-    {...cardInfo, type: "your-2"},
-    {...cardInfo, type: "your-3"},
-    {...cardInfo, type: "your-4"},
+    { ...cardInfo, type: "my" },
+    { ...cardInfo, type: "your-0" },
+    { ...cardInfo, type: "your-1" },
+    { ...cardInfo, type: "your-2" },
   ]);
 
   // const addYourCard = (card = {code: null, name: null}) => {
@@ -30,12 +28,10 @@ export function TradeProvider({ children }) {
 
   const resetSelectCard = () => {
     setSelectedCardList([
-      {...cardInfo, type: "my"},
-      {...cardInfo, type: "your-0"},
-      {...cardInfo, type: "your-1"},
-      {...cardInfo, type: "your-2"},
-      {...cardInfo, type: "your-3"},
-      {...cardInfo, type: "your-4"},
+      { ...cardInfo, type: "my" },
+      { ...cardInfo, type: "your-0" },
+      { ...cardInfo, type: "your-1" },
+      { ...cardInfo, type: "your-2" },
     ]);
   };
 
@@ -44,12 +40,8 @@ export function TradeProvider({ children }) {
   // };
 
   const updateSelectCardInfo = ({ code, name, type }) => {
-    setSelectedCardList(prev =>
-      prev.map(card =>
-        card.type === type
-          ? { ...card, code, name }
-          : card
-      )
+    setSelectedCardList((prev) =>
+      prev.map((card) => (card.type === type ? { ...card, code, name } : card))
     );
   };
 
@@ -64,7 +56,9 @@ export function TradeProvider({ children }) {
     resetSelectCard,
   };
 
-  return <TradeContext.Provider value={value}>{children}</TradeContext.Provider>;
+  return (
+    <TradeContext.Provider value={value}>{children}</TradeContext.Provider>
+  );
 }
 
 export const useTrade = () => {
