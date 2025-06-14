@@ -111,8 +111,8 @@ export default function MyReport() {
               </TableRow>
             </TableHeader>
             <TableBody className={"text-center"}>
-              {reportList.map((report) => (
-                <TableRow key={report.id}>
+              {reportList.map((report, index) => (
+                <TableRow key={index}>
                   <TableCell>
                     <a
                       className="text-blue-500 hover:underline hover:text-blue-600"
