@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Link from "next/link"
+import * as React from "react";
+import Link from "next/link";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -10,10 +10,9 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu"
+} from "@/components/ui/navigation-menu";
 
-import useAuthStore from '@/store/authStore'
-
+import useAuthStore from "@/store/authStore";
 
 export function HeaderNav() {
   const isLogin = useAuthStore((state) => state.isLogin);
@@ -21,7 +20,6 @@ export function HeaderNav() {
   return (
     <NavigationMenu viewport={false} className="max-w-[100%]">
       <NavigationMenuList>
-
         <NavigationMenuItem>
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
             <Link href="/">홈</Link>
@@ -32,8 +30,10 @@ export function HeaderNav() {
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
             <Link href="/pokemon-card">포켓몬 카드</Link>
           </NavigationMenuLink>
+          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+            <Link href="/trade">카드 교환</Link>
+          </NavigationMenuLink>
         </NavigationMenuItem>
-        
       </NavigationMenuList>
 
       {/* 네비 우측 */}
@@ -52,14 +52,22 @@ export function HeaderNav() {
                         <Link href="/mypage">마이페이지</Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
-                        <button className="w-full text-left" onClick={() => useAuthStore.getState().logout()}>로그아웃</button>
+                        <button
+                          className="w-full text-left"
+                          onClick={() => useAuthStore.getState().logout()}
+                        >
+                          로그아웃
+                        </button>
                       </NavigationMenuLink>
                     </li>
                   </ul>
                 </NavigationMenuContent>
               </>
             ) : (
-              <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+              <NavigationMenuLink
+                asChild
+                className={navigationMenuTriggerStyle()}
+              >
                 <Link href="/login">로그인</Link>
               </NavigationMenuLink>
             )}
@@ -67,6 +75,5 @@ export function HeaderNav() {
         </NavigationMenuList>
       </div>
     </NavigationMenu>
-  )
+  );
 }
-
