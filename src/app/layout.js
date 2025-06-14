@@ -5,6 +5,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "@/styles/globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { Toaster } from "@/components/ui/sonner"
 
 // 폰트 설정
 const notoSansKr = Noto_Sans_KR({
@@ -38,6 +39,7 @@ export default function RootLayout({ children }) {
         <main className="min-h-[calc(100vh_-_112px)] p-8 pb-20 sm:py-10 sm:px-20 font-[family-name:var(--font-geist-sans)] gap-[32px] w-full flex flex-col">
           {children}
         </main>
+        <Toaster />
         <Footer />
       </body>
     </html>
