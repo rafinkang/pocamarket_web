@@ -23,7 +23,7 @@ export default function CardElement({
   return (
     <button
       onClick={onClickHandler}
-      className="no-underline block min-w-[200px] max-w-[400px] w-full h-[100%] my-2 bg-[#f8f9fa] shadow-lg"
+      className="no-underline block min-w-[200px] max-w-[300px] w-full my-2 bg-[#f8f9fa] shadow-lg"
     >
       <PokemonCard data={data} priority={priority} testMode={testMode} />
     </button>

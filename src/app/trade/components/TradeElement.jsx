@@ -1,7 +1,15 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
-
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardDescription,
+  CardTitle,
+} from "@/components/ui/card";
+import Link from "next/link";
 /*
 testMode
     ? "/images/cardback.webp"
@@ -17,86 +25,102 @@ export default function TradeElement({
     code: "a1-001",
     name: "테스트 마이 카드",
   },
-  wantedCards = [{
-    code: "a1-002",
-    name: "테스트 원하는 카드"
-  }], // 원하는 카드들의 배열
+  wantedCards = [
+    {
+      code: "a1-002",
+      name: "테스트 원하는 카드",
+    },
+  ], // 원하는 카드들의 배열
 }) {
-  let isError = false;
+  const [isError, setIsError] = useState(false);
+
+  const imageHandleError = () => {
+    setIsError(true);
+  };
 
   return (
-    <div className="flex items-center gap-4 p-4 border rounded-lg">
-      {/* 내 카드 섹션 */}
-      <div className="flex-1">
-        <div className="flex gap-4">
-          <div className="relative w-[200px] aspect-[366/512]">
-            {isError ? (
-              <div className="errorBox">
-                <img
-                  className="rounded-[12px]"
-                  src="/images/cardback.webp"
-                  alt="errorImg"
-                  style={{ objectFit: "contain" }}
-                  sizes="(max-width: 400px) 100vw, 400px"
-                />
-              </div>
-            ) : (
-              <a href={`/card/${myCard.code}`} target="_blank">
-                <Image
-                  className="rounded-[12px]"
-                  src="/images/cardback.webp"
-                  alt="My Pokemon Card"
-                  fill
-                  sizes="(max-width: 400px) 100vw, 400px"
-                  style={{ objectFit: "contain" }}
-                  priority={true}
-                  onError={() => (isError = true)}
-                />
-              </a>
-            )}
-          </div>
-          <div className="flex flex-col">
-            <p className="mb-2 font-medium">{tradeUserNickname}님의 카드</p>
-            <p className="self-center">{myCard.name}</p>
-          </div>
-        </div>
-      </div>
-
-      {/* 교환 화살표 */}
-      <div className="flex-none">
-        <span className="text-2xl">↔</span>
-      </div>
-
-      {/* 원하는 카드들 */}
-      <div className="flex-1">
-        <div className="flex flex-wrap gap-4">
-          {wantedCards.map((card, index) => (
-            <div key={index} className="flex gap-2">
-              <div className="relative w-[120px] aspect-[366/512]">
-                <a href={`/card/${card.code}`} target="_blank">
+    <Link href={`/trade/${tradeCode}`} className="w-full h-[100%]">
+      <div className="flex flex-wrap items-center gap-4 p-4 border rounded-lg w-full mx-auto h-[100%]">
+        {/* 내 카드 섹션 */}
+        <div className="w-[300px] shrink-0 h-[100%]">
+          <div className="w-full h-full bg-[#f8f9fa] shadow-lg">
+            <Card className="flex flex-row items-center rounded-[12px] p-4 h-full">
+              <div className="relative w-[80px] aspect-[366/512] shrink-0">
+                {isError ? (
+                  <div className="errorBox">
+                    <img
+                      className="rounded-[12px]"
+                      src="/images/cardback.webp"
+                      alt="errorImg"
+                      style={{ objectFit: "contain" }}
+                      sizes="(max-width: 400px) 100vw, 400px"
+                    />
+                  </div>
+                ) : (
                   <Image
                     className="rounded-[12px]"
                     src="/images/cardback.webp"
-                    alt={`Wanted Pokemon Card ${index + 1}`}
+                    alt="My Pokemon Card"
                     fill
                     sizes="(max-width: 400px) 100vw, 400px"
                     style={{ objectFit: "contain" }}
-                      onError={() => (isError = true)}
-                    />
-                </a>
+                    priority={true}
+                    onError={imageHandleError}
+                  />
+                )}
               </div>
-          <div className="flex flex-col">
-            <p className="self-center">{myCard.name}</p>
+              <div className="flex flex-col min-w-0 flex-1">
+                <h3 className="text-lg font-semibold truncate">
+                  {myCard.name}
+                </h3>
+                <p className="text-gray-600 truncate">
+                  {tradeUserNickname}님의 카드
+                </p>
+              </div>
+            </Card>
           </div>
-            </div>
-          ))}
+        </div>
+
+        {/* 교환 화살표 */}
+        <div className="flex items-center px-2">
+          <span className="text-2xl">↔</span>
+        </div>
+
+        {/* 원하는 카드들 */}
+        <div className="flex-1 min-w-0 h-[100%]">
+          <div className="flex flex-wrap h-full gap-4">
+            {wantedCards.map((card, index) => (
+              <div key={index} className="bg-[#f8f9fa] shadow-lg h-full">
+                <Card className="flex flex-row items-center rounded-[12px] p-4 h-full">
+                  <div className="relative w-[80px] aspect-[366/512] shrink-0">
+                    <Image
+                      className="rounded-[12px]"
+                      src="/images/cardback.webp"
+                      alt={`Wanted Pokemon Card ${index + 1}`}
+                      fill
+                      sizes="(max-width: 400px) 100vw, 400px"
+                      style={{ objectFit: "contain" }}
+                      onError={imageHandleError}
+                    />
+                  </div>
+                  <div className="flex flex-col min-w-0 flex-1">
+                    <h3 className="text-lg font-semibold truncate">
+                      {card.name}
+                    </h3>
+                  </div>
+                </Card>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 교환 정보 */}
+        <div className="flex flex-col items-center pl-2">
+          <p>교환 등록 날짜</p>
+          <p>교환 상태</p>
+          <p>교환 요청 건수</p>
         </div>
       </div>
-
-      {/* 교환 신청 버튼 */}
-      <button className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600" onClick={() => { window.location.href = `/trade/${tradeCode}` }}>
-        교환 신청
-      </button>
-    </div>
+    </Link>
   );
 }

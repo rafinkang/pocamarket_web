@@ -5,10 +5,8 @@ import { Button } from "@/components/ui/button";
 import { useTrade } from "./TradeProvider";
 import SelectedCard from "./SelectedCard";
 
-
 export default function TradeSearch({ onSearch, onCardButton }) {
-  const { selectedCardList, setActiveCard, resetSelectCard } =
-    useTrade();
+  const { selectedCardList, setActiveCard, resetSelectCard } = useTrade();
 
   // 필터 제출
   const onSubmit = (data) => {
@@ -50,44 +48,48 @@ export default function TradeSearch({ onSearch, onCardButton }) {
 
   return (
     <section id="formBody" className="w-full">
-      <div className="flex items-center gap-6">
-        <div className="flex items-center flex-grow gap-2">
-          {selectedCardList.map(card => (
-            <button
-              key={card.type}
-              className="tradeCardBtn"
-              onClick={() => {
-                onCardButton(card.type);
-                setActiveCard(card.type);
-              }}
-            >
-              <SelectedCard
-                code={card.code}
-                name={card.name}
-                type={card.type}
-              />
-            </button>
-          ))}
+      <div className="bg-[#f7f7f7] p-4 rounded min-w-[300px]">
+        <div className="flex flex-col gap-6 optionContainer">
+          <div className="flex items-center gap-2 searchbarContainer justify-between">
+            <div className="flex items-center flex-grow gap-2 overflow-x-auto">
+              {selectedCardList.map((card) => (
+                <button
+                  key={card.type}
+                  className="tradeCardBtn shrink-0"
+                  onClick={() => {
+                    onCardButton(card.type);
+                    setActiveCard(card.type);
+                  }}
+                >
+                  <SelectedCard
+                    code={card.code}
+                    name={card.name}
+                    type={card.type}
+                  />
+                </button>
+              ))}
 
-{/*           {selectedCardList.your.length < 5 && (
+              {/*           {selectedCardList.your.length < 5 && (
             <button onClick={onAddYourCard}>카드 추가</button>
           )} */}
-        </div>
+            </div>
+          </div>
 
-        <div className="buttonContainer flex items-right gap-4 justify-end">
-          <Button type="submit" className="ml-2">
-            검색
-          </Button>
-          <Button
-            type="button"
-            className="ml-4 bg-gray-300 text-black"
-            onClick={handleReset}
-          >
-            초기화
-          </Button>
-          <Button type="button" className="ml-2">
-            교환 등록
-          </Button>
+          <div className="buttonContainer flex items-right gap-4 justify-end">
+            <Button type="submit" className="ml-2">
+              검색
+            </Button>
+            <Button
+              type="button"
+              className="ml-4 bg-gray-300 text-black"
+              onClick={handleReset}
+            >
+              초기화
+            </Button>
+            <Button type="button" className="ml-2">
+              교환 등록
+            </Button>
+          </div>
         </div>
       </div>
     </section>

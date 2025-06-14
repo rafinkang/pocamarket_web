@@ -8,6 +8,7 @@ import { TradeProvider } from "./TradeProvider";
 import TradeSearch from "./TradeSearch";
 import TradeList from "./TradeList";
 
+import TradeDialog from "./TradeDialog";
 import CardList from "./CardList";
 
 import CommonPagination from "../../../components/pagination/Pagination";
@@ -102,9 +103,9 @@ export default function TradeListContainer() {
         <TradeSearch onCardButton={onCardButton} />
 
         {isCardSearch && (
-          <div className="cardWrap">
-            <CardList placeholder={placeholder}/>
-          </div>
+          <TradeDialog open={isCardSearch} onOpenChange={setIsCardSearch}>
+            <CardList placeholder={placeholder} />
+          </TradeDialog>
         )}
 
         <TradeList />
