@@ -12,6 +12,7 @@ import {
 import MyInfoPage from "./MyInfo"
 import TcgCode from "./TcgCode"
 import MyReport from "./MyReport"
+import MyTrade from "./MyTrade"
 
 
 export default function MyPageContainer() {
@@ -23,20 +24,8 @@ export default function MyPageContainer() {
 
       <TcgCode />
 
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle>나의 교환</CardTitle>
-          <CardDescription>Card Description</CardDescription>
-          <CardAction>Card Action</CardAction>
-        </CardHeader>
-        <CardContent>
-          <p>교환 목록 출력</p>
-        </CardContent>
-        <CardFooter>
-          <p>Card Footer</p>
-        </CardFooter>
-      </Card>
-
+      <MyTrade />
+      
       <Card className="w-full">
         <CardHeader>
           <CardTitle>나의 덱</CardTitle>
@@ -44,12 +33,14 @@ export default function MyPageContainer() {
           <CardAction>Card Action</CardAction>
         </CardHeader>
         <CardContent>
-          <p>덱 리스트 출력</p>
+          <p>덱 목록 출력</p>
         </CardContent>
         <CardFooter>
           <p>Card Footer</p>
         </CardFooter>
       </Card>
+
+      
 
       <MyReport />
       
