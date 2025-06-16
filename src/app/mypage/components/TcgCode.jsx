@@ -1,10 +1,9 @@
-"use client"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useState } from "react"
+"use client";
 
-
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useEffect, useState } from "react";
 
 import {
   Card,
@@ -14,7 +13,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 
 import {
   ColumnDef,
@@ -27,10 +26,10 @@ import {
   SortingState,
   useReactTable,
   VisibilityState,
-} from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+} from "@tanstack/react-table";
+import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 
-import { Checkbox } from "@/components/ui/checkbox"
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -39,7 +38,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -47,34 +46,46 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import TcgCodeDialog from "./TcgCodeDialog"
+} from "@/components/ui/table";
+import TcgCodeDialog from "./TcgCodeDialog";
 
-
+import { postTcgCode, getTcgCodeList } from "@/api/tcgCode";
 
 export default function TcgCode() {
-
-  const [sorting, setSorting] = useState([])
-  const [columnFilters, setColumnFilters] = useState([])
-  const [columnVisibility, setColumnVisibility] = useState({})
-  const [rowSelection, setRowSelection] = useState({})
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [sorting, setSorting] = useState([]);
+  const [columnFilters, setColumnFilters] = useState([]);
+  const [columnVisibility, setColumnVisibility] = useState({});
+  const [rowSelection, setRowSelection] = useState({});
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingRow, setEditingRow] = useState(null);
-  const [data, setData] = useState([{
-    tcgCodeId: 1,
-    tcgCode: "포켓몬카드게임코드번호이다",
-    memo: "메모메모메모",
-  },
-  {
-    tcgCodeId: 2,
-    tcgCode: "포켓몬카드게임코드번호이다2",
-    memo: "메모메모메모2",
-  },
-  {
-    tcgCodeId: 3,
-    tcgCode: "포켓몬카드게임코드번호이다3",
-    memo: "메모메모메모3",
-  },])
+  const [data, setData] = useState([
+    {
+      tcgCodeId: 1,
+      tcgCode: "포켓몬카드게임코드번호이다",
+      memo: "메모메모메모",
+    },
+    {
+      tcgCodeId: 2,
+      tcgCode: "포켓몬카드게임코드번호이다2",
+      memo: "메모메모메모2",
+    },
+    {
+      tcgCodeId: 3,
+      tcgCode: "포켓몬카드게임코드번호이다3",
+      memo: "메모메모메모3",
+    },
+  ]);
+
+  useEffect(() => {
+    async function fetchTcgCodeList() {
+      const res = await getTcgCodeList();
+      console.log("res ::: ", res);
+      // if (res && res.data) {
+      //   setMyInfo(res.data);
+      // }
+    }
+    fetchTcgCodeList();
+  }, []);
 
   // 수정 버튼 클릭 핸들러
   const handleEditClick = (rowData) => {
@@ -95,14 +106,14 @@ export default function TcgCode() {
       if (editingRow) {
         // 항목수정 API 호출
         // 기존 항목 수정
-        setData(prevData =>
-          prevData.map(item =>
+        setData((prevData) =>
+          prevData.map((item) =>
             item.tcgCodeId === editingRow.tcgCodeId
               ? {
-                ...item,
-                tcgCode: formData.tcgCode,
-                memo: formData.memo
-              }
+                  ...item,
+                  tcgCode: formData.tcgCode,
+                  memo: formData.memo,
+                }
               : item
           )
         );
@@ -110,34 +121,36 @@ export default function TcgCode() {
         // 신규추가 API 호출
         // 새 항목 추가
         const newItem = {
-          tcgCodeId: 99,
+          tcgCodeId: null,
           tcgCode: formData.tcgCode,
           memo: formData.memo,
         };
-        setData(prevData => [...prevData, newItem]);
+        const result = await postTcgCode(newItem);
+        console.log(result);
+        setData((prevData) => [...prevData, newItem]);
       }
       setIsDialogOpen(false);
       return true; // 성공 시 true 반환
     } catch (error) {
-      console.error('데이터 저장 오류:', error);
+      console.error("데이터 저장 오류:", error);
       return false; // 실패 시 false 반환
     }
   };
 
   // 삭제 핸들러 함수
   const handleDelete = async (rowData) => {
-    if (!window.confirm('정말로 이 TCG 코드를 삭제하시겠습니까?')) {
+    if (!window.confirm("정말로 이 TCG 코드를 삭제하시겠습니까?")) {
       return;
     }
 
     try {
       // await deleteTcgCode(rowData.tcgCodeId);
       // 성공 시 로컬 상태에서 제거
-      setData(prevData =>
-        prevData.filter(item => item.tcgCodeId !== rowData.tcgCodeId)
+      setData((prevData) =>
+        prevData.filter((item) => item.tcgCodeId !== rowData.tcgCodeId)
       );
     } catch (error) {
-      console.error('삭제 중 오류 발생:', error);
+      console.error("삭제 중 오류 발생:", error);
       // 에러 처리 (예: 토스트 메시지)
     }
   };
@@ -161,7 +174,7 @@ export default function TcgCode() {
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {
-        const rowData = row.original
+        const rowData = row.original;
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -178,18 +191,24 @@ export default function TcgCode() {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={() => { handleEditClick(rowData) }}
-              >수정</DropdownMenuItem>
+                onClick={() => {
+                  handleEditClick(rowData);
+                }}
+              >
+                수정
+              </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => handleDelete(rowData)}
                 className="text-red-600 focus:text-red-600"
-              >삭제</DropdownMenuItem>
+              >
+                삭제
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        )
+        );
       },
     },
-  ]
+  ];
 
   const table = useReactTable({
     data,
@@ -208,19 +227,18 @@ export default function TcgCode() {
       columnVisibility,
       rowSelection,
     },
-  })
-
+  });
 
   return (
-
     <Card className="w-full">
       <CardHeader>
         <CardTitle>친구 코드</CardTitle>
-        <CardDescription>친구 코드를 복사하여 친구에게 공유할 수 있습니다.</CardDescription>
+        <CardDescription>
+          친구 코드를 복사하여 친구에게 공유할 수 있습니다.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="w-full">
-
           <div className="rounded-md border">
             <Table>
               <TableHeader>
@@ -232,11 +250,11 @@ export default function TcgCode() {
                           {header.isPlaceholder
                             ? null
                             : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
                         </TableHead>
-                      )
+                      );
                     })}
                   </TableRow>
                 ))}
@@ -271,7 +289,6 @@ export default function TcgCode() {
               </TableBody>
             </Table>
           </div>
-
         </div>
       </CardContent>
       <CardFooter>
@@ -283,5 +300,5 @@ export default function TcgCode() {
         />
       </CardFooter>
     </Card>
-  )
+  );
 }
