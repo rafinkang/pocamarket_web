@@ -24,7 +24,6 @@ import {
 
 // store
 import useAuthStore from '@/store/authStore';
-import { useRouter } from 'next/navigation';
 
 // 클라이언트 컴포넌트 작성
 export default function Login({ test = null }) {
