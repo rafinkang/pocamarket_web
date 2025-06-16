@@ -18,32 +18,33 @@ import {
  * @returns {JSX.Element} 포켓몬 카드 컴포넌트
  */
 export default function PokemonCard({
-  data, 
-  priority = false, 
-  testMode = false, 
+  data,
+  priority = false,
+  testMode = false,
   showInfo = true,
+  ...props
 }) {
   return (
-      <Card className={ `flex flex-col items-center rounded-[12px] py-0 gap-0 max-w-[366px] ${!showInfo ? "shadow-none border-none" : ""}`}>
-        <CardHeader className="p-0 gap-0 w-full">
-          <PokemonCardImage
-            data={data}
-            priority={priority}
-            testMode={testMode}
-          />
-        </CardHeader>
-        {showInfo &&
-          <>
-            <CardContent className="w-full flex-1 flex flex-col justify-between mt-2">
-              <CardTitle>{data?.nameKo ? data.nameKo : "포켓몬 이름"}</CardTitle>
-              <CardDescription>
-                <p>{data?.type ? data.type : "포켓몬 타입"}</p>
-                <p>{data?.packSet ? data.packSet : "확장팩 이름"}</p>
-                <p>{data?.rarity ? data.rarity : "희귀도"}</p>
-              </CardDescription>
-            </CardContent>
-          </>
-        }
-      </Card>
+    <Card className={`flex flex-col items-center py-0 gap-0 max-w-[366px] ${!showInfo ? "shadow-none border-none" : ""} ${props.className}`}>
+      <CardHeader className="p-0 gap-0 w-full">
+        <PokemonCardImage
+          data={data}
+          priority={priority}
+          testMode={testMode}
+        />
+      </CardHeader>
+      {showInfo &&
+        <>
+          <CardContent className="w-full flex-1 flex flex-col justify-between mt-2">
+            <CardTitle>{data?.nameKo ? data.nameKo : "포켓몬 이름"}</CardTitle>
+            <CardDescription>
+              <p>{data?.type ? data.type : "포켓몬 타입"}</p>
+              <p>{data?.packSet ? data.packSet : "확장팩 이름"}</p>
+              <p>{data?.rarity ? data.rarity : "희귀도"}</p>
+            </CardDescription>
+          </CardContent>
+        </>
+      }
+    </Card>
   );
 }
