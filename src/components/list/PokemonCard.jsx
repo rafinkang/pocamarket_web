@@ -9,10 +9,19 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+/**
+ * 포켓몬 카드 컴포넌트
+ * @param {Object} data - 카드 데이터
+ * @param {boolean} priority - 이미지 우선 로딩 여부
+ * @param {boolean} testMode - 테스트 모드(카드 이미지 대신 뒷면 이미지 표시) 여부
+ * @param {boolean} showInfo - 카드 정보 표시 여부
+ * @returns {JSX.Element} 포켓몬 카드 컴포넌트
+ */
 export default function PokemonCard({
-  data,
-  priority = false,
-  testMode = false,
+  data, 
+  priority = false, 
+  testMode = false, 
+  showInfo = true,
 }) {
   return (
     <div className="min-w-[200px] max-w-[400px] w-full h-[100%] my-2 bg-[#f8f9fa] shadow-lg">
@@ -24,14 +33,18 @@ export default function PokemonCard({
             testMode={testMode}
           />
         </CardHeader>
-        <CardContent className="w-full flex-1 flex flex-col justify-between">
-          <CardTitle>{data?.nameKo ? data.nameKo : "포켓몬 이름"}</CardTitle>
-          <CardDescription>
-            <p>{data?.type ? data.type : "포켓몬 타입"}</p>
-            <p>{data?.packSet ? data.packSet : "확장팩 이름"}</p>
-            <p>{data?.rarity ? data.rarity : "희귀도"}</p>
-          </CardDescription>
-        </CardContent>
+        {showInfo &&
+          <>
+            <CardContent className="w-full flex-1 flex flex-col justify-between">
+              <CardTitle>{data?.nameKo ? data.nameKo : "포켓몬 이름"}</CardTitle>
+              <CardDescription>
+                <p>{data?.type ? data.type : "포켓몬 타입"}</p>
+                <p>{data?.packSet ? data.packSet : "확장팩 이름"}</p>
+                <p>{data?.rarity ? data.rarity : "희귀도"}</p>
+              </CardDescription>
+            </CardContent>
+          </>
+        }
       </Card>
     </div>
   );
