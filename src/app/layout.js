@@ -35,7 +35,7 @@ export default function RootLayout({ children }) {
     <html lang="ko" className="light layout-full">
       <body
         suppressHydrationWarning={true}
-        className={`${geistSans.variable} ${geistMono.variable} ${notoSansKr.className} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${notoSansKr.className} antialiased max-w-[1280px] mx-auto`}
       >
         <Header />
         <main className="min-h-[calc(100vh_-_112px)] p-8 pb-20 sm:py-10 sm:px-20 font-[family-name:var(--font-geist-sans)] gap-[32px] w-full flex flex-col">
