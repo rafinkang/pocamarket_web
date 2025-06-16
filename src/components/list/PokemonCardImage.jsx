@@ -20,7 +20,6 @@ export default function PokemonCardImage({
       {isError ? (
         <div className="errorBox">
           <img
-            className="rounded-[12px]"
             src="/images/cardback.webp"
             alt="errorImg"
             style={{ objectFit: "contain" }}
@@ -29,7 +28,6 @@ export default function PokemonCardImage({
         </div>
       ) : (
         <Image
-          className="rounded-[12px]"
           src={
             testMode
               ? "/images/cardback.webp"
