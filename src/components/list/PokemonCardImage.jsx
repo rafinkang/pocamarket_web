@@ -33,9 +33,8 @@ export default function PokemonCardImage({
           src={
             testMode
               ? "/images/cardback.webp"
-              : `${S3_IMAGES_BASE_URL}/${
-                  data?.code ? data.code : "a1-001"
-                }.webp`
+              : data?.code ? `${S3_IMAGES_BASE_URL}/${data.code}.webp`
+                : "/images/cardback.webp"
           }
           alt="Pokemon Card"
           fill

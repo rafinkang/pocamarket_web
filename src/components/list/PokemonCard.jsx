@@ -24,9 +24,8 @@ export default function PokemonCard({
   showInfo = true,
 }) {
   return (
-    <div className="min-w-[200px] max-w-[400px] w-full h-[100%] my-2 bg-[#f8f9fa] shadow-lg">
-      <Card className="flex flex-col items-center rounded-[12px] py-0 gap-0">
-        <CardHeader className="p-0 w-full">
+      <Card className={ `flex flex-col items-center rounded-[12px] py-0 gap-0 max-w-[366px] ${!showInfo ? "shadow-none border-none" : ""}`}>
+        <CardHeader className="p-0 gap-0 w-full">
           <PokemonCardImage
             data={data}
             priority={priority}
@@ -35,7 +34,7 @@ export default function PokemonCard({
         </CardHeader>
         {showInfo &&
           <>
-            <CardContent className="w-full flex-1 flex flex-col justify-between">
+            <CardContent className="w-full flex-1 flex flex-col justify-between mt-2">
               <CardTitle>{data?.nameKo ? data.nameKo : "포켓몬 이름"}</CardTitle>
               <CardDescription>
                 <p>{data?.type ? data.type : "포켓몬 타입"}</p>
@@ -46,6 +45,5 @@ export default function PokemonCard({
           </>
         }
       </Card>
-    </div>
   );
 }
