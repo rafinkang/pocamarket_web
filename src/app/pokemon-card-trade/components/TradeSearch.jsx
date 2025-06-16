@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 
 import { useTrade } from "./TradeProvider";
 import SelectedCard from "./SelectedCard";
+import Link from "next/link";
+import { POKEMON_CARD_TRADE } from "@/constants/path";
 
 export default function TradeSearch({ onSearch, onCardButton }) {
   const { selectedCardList, setActiveCard, resetSelectCard } = useTrade();
@@ -86,9 +88,11 @@ export default function TradeSearch({ onSearch, onCardButton }) {
             >
               초기화
             </Button>
-            <Button type="button" className="ml-2">
-              교환 등록
-            </Button>
+            <Link href={`${POKEMON_CARD_TRADE}/write`}>
+              <Button type="button" className="ml-2">
+                교환 등록
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

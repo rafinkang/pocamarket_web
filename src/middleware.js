@@ -24,5 +24,6 @@ export function middleware(request) {
 export const config = {
   matcher: [
     '/mypage/:path*', // mypage와 그 하위 모든 경로에 적용
+    '/pokemon-card-trade/write', // pokemon-card-trade 글 쓰기 페이지
   ],
 };
