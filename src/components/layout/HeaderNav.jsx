@@ -12,7 +12,8 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 
-import useAuthStore from "@/store/authStore";
+import useAuthStore from '@/store/authStore'
+import { POKEMON_CARD, POKEMON_CARD_TRADE, LOGIN, MYPAGE } from "@/constants/path"
 
 export function HeaderNav() {
   const isLogin = useAuthStore((state) => state.isLogin);
@@ -28,10 +29,13 @@ export function HeaderNav() {
 
         <NavigationMenuItem>
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <Link href="/pokemon-card">포켓몬 카드</Link>
+            <Link href={POKEMON_CARD}>포켓몬 카드</Link>
           </NavigationMenuLink>
+        </NavigationMenuItem>
+
+        <NavigationMenuItem>
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <Link href="/trade">카드 교환</Link>
+            <Link href={POKEMON_CARD_TRADE}>카드 교환</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
       </NavigationMenuList>
@@ -43,13 +47,13 @@ export function HeaderNav() {
             {isLogin ? (
               <>
                 <NavigationMenuTrigger>
-                  <Link href="/mypage">안녕하세요 {user.nickname}님😎</Link>
+                  <Link href={MYPAGE}>안녕하세요 {user.nickname}님😎</Link>
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-[200px] gap-4">
                     <li>
                       <NavigationMenuLink asChild>
-                        <Link href="/mypage">마이페이지</Link>
+                        <Link href={MYPAGE}>마이페이지</Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
                         <button
@@ -64,11 +68,8 @@ export function HeaderNav() {
                 </NavigationMenuContent>
               </>
             ) : (
-              <NavigationMenuLink
-                asChild
-                className={navigationMenuTriggerStyle()}
-              >
-                <Link href="/login">로그인</Link>
+              <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                <Link href={LOGIN}>로그인</Link>
               </NavigationMenuLink>
             )}
           </NavigationMenuItem>

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { SIGNUP } from '@/constants/path';
 import { toast } from "sonner"
+import { useRouter } from 'next/navigation';
 
 //api
 import { postLogin } from '@/api/login';
@@ -40,8 +41,6 @@ export default function Login({ test = null }) {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    console.log('test ::: ', test)
-
     // TODO 로그인 성공 후 프로세스 정의
     if (currentIsLogin && currentUser) {
       // 이전 페이지로 리다이렉트하거나 기본값으로 마이페이지

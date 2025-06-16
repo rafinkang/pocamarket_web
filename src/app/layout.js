@@ -30,9 +30,11 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  'use client'
   return (
     <html lang="ko" className="light layout-full">
       <body
+        suppressHydrationWarning={true}
         className={`${geistSans.variable} ${geistMono.variable} ${notoSansKr.className} antialiased`}
       >
         <Header />
