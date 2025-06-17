@@ -74,6 +74,11 @@ export default function TcgCode() {
           setData(res.data);
         }
       } catch (error) {
+        if (error?.response?.data?.message) {
+          alert(error.response.data.message);
+        } else {
+          alert(error.message);
+        }
         console.error("TCG 코드 목록 조회 실패:", error);
       }
     }
@@ -130,7 +135,11 @@ export default function TcgCode() {
       return true; // 성공 시 true 반환
     } catch (error) {
       console.error("데이터 저장 오류:", error);
-      alert(error.message);
+      if (error?.response?.data?.message) {
+        alert(error.response.data.message);
+      } else {
+        alert(error.message);
+      }
       return false; // 실패 시 false 반환
     }
   };
@@ -156,6 +165,11 @@ export default function TcgCode() {
         prevData.filter((item) => item.tcgCodeId !== rowData.tcgCodeId)
       );
     } catch (error) {
+      if (error?.response?.data?.message) {
+        alert(error.response.data.message);
+      } else {
+        alert(error.message);
+      }
       console.error("삭제 중 오류 발생:", error);
       // 에러 처리 (예: 토스트 메시지)
     }
