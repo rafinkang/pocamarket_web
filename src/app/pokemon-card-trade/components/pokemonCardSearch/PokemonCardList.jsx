@@ -1,7 +1,14 @@
 "use client";
 
 import { getPokemonCardList } from "@/api/pokemon-card";
-import { formSchema, defaultFilter, type, subtype, packSet, pack } from "@/constants/pokemonCardFilter";
+import {
+  formSchema,
+  defaultFilter,
+  type,
+  subtype,
+  packSet,
+  pack,
+} from "@/constants/pokemonCardFilter";
 
 import CardListContainer from "@/components/list/CardListContainer";
 import CardSearch from "@/components/search/CardSearch";
@@ -22,7 +29,11 @@ const parsingData = (res, setPage, setTotalPage, setTotalCount) => {
   return data.content;
 };
 
-export default function PokemonCardPage({placeholder = "내가 가진 카드"}) {
+export default function PokemonCardList({
+  placeholder = "내가 가진 카드",
+  itemComponent = CardElement,
+  onCardClick,
+}) {
   return (
     <CardListContainer
       fetchList={getPokemonCardList}
@@ -66,9 +77,15 @@ export default function PokemonCardPage({placeholder = "내가 가진 카드"}) 
           ]}
         />
       )}
-      ListComponent={(props) => <CardList {...props} ItemComponent={CardElement} />}
+      ListComponent={(props) => (
+        <CardList
+          {...props}
+          ItemComponent={itemComponent}
+          onItemClick={onCardClick}
+        />
+      )}
       PaginationComponent={CommonPagination}
       pageSize={10}
     />
   );
-} 
+}

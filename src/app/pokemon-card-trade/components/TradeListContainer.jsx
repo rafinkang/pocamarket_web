@@ -1,18 +1,20 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 // 공용 컴포넌트
 import { TradeProvider } from "./TradeProvider";
 
-import TradeSearch from "./TradeSearch";
+import FindCardBox from "./Search/FindCardBox";
 import TradeList from "./TradeList";
 
 import TradeDialog from "./TradeDialog";
-import CardList from "./CardList";
+import PokemonCardList from "./pokemonCardSearch/PokemonCardList";
 
 import CommonPagination from "../../../components/pagination/Pagination";
 import { parseQueryString, makeQueryString } from "@/utils/queryString";
+import SearchContainer from "./Search/SearchContainer";
+import Buttons from "./Search/Buttons";
 
 const parsingData = () => {};
 
@@ -22,11 +24,19 @@ export default function TradeListContainer() {
   const pageSize = 10;
 
   const [isCardSearch, setIsCardSearch] = useState(false);
-  const [who, setWho] = useState(false);
+  const [currentFindCardType, setCurrentFindCardType] = useState(null);
 
   const [filterQuery, setFilterQuery] = useState({});
   const [placeholder, setPlaceholder] = useState("내가 원하는 카드");
   const isPopState = useRef(false);
+
+  const cardInfo = { code: null, name: null, type: null };
+  const [findCardList, setFindCardList] = useState([
+    { ...cardInfo, findCardTtpe: "my" },
+    { ...cardInfo, findCardTtpe: "want-0" },
+    { ...cardInfo, findCardTtpe: "want-1" },
+    { ...cardInfo, findCardTtpe: "want-2" },
+  ]);
 
   useEffect(() => {
     // 마운트/새로고침/뒤로가기/앞으로가기 모두 처리
@@ -48,73 +58,78 @@ export default function TradeListContainer() {
     return () => window.removeEventListener("popstate", handlePopOrInit);
   }, []);
 
-  const createParams = () => {
-    let tPage = page ?? 0;
-    tPage = Math.min(page, totalPage);
-    return {
-      ...filterQuery,
-      page: tPage,
-      size: pageSize,
-      sort: sortInfo,
-    };
-  };
-
-  // useEffect(() => {
-  //   async function fetchCardList() {
-  //     const params = createParams();
-  //     try {
-  //       const res = await getPokemonCardList(params);
-
-  //       if (res && res.data.content) {
-  //         let result = parsingData(res, setPage, setTotalPage, setTotalCount);
-  //         // popstate로 인한 상태 변경이 아니면 pushState
-  //         if (!isPopState.current) {
-  //           const queryString = makeQueryString(params);
-  //           window.history.pushState(null, "", queryString);
-  //         }
-  //         isPopState.current = false; // 항상 리셋
-  //         setCardList(result);
-  //       } else {
-  //         throw new Error("CONTENT_UNDEFINED");
-  //       }
-  //     } catch (error) {
-  //       reset();
-  //     }
-  //   }
-
-  //   fetchCardList();
-  // }, [page]);
-
-  const onCardButton = (select) => {
-    if (who == select) {
-      setWho(null);
-      setIsCardSearch(false);
-    } else {
-      setWho(select);
+  const onFindCardButton = useCallback(
+    (findCardTtpe) => {
+      if (findCardTtpe === currentFindCardType) return;
+      setCurrentFindCardType(findCardTtpe);
       setIsCardSearch(true);
-      setPlaceholder(select == "my" ? "내가 가진 카드" : "원하는 카드");
-      // setActiveCard(select);
-    }
-  };
+    },
+    [currentFindCardType]
+  );
+
+  const onCardClick = useCallback(
+    (cardData) => {
+      if (!currentFindCardType || !cardData) return;
+
+      setFindCardList((prev) => {
+        // 이전 상태와 동일한 경우 업데이트 하지 않음
+        const existingCard = prev.find(
+          (card) => card.findCardTtpe === currentFindCardType
+        );
+        if (
+          existingCard &&
+          existingCard.code === cardData.code &&
+          existingCard.name === cardData.name &&
+          existingCard.type === cardData.type
+        ) {
+          return prev;
+        }
+
+        const newList = prev.map((findCard) =>
+          findCard.findCardTtpe === currentFindCardType
+            ? { ...findCard, ...cardData }
+            : findCard
+        );
+        return newList;
+      });
+
+      // 상태 업데이트를 배치로 처리
+      Promise.resolve().then(() => {
+        setIsCardSearch(false);
+        setCurrentFindCardType(null);
+      });
+    },
+    [currentFindCardType]
+  );
 
   return (
     <>
-      <TradeProvider>
-        <TradeSearch onCardButton={onCardButton} />
-
-        {isCardSearch && (
-          <TradeDialog open={isCardSearch} onOpenChange={setIsCardSearch}>
-            <CardList placeholder={placeholder} />
-          </TradeDialog>
+      <SearchContainer
+        findCardComponent={useCallback(
+          (props) => (
+            <FindCardBox
+              {...props}
+              onCardButton={onFindCardButton}
+              findCardList={findCardList}
+            />
+          ),
+          [onFindCardButton, findCardList]
         )}
+        // filterComponent={Filter}
+        // buttonsComponent={Buttons}
+      />
 
-        <TradeList />
-        <CommonPagination
-          page={page}
-          totalPage={totalPage}
-          onPageChange={setPage}
-        />
-      </TradeProvider>
+      <TradeDialog open={isCardSearch} onOpenChange={setIsCardSearch}>
+        <PokemonCardList placeholder={placeholder} onCardClick={onCardClick} />
+      </TradeDialog>
+
+      <TradeList />
+
+      <CommonPagination
+        page={page}
+        totalPage={totalPage}
+        onPageChange={setPage}
+      />
     </>
   );
 }

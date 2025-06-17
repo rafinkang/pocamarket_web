@@ -25,26 +25,29 @@ export default function PokemonCard({
   ...props
 }) {
   return (
-    <Card className={`flex flex-col items-center py-0 gap-0 max-w-[366px] ${!showInfo ? "shadow-none border-none" : ""} ${props.className}`}>
+    <Card
+      className={`flex flex-col items-center py-0 gap-0 max-w-[366px] ${
+        !showInfo ? "shadow-none border-none" : ""
+      } ${props.className}`}
+    >
       <CardHeader className="p-0 gap-0 w-full">
         <PokemonCardImage
           data={data}
           priority={priority}
           testMode={testMode}
+          className="w-full h-full object-contain"
         />
       </CardHeader>
-      {showInfo &&
-        <>
-          <CardContent className="w-full flex-1 flex flex-col justify-between mt-2">
-            <CardTitle>{data?.nameKo ? data.nameKo : "포켓몬 이름"}</CardTitle>
-            <CardDescription>
-              <p>{data?.type ? data.type : "포켓몬 타입"}</p>
-              <p>{data?.packSet ? data.packSet : "확장팩 이름"}</p>
-              <p>{data?.rarity ? data.rarity : "희귀도"}</p>
-            </CardDescription>
-          </CardContent>
-        </>
-      }
+      {showInfo && (
+        <CardContent className="w-full flex-1 flex flex-col justify-between mt-2">
+          <CardTitle>{data?.nameKo ? data.nameKo : "포켓몬 이름"}</CardTitle>
+          <CardDescription>
+            <p>{data?.type ? data.type : "포켓몬 타입"}</p>
+            <p>{data?.packSet ? data.packSet : "확장팩 이름"}</p>
+            <p>{data?.rarity ? data.rarity : "희귀도"}</p>
+          </CardDescription>
+        </CardContent>
+      )}
     </Card>
   );
 }

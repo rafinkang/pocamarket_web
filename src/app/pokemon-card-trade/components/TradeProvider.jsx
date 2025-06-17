@@ -2,9 +2,9 @@
 
 import { createContext, useContext, useState } from "react";
 
-const TradeContext = createContext();
+// const TradeContext = createContext();
 
-export function TradeProvider({ children }) {
+export function TradeProvider({ children, setIsCardSearch }) {
   const cardInfo = { code: null, name: null, type: null };
   const [activeCard, setActiveCard] = useState(null);
   const [selectedCardList, setSelectedCardList] = useState([
@@ -13,18 +13,6 @@ export function TradeProvider({ children }) {
     { ...cardInfo, type: "your-1" },
     { ...cardInfo, type: "your-2" },
   ]);
-
-  // const addYourCard = (card = {code: null, name: null}) => {
-  //   setSelectedCardList((prev) => {
-
-  //     const yourCardList = prev.filter(card => card.type !== "my");
-  //     // 최대 5개까지만 추가 가능
-  //     if (yourCardList.length <= 5) {
-  //       prev.push(card);
-  //     }
-  //     return prev;
-  //   });
-  // };
 
   const resetSelectCard = () => {
     setSelectedCardList([
@@ -48,6 +36,7 @@ export function TradeProvider({ children }) {
   const value = {
     activeCard,
     selectedCardList,
+    setIsCardSearch,
     setSelectedCardList,
     setActiveCard,
     // handleCardClick,
@@ -56,15 +45,15 @@ export function TradeProvider({ children }) {
     resetSelectCard,
   };
 
-  return (
-    <TradeContext.Provider value={value}>{children}</TradeContext.Provider>
-  );
+  // return (
+  //   <TradeContext.Provider value={value}>{children}</TradeContext.Provider>
+  // );
 }
 
-export const useTrade = () => {
-  const context = useContext(TradeContext);
-  if (context === undefined) {
-    throw new Error("useTrade must be used within a TradeProvider");
-  }
-  return context;
-};
+// export const useTrade = () => {
+//   const context = useContext(TradeContext);
+//   if (context === undefined) {
+//     throw new Error("useTrade must be used within a TradeProvider");
+//   }
+//   return context;
+// };
