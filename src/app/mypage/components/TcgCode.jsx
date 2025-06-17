@@ -49,7 +49,12 @@ import {
 } from "@/components/ui/table";
 import TcgCodeDialog from "./TcgCodeDialog";
 
-import { postTcgCode, getTcgCodeList } from "@/api/tcgCode";
+import {
+  postTcgCode,
+  getTcgCodeList,
+  updateTcgCode,
+  deleteTcgCode,
+} from "@/api/tcgCode";
 
 export default function TcgCode() {
   const [sorting, setSorting] = useState([]);
@@ -58,31 +63,19 @@ export default function TcgCode() {
   const [rowSelection, setRowSelection] = useState({});
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingRow, setEditingRow] = useState(null);
-  const [data, setData] = useState([
-    {
-      tcgCodeId: 1,
-      tcgCode: "포켓몬카드게임코드번호이다",
-      memo: "메모메모메모",
-    },
-    {
-      tcgCodeId: 2,
-      tcgCode: "포켓몬카드게임코드번호이다2",
-      memo: "메모메모메모2",
-    },
-    {
-      tcgCodeId: 3,
-      tcgCode: "포켓몬카드게임코드번호이다3",
-      memo: "메모메모메모3",
-    },
-  ]);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     async function fetchTcgCodeList() {
-      const res = await getTcgCodeList();
-      console.log("res ::: ", res);
-      // if (res && res.data) {
-      //   setMyInfo(res.data);
-      // }
+      try {
+        const res = await getTcgCodeList();
+        handleFailCheck(res);
+        if (res && res.data) {
+          setData(res.data);
+        }
+      } catch (error) {
+        console.error("TCG 코드 목록 조회 실패:", error);
+      }
     }
     fetchTcgCodeList();
   }, []);
@@ -106,16 +99,18 @@ export default function TcgCode() {
       if (editingRow) {
         // 항목수정 API 호출
         // 기존 항목 수정
+        const updateData = {
+          ...editingRow,
+          tcgCode: formData.tcgCode,
+          memo: formData.memo,
+        };
+        const result = await updateTcgCode(updateData);
+        handleFailCheck(result);
+
         setData((prevData) =>
-          prevData.map((item) =>
-            item.tcgCodeId === editingRow.tcgCodeId
-              ? {
-                  ...item,
-                  tcgCode: formData.tcgCode,
-                  memo: formData.memo,
-                }
-              : item
-          )
+          prevData.map((item) => {
+            return item.tcgCodeId === editingRow.tcgCodeId ? result.data : item;
+          })
         );
       } else {
         // 신규추가 API 호출
@@ -126,14 +121,23 @@ export default function TcgCode() {
           memo: formData.memo,
         };
         const result = await postTcgCode(newItem);
-        console.log(result);
+
+        handleFailCheck(result);
+
         setData((prevData) => [...prevData, newItem]);
       }
       setIsDialogOpen(false);
       return true; // 성공 시 true 반환
     } catch (error) {
       console.error("데이터 저장 오류:", error);
+      alert(error.message);
       return false; // 실패 시 false 반환
+    }
+  };
+
+  const handleFailCheck = (result) => {
+    if (!result.success) {
+      throw new Error(`message: ${result.message} code: ${result.errorCode}`);
     }
   };
 
@@ -144,7 +148,9 @@ export default function TcgCode() {
     }
 
     try {
-      // await deleteTcgCode(rowData.tcgCodeId);
+      const result = await deleteTcgCode(rowData.tcgCodeId);
+      handleFailCheck(result);
+
       // 성공 시 로컬 상태에서 제거
       setData((prevData) =>
         prevData.filter((item) => item.tcgCodeId !== rowData.tcgCodeId)

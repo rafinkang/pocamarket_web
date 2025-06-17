@@ -19,4 +19,17 @@ export const getTcgCodeList = async () => {
   });
 };
 
-// export const deleteTcgCode = async (tcgCodeId) => {}
+export const updateTcgCode = async (data) => {
+  return callApi({
+    method: 'PUT',
+    url: `/tcg-code/${data.tcgCodeId}`,
+    data,
+  });
+};
+
+export const deleteTcgCode = async (tcgCodeId) => {
+  return callApi({
+    method: 'DELETE',
+    url: `/tcg-code/${tcgCodeId}`,
+  });
+};
