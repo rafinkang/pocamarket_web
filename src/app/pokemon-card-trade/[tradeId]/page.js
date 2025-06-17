@@ -3,9 +3,9 @@ import TradeList from "./components/TradeList";
 import ButtonGroup from "./components/ButtonGroup";
 
 export default function PokemonCardTrade() {
-    return (<>
+    return (<div className="flex flex-col gap-8">
         <TradeBox />
         <ButtonGroup/>
         <TradeList />
-    </>);
+    </div>);
 }

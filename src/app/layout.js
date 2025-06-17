@@ -6,12 +6,14 @@ import "@/styles/globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/sonner"
+import { cn } from "@/lib/utils";
 
 // 폰트 설정
 const notoSansKr = Noto_Sans_KR({
   // preload: true, // (선택) 미리 로드할지 여부
   subsets: ['latin'], // 또는 'korean' (보통 Next.js가 알아서 최적화해줌)
-  weight: ['100', '400', '600', '700', '800'], // 사용할 폰트 두께
+  weight: ['100', '400', '700'], // 사용할 폰트 두께
+  variable: '--font-noto-sans-kr', // CSS 변수 이름 지정
 });
 
 const geistSans = Geist({
@@ -30,19 +32,25 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-  'use client'
   return (
     <html lang="ko" className="light layout-full">
       <body
         suppressHydrationWarning={true}
-        className={`${geistSans.variable} ${geistMono.variable} ${notoSansKr.className} antialiased max-w-[1280px] mx-auto!`}
+        className={cn(
+          "antialiased font-sans",
+          geistSans.variable, 
+          geistMono.variable, 
+          notoSansKr.variable
+        )}
       >
-        <Header />
-        <main className="min-h-[calc(100vh_-_112px)] p-8 pb-20 sm:py-10 sm:px-20 font-[family-name:var(--font-geist-sans)] gap-[32px] w-full flex flex-col">
-          {children}
-        </main>
-        <Toaster />
-        <Footer />
+        <div className="max-w-[1280px] mx-auto">
+          <Header />
+          <main className="min-h-[calc(100vh_-_112px)] p-8 pb-20 sm:py-10 sm:px-20 w-full flex flex-col">
+            {children}
+          </main>
+          <Toaster />
+          <Footer />
+        </div>
       </body>
     </html>
   );

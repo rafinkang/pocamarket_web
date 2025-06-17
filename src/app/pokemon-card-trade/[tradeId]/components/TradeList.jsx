@@ -26,7 +26,7 @@ export default function TradeList() {
       title: "교환중",
       description: "XXX님이 [개무소](으)로 교환 신청 하였습니다.",
       code: "a1-002",
-      ctaText: "교환 취소",
+      ctaText: "상세 보기",
       status: {
         text: "교환중",
         code: "TRADE"

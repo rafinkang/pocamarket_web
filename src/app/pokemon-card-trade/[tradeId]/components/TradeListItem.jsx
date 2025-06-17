@@ -1,3 +1,5 @@
+"use client"
+
 import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils";
@@ -42,7 +44,7 @@ export default function TradeItem ({id, card, isActiveCard, disabled, handleClic
           layoutId={`button-${card.title}-${id}`}
           className="px-4 py-2 text-sm rounded-full font-bold mt-4 md:mt-0" 
           style={{backgroundColor: '#f1f3f3', color: isActiveCard ? '#000' : '#a3a5ac' }}
-          whileHover={() => (isActiveCard ? {backgroundColor: "#1e73be", color: "#fff"} : {})}
+          whileHover={() => (isActiveCard ? {backgroundColor: "#1e73be", color: "#fff", cursor: 'pointer'} : {})}
           disabled={disabled}
         >
           {card.ctaText}

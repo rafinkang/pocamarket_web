@@ -1,3 +1,5 @@
+"use client"
+
 import PokemonCard from "@/components/list/PokemonCard";
 import { useAnimationControls, motion } from "framer-motion";
 
