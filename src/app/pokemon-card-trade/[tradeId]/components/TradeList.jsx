@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useEffect, useId, useState } from "react";
-import { useOutsideClick } from "@/hooks/useOutsideClick";
 
-import TradeItem from "./TradeItem";
-import TradeItemDialog from "./TradeItemDialog";
+import TradeListItem from "./TradeListItem";
+import TradeListItemDialog from "./TradeListItemDialog";
 
 export default function TradeList() {
   const cards = [
@@ -81,10 +80,10 @@ export default function TradeList() {
 
   return (
     <>
-      <TradeItemDialog handleClick={setActive} id={id} active={active} />
+      <TradeListItemDialog handleClick={setActive} id={id} active={active} />
       <ul className="max-w-2xl mx-auto w-full gap-4">
         {cards.map(card => 
-        <TradeItem
+        <TradeListItem
           handleClick={setActive}
           id={id}
           key={card.code}
