@@ -1,11 +1,12 @@
 "use client";
 
-import { getTcgCodeList } from "@/api/tcgCode";
-import { postTcgTrade } from "@/api/tcgTrade";
-import FlippableCard from "@/components/card/FlippableCard";
-import ListPickerDialog from "@/components/list/ListPickerDialog";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { RiArrowLeftRightFill } from "react-icons/ri";
+import PlusCard from "./PlusCard";
+import { useEffect, useState } from "react";
+import ListPickerDialog from "@/components/list/ListPickerDialog";
+import FlippableCard from "@/components/card/FlippableCard";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -14,13 +15,12 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { MYPAGE, POKEMON_CARD_TRADE } from "@/constants/path";
+} from "@/components/ui/select"
+import { getTcgCodeList } from "@/api/tcgCode";
 import Link from "next/link";
+import { MYPAGE, POKEMON_CARD_TRADE } from "@/constants/path";
+import { postTcgTrade } from "@/api/tcgTrade";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { RiArrowLeftRightFill } from "react-icons/ri";
-import PlusCard from "./PlusCard";
 
 export default function WriteContainer() {
   const router = useRouter();
@@ -34,17 +34,15 @@ export default function WriteContainer() {
 
   const onMyCardClick = () => {
     setIsCardSearch(true);
-    setMyCard(null);
     setSearchType("my");
     setPlaceholder("내가 교환할 카드");
-  };
+  }
 
   const onWantCardClick = () => {
     setIsCardSearch(true);
-    setWantCard(null);
     setSearchType("want");
     setPlaceholder("내가 원하는 카드");
-  };
+  }
 
   // 카드 선택 시 호출되는 함수
   const handleCardSelect = (selectedCard) => {
@@ -138,9 +136,6 @@ export default function WriteContainer() {
 
             <RiArrowLeftRightFill size="50px" />
 
-            <PokemonCard showInfo={false} className="max-w-[200px] w-[20vw]" />
-
-            <PlusCard type="want" onWantCardClick={onWantCardClick} />
             <div className="flex flex-col items-center gap-4">
               {wantCard.length > 0 ? (
                 <div className="flex items-center gap-4">
