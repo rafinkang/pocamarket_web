@@ -37,8 +37,8 @@ const useAuthStore = create(
       }
     }),
     {
-      name: 'auth-storage', // sessionStorage에 저장될 고유 키 이름
-      storage: createJSONStorage(() => sessionStorage), // sessionStorage 사용
+      name: 'auth-storage', // localStorage에 저장될 고유 키 이름
+      storage: createJSONStorage(() => localStorage), // localStorage 사용
       // 특정 상태만 저장
       // partialize: (state) => ({ isLogin: state.isLogin, user: state.user }),
     }
