@@ -10,12 +10,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 
-/**
- * 
- * @param {*} param0 
- * @returns 
- */
-
 export default function ConfirmDialog({ children = null, title = "", msg = "", content = null, isConfrim = false, cancelBtnName = "취소", okBtnName = "확인", handleCancel = () => { }, handleOk = () => { } }) {
   return (
     <Dialog>
@@ -25,7 +19,9 @@ export default function ConfirmDialog({ children = null, title = "", msg = "", c
       <DialogContent showCloseButton={false} className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>{msg}</DialogDescription>
+          <DialogDescription asChild style={{ paddingTop : msg && '12px' }}>
+            <div dangerouslySetInnerHTML={{ __html: msg }} />
+          </DialogDescription>
         </DialogHeader>
 
         {content}
