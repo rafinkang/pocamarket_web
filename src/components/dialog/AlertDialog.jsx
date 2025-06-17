@@ -16,7 +16,7 @@ import {
  * @returns 
  */
 
-export default function ConfirmDialog({ children, title, msg, content, isConfrim, cancelBtnName = "취소", okBtnName = "확인", handleCancel = () => { }, handleOk = () => { } }) {
+export default function ConfirmDialog({ children = null, title = "", msg = "", content = null, isConfrim = false, cancelBtnName = "취소", okBtnName = "확인", handleCancel = () => { }, handleOk = () => { } }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
