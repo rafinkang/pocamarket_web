@@ -17,8 +17,7 @@ import TradeStatusFilter from "./Search/TradeStatusFilter";
 import Buttons from "./Search/Buttons";
 
 // - 카드 필터의 카드 검색
-import TradeDialog from "./TradeDialog";
-import PokemonCardList from "./pokemonCardSearch/PokemonCardList";
+import ListPickerDialog from "@/components/list/ListPickerDialog";
 
 // 거래 목록
 import TradeList from "./TradeList";
@@ -199,6 +198,15 @@ export default function TradeListContainer() {
 
   return (
     <>
+      {isCardSearch && (
+        <ListPickerDialog
+          key={`dialog-${currentFilterCardType}-${Date.now()}`}
+          open={isCardSearch}
+          onOpenChange={setIsCardSearch}
+          placeholder={"포켓몬 이름 검색"}
+          onSelect={onCardClick}
+        />
+      )}
       <SearchContainer
         findCardComponent={(props) => (
           <FilterCardBox {...props}>
@@ -237,10 +245,6 @@ export default function TradeListContainer() {
           <Buttons {...props} onSumbmit={onSubmit} onReset={onReset} />
         )}
       />
-
-      <TradeDialog open={isCardSearch} onOpenChange={setIsCardSearch}>
-        <PokemonCardList onCardClick={onCardClick} />
-      </TradeDialog>
 
       <TradeList />
 
