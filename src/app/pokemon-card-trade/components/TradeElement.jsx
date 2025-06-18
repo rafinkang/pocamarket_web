@@ -1,16 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardDescription,
-  CardTitle,
-} from "@/components/ui/card";
-import Link from "next/link";
+import { Card } from "@/components/ui/card";
 import { POKEMON_CARD_TRADE } from "@/constants/path";
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
 /*
 testMode
     ? "/images/cardback.webp"
@@ -40,7 +34,10 @@ export default function TradeElement({
   };
 
   return (
-    <Link href={`${POKEMON_CARD_TRADE}/${tradeCode}`} className="w-full h-[100%]">
+    <Link
+      href={`${POKEMON_CARD_TRADE}/${tradeCode}`}
+      className="w-full h-[100%]"
+    >
       <div className="flex flex-wrap items-center gap-4 p-4 border rounded-lg w-full mx-auto h-[100%]">
         {/* 내 카드 섹션 */}
         <div className="w-[300px] shrink-0 h-[100%]">

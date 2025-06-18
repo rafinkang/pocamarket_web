@@ -30,7 +30,7 @@ const parsingData = (res, setPage, setTotalPage, setTotalCount) => {
 };
 
 export default function PokemonCardList({
-  placeholder = "내가 가진 카드",
+  placeholder = "포켓몬 이름 검색",
   itemComponent = CardElement,
   onCardClick,
 }) {

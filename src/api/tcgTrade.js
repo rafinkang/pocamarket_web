@@ -11,3 +11,26 @@ export const postTcgTrade = async (data) => {
     data,
   });
 };
+
+/**
+ * TCG 교환 목록 조회
+ */
+export const getTcgTradeList = async (params) => {
+  return callApi({
+    method: "GET",
+    url: "/tcg-trade",
+    params,
+  });
+};
+
+
+/**
+ * 내 TCG 교환 목록 조회
+ */
+export const getMyTcgTradeList = async (params) => {
+  return callApi({
+    method: "GET",
+    url: "/tcg-trade/my",
+    params,
+  });
+};

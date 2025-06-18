@@ -4,23 +4,21 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { POKEMON_CARD_TRADE } from "@/constants/path";
 
-export default function Buttons({ handleReset }) {
+export default function Buttons({ onSumbmit, onReset }) {
   return (
-    <div className="buttonContainer flex items-right gap-4 justify-end px-4">
-      <Button type="submit" className="ml-2">
+    <div className="buttonContainer flex items-center gap-4 justify-end px-4">
+      <Button type="submit" onClick={onSumbmit}>
         검색
       </Button>
       <Button
         type="button"
-        className="ml-4 bg-gray-300 text-black"
-        onClick={handleReset}
+        className="bg-gray-300 text-black"
+        onClick={onReset}
       >
         초기화
       </Button>
       <Link href={`${POKEMON_CARD_TRADE}/write`}>
-        <Button type="button" className="ml-2">
-          교환 등록
-        </Button>
+        <Button type="button">교환 등록</Button>
       </Link>
     </div>
   );
