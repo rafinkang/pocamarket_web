@@ -106,6 +106,7 @@ export default function WriteContainer() {
     <>
       {isCardSearch && (
         <ListPickerDialog
+          key={`dialog-${searchType}-${Date.now()}`}
           open={isCardSearch}
           onOpenChange={setIsCardSearch}
           placeholder={placeholder}

@@ -11,6 +11,7 @@ import { ListProvider, useList } from "./ListProvider";
  * - ListComponent: 리스트 컴포넌트
  * - PaginationComponent: 페이지네이션 컴포넌트
  * - pageSize: 페이지당 아이템 수
+ * - disableHistory: 히스토리 조작 비활성화 (다이얼로그 등에서 사용)
  */
 export default function CardListContainer({
   fetchList,
@@ -20,9 +21,15 @@ export default function CardListContainer({
   ListComponent,
   PaginationComponent,
   pageSize = 10,
+  disableHistory = false,
 }) {
   return (
-    <ListProvider fetchList={fetchList} parseData={parseData} pageSize={pageSize}>
+    <ListProvider 
+      fetchList={fetchList} 
+      parseData={parseData} 
+      pageSize={pageSize}
+      disableHistory={disableHistory}
+    >
       <CardListContainerContent
         SearchComponent={SearchComponent}
         SortComponent={SortComponent}
