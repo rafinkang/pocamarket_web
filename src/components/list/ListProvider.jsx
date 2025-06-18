@@ -10,8 +10,9 @@ const ListContext = createContext();
  * - fetchList: 리스트 데이터를 가져오는 함수
  * - parseData: fetch 결과를 파싱하는 함수
  * - pageSize: 페이지당 아이템 수
+ * - disableHistory: 히스토리 조작 비활성화 (다이얼로그 등에서 사용)
  */
-export function ListProvider({ children, fetchList, parseData, pageSize = 10 }) {
+export function ListProvider({ children, fetchList, parseData, pageSize = 10, disableHistory = false }) {
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(0);
   const [totalPage, setTotalPage] = useState(1);
@@ -40,21 +41,23 @@ export function ListProvider({ children, fetchList, parseData, pageSize = 10 }) 
   };
 
   useEffect(() => {
-    const handlePopOrInit = () => {
-      isPopState.current = true;
-      const params = new URLSearchParams(window.location.search);
-      const page = params.get("page") ? Number(params.get("page")) : 0;
-      params.delete("page");
-      params.delete("size");
-      const filter = {};
-      params.forEach((v, k) => (filter[k] = v));
-      setFilterQuery(filter);
-      setPage(page);
-    };
-    handlePopOrInit();
-    window.addEventListener("popstate", handlePopOrInit);
-    return () => window.removeEventListener("popstate", handlePopOrInit);
-  }, []);
+    if (!disableHistory) {
+      const handlePopOrInit = () => {
+        isPopState.current = true;
+        const params = new URLSearchParams(window.location.search);
+        const page = params.get("page") ? Number(params.get("page")) : 0;
+        params.delete("page");
+        params.delete("size");
+        const filter = {};
+        params.forEach((v, k) => (filter[k] = v));
+        setFilterQuery(filter);
+        setPage(page);
+      };
+      handlePopOrInit();
+      window.addEventListener("popstate", handlePopOrInit);
+      return () => window.removeEventListener("popstate", handlePopOrInit);
+    }
+  }, [disableHistory]);
 
   useEffect(() => {
     async function fetchData() {
@@ -63,7 +66,7 @@ export function ListProvider({ children, fetchList, parseData, pageSize = 10 }) 
         const res = await fetchList(params);
         if (res) {
           let result = parseData(res, setPage, setTotalPage, setTotalCount);
-          if (!isPopState.current) {
+          if (!disableHistory && !isPopState.current) {
             const queryString =
               "?" + Object.entries(params).map(([k, v]) => `${k}=${v}`).join("&");
             window.history.pushState(null, "", queryString);
@@ -78,7 +81,7 @@ export function ListProvider({ children, fetchList, parseData, pageSize = 10 }) 
       }
     }
     fetchData();
-  }, [filterQuery, page, sortInfo]);
+  }, [filterQuery, page, sortInfo, disableHistory]);
 
   const value = {
     items,

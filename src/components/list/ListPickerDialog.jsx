@@ -3,6 +3,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialogFull";
 import { getPokemonCardList } from "@/api/pokemon-card";
 import { formSchema, defaultFilter, type, subtype, packSet, pack } from "@/constants/pokemonCardFilter";
+import { useEffect } from "react";
 
 import CardListContainer from "./CardListContainer";
 import CardSearch from "../search/CardSearch";
@@ -24,6 +25,17 @@ const parsingData = (res, setPage, setTotalPage, setTotalCount) => {
 };
 
 export default function ListPickerDialog({ open, onOpenChange, placeholder, onSelect }) {
+  // 다이얼로그가 닫힐 때 브라우저 히스토리 정리
+  useEffect(() => {
+    if (!open) {
+      // 다이얼로그가 닫힐 때 URL에서 쿼리 파라미터 제거
+      const currentUrl = new URL(window.location);
+      if (currentUrl.search) {
+        window.history.replaceState({}, '', currentUrl.pathname);
+      }
+    }
+  }, [open]);
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-[90vw] max-w-[90vw] h-[90vh] max-h-[90vh] overflow-y-auto p-6">
@@ -35,6 +47,7 @@ export default function ListPickerDialog({ open, onOpenChange, placeholder, onSe
         <CardListContainer
           fetchList={getPokemonCardList}
           parseData={parsingData}
+          disableHistory={true}
           SearchComponent={(props) => (
             <CardSearch
               {...props}
