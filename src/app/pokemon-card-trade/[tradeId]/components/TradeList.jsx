@@ -8,47 +8,50 @@ import TradeListItemDialog from "./TradeListItemDialog";
 export default function TradeList() {
   const cards = [
     {
-      title: "교환 취소",
       description: "XXX님이 [캐터피](으)로 교환 신청 하였습니다.",
       code: "a1-001",
-      ctaText: "",
       status: {
         text: "교환 취소",
         code: "CANCEL"
       },
       content: () => {
         return (
-          <p>어쩌고 저쩌고 이랬다 저랬다</p>
+          <>
+            <p>교환 성공 횟수 : 13</p>
+            <p>신고 횟수 : 2</p>
+          </>
         );
       },
     },
     {
-      title: "교환중",
       description: "XXX님이 [개무소](으)로 교환 신청 하였습니다.",
       code: "a1-002",
-      ctaText: "상세 보기",
       status: {
         text: "교환중",
         code: "TRADE"
       },
       content: () => {
         return (
-          <p>어쩌고 저쩌고 이랬다 저랬다</p>
+          <>
+            <p>교환 성공 횟수 : 13</p>
+            <p>신고 횟수 : 2</p>
+          </>
         );
       },
     },
     {
-      title: "교환 신청",
       description: "XXX님이 [뿔충이](으)로 교환 신청 하였습니다.",
       code: "a1-003",
-      ctaText: "교환",
       status: {
         text: "교환 신청",
         code: "REQUEST"
       },
       content: () => {
         return (
-          <p>어쩌고 저쩌고 이랬다 저랬다</p>
+          <>
+            <p>교환 성공 횟수 : 13</p>
+            <p>신고 횟수 : 2</p>
+          </>
         );
       },
     },

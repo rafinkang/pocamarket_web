@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import { useOutsideClick } from "@/hooks/useOutsideClick";
+import { Badge } from "@/components/ui/badge"
 
 export default function TradeItemDialog({handleClick, active, id}) {
   const ref = useOutsideClick(() => {
@@ -21,9 +22,9 @@ export default function TradeItemDialog({handleClick, active, id}) {
       </AnimatePresence>
       <AnimatePresence>
         {active && typeof active === "object" ? (
-          <div className="fixed inset-0  grid place-items-center z-[100]">
+          <div className="fixed inset-0 grid place-items-center z-[100]">
             <motion.button
-              key={`button-${active.title}-${id}`}
+              key={`button-${active.code}-${id}`}
               layout
               initial={{
                 opacity: 0,
@@ -42,10 +43,10 @@ export default function TradeItemDialog({handleClick, active, id}) {
               <CloseIcon />
             </motion.button>
             <motion.div
-              layoutId={`card-${active.title}-${id}`}
+              layoutId={`card-${active.code}-${id}`}
               ref={ref}
-              className="w-full max-w-[500px]  h-full md:h-fit md:max-h-[90%]  flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden">
-              <motion.div layoutId={`image-${active.title}-${id}`}>
+              className="w-full max-w-[500px]  h-full md:h-fit md:max-h-[90%]  flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden  px-8 py-8">
+              <motion.div layoutId={`image-${active.code}-${id}`}>
                   <img
                     src="/images/cardback.webp"
                     width={100}
@@ -58,11 +59,9 @@ export default function TradeItemDialog({handleClick, active, id}) {
               <div>
                 <div className="flex justify-between items-start p-4">
                   <div className="">
-                    <motion.h3
-                      layoutId={`title-${active.title}-${id}`}
-                      className="font-bold text-neutral-700 dark:text-neutral-200">
-                      {active.title}
-                    </motion.h3>
+                    <motion.span layoutId={`code-${active.code}-${id}`}>
+                      <Badge variant="secondary">{active.status.text}</Badge>
+                    </motion.span>
                     <motion.p
                       layoutId={`description-${active.description}-${id}`}
                       className="text-neutral-600 dark:text-neutral-400">
@@ -71,7 +70,7 @@ export default function TradeItemDialog({handleClick, active, id}) {
                   </div>
 
                   {active.ctaText && <motion.a
-                      layoutId={`button-${active.title}-${id}`}
+                      layoutId={`button-${active.code}-${id}`}
                       href={active.ctaLink}
                       target="_blank"
                       className="px-4 py-3 text-sm rounded-full font-bold bg-green-500 text-white">

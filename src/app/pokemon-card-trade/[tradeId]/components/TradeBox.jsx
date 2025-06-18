@@ -35,7 +35,7 @@ export default function TradeCard({}) {
             className="flex justify-center items-center w-full gap-4 h-64"
           >
             <div className="relative aspect-[366/512]" style={{ width: "20vw", maxWidth: "200px" }}>
-              <PokemonCard data={offerCard} showInfo={false} className="relative aspect-[366/512]" style={{ width: "20vw", maxWidth: "200px" }} />
+              <PokemonCard data={offerCard} showInfo={false} className="relative aspect-[366/512]" />
             </div>
 
             <RiArrowLeftRightFill size="50px" />

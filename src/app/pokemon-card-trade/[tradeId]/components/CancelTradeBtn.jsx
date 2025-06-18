@@ -12,7 +12,7 @@ export default function CancelTradeBtn () {
 
   return (
     <AlertDialog handleOk={handleOk} isConfrim={true} title="교환 취소" msg={tradeMsg}>
-      <Button>교환 취소(등록자만)</Button>
+      <Button variant="outline" className="text-xs px-3 h-[30px] font-bold">교환 취소</Button>
     </AlertDialog>
   )
 }
