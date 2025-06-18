@@ -1,10 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { POKEMON_CARD_TRADE } from "@/constants/path";
 
 export default function Buttons({ handleReset }) {
   return (
-    <div className="buttonContainer flex items-right gap-4 justify-end">
+    <div className="buttonContainer flex items-right gap-4 justify-end px-4">
       <Button type="submit" className="ml-2">
         검색
       </Button>

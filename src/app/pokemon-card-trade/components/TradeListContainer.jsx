@@ -1,20 +1,31 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
-// 공용 컴포넌트
-import { TradeProvider } from "./TradeProvider";
+// 거래 검색 필터
+import SearchContainer from "./Search/SearchContainer";
 
-import FindCardBox from "./Search/FindCardBox";
-import TradeList from "./TradeList";
+// - 카드 필터
+import FilterCardBox from "./Search/FilterCardBox";
+import FilterCard from "./Search/FilterCard";
+import { RiArrowLeftRightFill } from "react-icons/ri";
 
+// - 거래 글 검색 필터
+import TradeStatusFilterBox from "./Search/TradeStatusFilterBox";
+
+import Buttons from "./Search/Buttons";
+
+// - 카드 필터의 카드 검색
 import TradeDialog from "./TradeDialog";
 import PokemonCardList from "./pokemonCardSearch/PokemonCardList";
 
+// 거래 목록
+import TradeList from "./TradeList";
+
+// 페이지네이션
 import CommonPagination from "../../../components/pagination/Pagination";
-import { parseQueryString, makeQueryString } from "@/utils/queryString";
-import SearchContainer from "./Search/SearchContainer";
-import Buttons from "./Search/Buttons";
+
+import { parseQueryString } from "@/utils/queryString";
 
 const parsingData = () => {};
 
@@ -24,18 +35,18 @@ export default function TradeListContainer() {
   const pageSize = 10;
 
   const [isCardSearch, setIsCardSearch] = useState(false);
-  const [currentFindCardType, setCurrentFindCardType] = useState(null);
+  const [currentFilterCardType, setCurrentFilterCardType] = useState(null);
 
   const [filterQuery, setFilterQuery] = useState({});
   const [placeholder, setPlaceholder] = useState("내가 원하는 카드");
   const isPopState = useRef(false);
 
   const cardInfo = { code: null, name: null, type: null };
-  const [findCardList, setFindCardList] = useState([
-    { ...cardInfo, findCardTtpe: "my" },
-    { ...cardInfo, findCardTtpe: "want-0" },
-    { ...cardInfo, findCardTtpe: "want-1" },
-    { ...cardInfo, findCardTtpe: "want-2" },
+  const [filterCardList, setFilterCardList] = useState([
+    { ...cardInfo, filterCardType: "my" },
+    { ...cardInfo, filterCardType: "want-0" },
+    { ...cardInfo, filterCardType: "want-1" },
+    { ...cardInfo, filterCardType: "want-2" },
   ]);
 
   useEffect(() => {
@@ -58,65 +69,87 @@ export default function TradeListContainer() {
     return () => window.removeEventListener("popstate", handlePopOrInit);
   }, []);
 
-  const onFindCardButton = useCallback(
-    (findCardTtpe) => {
-      if (findCardTtpe === currentFindCardType) return;
-      setCurrentFindCardType(findCardTtpe);
+  const isExistingCard = (cardData) => {
+    const existingCard = filterCardList.find(
+      (card) => card.filterCardType === currentFilterCardType
+    );
+    return existingCard && existingCard.code === cardData.code;
+  };
+
+  const filterCardUpdate = (cardData) => {
+    setFilterCardList((prev) => {
+      if (isExistingCard(cardData)) {
+        return prev;
+      }
+
+      const newList = prev.map((findCard) =>
+        findCard.filterCardType === currentFilterCardType
+          ? { ...findCard, ...cardData }
+          : findCard
+      );
+      return newList;
+    });
+  };
+
+  const onFilterCardButton = useCallback(
+    (card) => {
+      if (card.filterCardType === currentFilterCardType) return;
+
+      setCurrentFilterCardType(card.filterCardType);
       setIsCardSearch(true);
     },
-    [currentFindCardType]
+    [currentFilterCardType]
   );
+
+  const onFilterCardCancel = (cardData) => {
+    setFilterCardList((prev) => {
+      return prev.map((findCard) =>
+        findCard.filterCardType === cardData.filterCardType
+          ? { ...cardData }
+          : findCard
+      );
+    });
+
+    setCurrentFilterCardType(null);
+  };
 
   const onCardClick = useCallback(
     (cardData) => {
-      if (!currentFindCardType || !cardData) return;
+      if (!currentFilterCardType || !cardData) return;
 
-      setFindCardList((prev) => {
-        // 이전 상태와 동일한 경우 업데이트 하지 않음
-        const existingCard = prev.find(
-          (card) => card.findCardTtpe === currentFindCardType
-        );
-        if (
-          existingCard &&
-          existingCard.code === cardData.code &&
-          existingCard.name === cardData.name &&
-          existingCard.type === cardData.type
-        ) {
-          return prev;
-        }
-
-        const newList = prev.map((findCard) =>
-          findCard.findCardTtpe === currentFindCardType
-            ? { ...findCard, ...cardData }
-            : findCard
-        );
-        return newList;
-      });
+      filterCardUpdate(cardData);
 
       // 상태 업데이트를 배치로 처리
       Promise.resolve().then(() => {
         setIsCardSearch(false);
-        setCurrentFindCardType(null);
+        setCurrentFilterCardType(null);
       });
     },
-    [currentFindCardType]
+    [currentFilterCardType]
   );
 
   return (
     <>
       <SearchContainer
-        findCardComponent={useCallback(
-          (props) => (
-            <FindCardBox
-              {...props}
-              onCardButton={onFindCardButton}
-              findCardList={findCardList}
-            />
-          ),
-          [onFindCardButton, findCardList]
+        findCardComponent={(props) => (
+          <FilterCardBox>
+            {filterCardList.map((card) => (
+              <React.Fragment key={card.filterCardType}>
+                <FilterCard
+                  data={card}
+                  type={card.filterCardType}
+                  onCardClick={onFilterCardButton}
+                  onCancelClick={onFilterCardCancel}
+                />
+                {card.filterCardType === "my" && (
+                  <RiArrowLeftRightFill size="50px" />
+                )}
+              </React.Fragment>
+            ))}
+          </FilterCardBox>
         )}
-        // filterComponent={Filter}
-        // buttonsComponent={Buttons}
+        filterComponent={TradeStatusFilterBox}
+        buttonsComponent={Buttons}
       />
 
       <TradeDialog open={isCardSearch} onOpenChange={setIsCardSearch}>

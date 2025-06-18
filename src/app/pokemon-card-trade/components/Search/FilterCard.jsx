@@ -1,42 +1,37 @@
 "use client";
 
+import FlippableCard from "@/components/card/FlippableCard";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import PokemonCard from "@/components/list/PokemonCard";
+import { memo } from "react";
 import { RiAddLine } from "react-icons/ri";
-import { useCallback, memo } from "react";
 
-const FindCard = memo(function FindCard({ data, onCardClick }) {
+const FilterCard = memo(function FilterCard({
+  data,
+  onCardClick,
+  onCancelClick,
+}) {
   const title =
-    data.findCardTtpe === "my" ? "교환할 카드" : "교환 받고 싶은 카드";
-
-  const handleClick = useCallback(
-    (e) => {
-      if (e.defaultPrevented) return;
-      e.preventDefault();
-      e.stopPropagation();
-      onCardClick(data.findCardTtpe);
-    },
-    [data.findCardTtpe, onCardClick]
-  );
+    data.filterCardType === "my" ? "교환할 카드" : "교환 받고 싶은 카드";
 
   return (
     <>
       {data.code ? (
-        <div
-          className="max-w-[200px] w-[20vw] flex justify-center items-center aspect-[366/512] cursor-pointer hover:scale-105 transition-transform"
-          onClick={handleClick}
-        >
-          <PokemonCard
+        <div className="max-w-[200px] w-[20vw] flex justify-center items-center aspect-[366/512] cursor-pointer hover:scale-105 transition-transform">
+          <FlippableCard
+            key={data.code}
+            cardKey={data.code}
             data={data}
-            priority={false}
-            testMode={false}
-            showInfo={false}
-            className="w-full h-full shadow-lg hover:shadow-xl transition-shadow"
+            handleClick={() =>
+              onCancelClick({ filterCardType: data.filterCardType, code: null })
+            }
+            btnName="선택 취소"
+            rotateY={180}
+            duration={0.3}
           />
         </div>
       ) : (
@@ -44,7 +39,7 @@ const FindCard = memo(function FindCard({ data, onCardClick }) {
           <HoverCardTrigger asChild>
             <Card
               className="max-w-[200px] w-[20vw] flex justify-center items-center aspect-[366/512] cursor-pointer hover:scale-105 transition-transform shadow-lg hover:shadow-xl"
-              onClick={handleClick}
+              onClick={() => onCardClick(data)}
             >
               <CardContent className="flex justify-center items-center w-full h-full p-0">
                 <RiAddLine size="50px" />
@@ -60,6 +55,6 @@ const FindCard = memo(function FindCard({ data, onCardClick }) {
   );
 });
 
-FindCard.displayName = "FindCard";
+FilterCard.displayName = "FilterCard";
 
-export default FindCard;
+export default FilterCard;

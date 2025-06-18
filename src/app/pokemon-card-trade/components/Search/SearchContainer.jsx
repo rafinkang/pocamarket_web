@@ -20,7 +20,7 @@ function SearchContainerContent({
   buttonsComponent: ButtonsComponent,
 }) {
   return (
-    <section id="searchTradeCard" className="w-full">
+    <section id="searchTradeCard" className="w-full flex flex-col gap-4">
       {FindCardComponent && <FindCardComponent />}
       {FilterComponent && <FilterComponent />}
       {ButtonsComponent && <ButtonsComponent />}
