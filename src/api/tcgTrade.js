@@ -13,6 +13,18 @@ export const postTcgTrade = async (data) => {
 };
 
 /**
+ * TCG 교환 수정
+ * @param {object} [data] - { myCardCode: '', wantCardCode: '', tcgCode: '' }
+ */
+export const putTcgTrade = async (tradeId, data) => {
+  return callApi({
+    method: 'PUT',
+    url: `/tcg-trade/${tradeId}`,
+    data,
+  });
+};
+
+/**
  * TCG 교환 목록 조회
  */
 export const getTcgTradeList = async (params) => {

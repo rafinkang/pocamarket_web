@@ -1,7 +1,7 @@
 "use client";
 
 import { getTcgCodeList } from "@/api/tcgCode";
-import { postTcgTrade } from "@/api/tcgTrade";
+import { getTcgTradeDetail, postTcgTrade, putTcgTrade } from "@/api/tcgTrade";
 import FlippableCard from "@/components/card/FlippableCard";
 import ListPickerDialog from "@/components/list/ListPickerDialog";
 import { Button } from "@/components/ui/button";
@@ -20,10 +20,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { RiArrowLeftRightFill } from "react-icons/ri";
+import { toast } from "sonner";
 import PlusCard from "./PlusCard";
 
-export default function WriteContainer() {
+export default function WriteContainer({ tradeId }) {
   const router = useRouter();
+  const [mode, setMode] = useState("write");
   const [myCard, setMyCard] = useState(null);
   const [wantCard, setWantCard] = useState([]);
   const [isCardSearch, setIsCardSearch] = useState(false);
@@ -53,7 +55,7 @@ export default function WriteContainer() {
       if (wantCard.length < 3) {
         setWantCard(prev => [...prev, selectedCard]);
       } else {
-        alert(title = "카드 선택 오류", msg = "원하는 카드는 최대 3장까지만 선택 가능합니다.")
+        toast.error("원하는 카드는 최대 3장까지만 선택 가능합니다.");
       }
     }
 
@@ -82,14 +84,26 @@ export default function WriteContainer() {
       tcgCode: tcgCode,
     }
 
-    postTcgTrade(data).then(res => {
-      if (res.success) {
-        alert("교환 등록 완료");
-        router.push(POKEMON_CARD_TRADE);
-      } else {
-        alert(res.message);
-      }
-    });
+    if (mode === "write") {
+      postTcgTrade(data).then(res => {
+        if (res.success) {
+          toast.success("교환이 등록되었습니다.");
+          router.push(POKEMON_CARD_TRADE);
+        } else {
+          toast.success(res.message);
+        }
+      });
+    } else {
+      putTcgTrade(tradeId, data).then(res => {
+        if (res.success) {
+          toast.success("교환이 수정되었습니다.");
+          router.push(POKEMON_CARD_TRADE + `/${tradeId}`);
+        } else {
+          toast.success(res.message);
+        }
+      });
+    }
+
   }
 
   const onTcgCodeChange = (value) => {
@@ -97,6 +111,22 @@ export default function WriteContainer() {
   }
 
   useEffect(() => {
+    if (tradeId) {
+      setMode("update");
+
+      getTcgTradeDetail(tradeId).then(res => {
+        if (!res.data.isMy) {
+          toast.error("권한이 없습니다.");
+          router.push(POKEMON_CARD_TRADE);
+          return;
+        }
+
+        setMyCard(res.data.myCard);
+        setWantCard(res.data.wantCards);
+        setTcgCode(res.data.tcgCode);
+      });
+    }
+
     getTcgCodeList().then(res => {
       setTcgCodeList(res.data);
     });
@@ -114,7 +144,7 @@ export default function WriteContainer() {
         />
       )}
       <div id="WriteContainer" className="w-[100%] flex flex-col gap-6">
-        <h1 className="text-2xl font-bold">포켓몬카드 교환 등록</h1>
+        <h1 className="text-2xl font-bold">{mode === "write" ? "포켓몬카드 교환 등록" : "포켓몬카드 교환 수정"}</h1>
         <Card>
           <CardContent className="flex justify-center items-center gap-4" >
             <div className="flex flex-col items-center gap-4">
@@ -162,8 +192,9 @@ export default function WriteContainer() {
             </div>
           </CardContent>
         </Card>
+
         <div className="flex justify-center items-center gap-4">
-          <Select onValueChange={onTcgCodeChange}>
+          <Select onValueChange={onTcgCodeChange} value={tcgCode}>
             <SelectTrigger className="w-[300px]">
               <SelectValue placeholder="TCG 코드 선택" />
             </SelectTrigger>
@@ -181,7 +212,8 @@ export default function WriteContainer() {
           </Button>
         </div>
         <div className="flex justify-end gap-1">
-          <Button onClick={onSubmitClick}>교환 등록</Button>
+          <Button onClick={onSubmitClick}>{mode === "write" ? "등록" : "수정"}</Button>
+          <Button variant="outline" onClick={() => router.back()}>취소</Button>
         </div>
 
       </div>
