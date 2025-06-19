@@ -1,16 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
 import useAuthStore from "@/store/authStore";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
+import AlertDialog from "@/components/dialog/AlertDialog";
+import ButtonGroup from "./ButtonGroup";
 import TradeBox from "./TradeBox";
 import TradeList from "./TradeList";
-import ButtonGroup from "./ButtonGroup";
-import AlertDialog from "@/components/dialog/AlertDialog";
 
-import { LOGIN } from "@/constants/path";
 import { getTcgTradeDetail } from "@/api/tcgTrade";
+import { LOGIN } from "@/constants/path";
 
 export default function TradePageClient() {
 
@@ -63,7 +63,7 @@ export default function TradePageClient() {
     if (isLogin) getDetail();
     else setShowAlert(true);
   }, [isLogin, isMounted])
-  
+
   if (!isMounted) {
     return null;
   }
@@ -82,7 +82,7 @@ export default function TradePageClient() {
       {isLogin && (
         <>
           <TradeBox data={data} isMy={isMy} />
-          {isMy && <ButtonGroup />}
+          {isMy && <ButtonGroup tradeId={tradeId} />}
           <TradeList isMy={isMy} />
         </>
       )}
