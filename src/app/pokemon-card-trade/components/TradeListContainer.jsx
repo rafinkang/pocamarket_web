@@ -2,6 +2,13 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
+// 거래 필터
+import {
+  defaultFilterCardList,
+  defaultFilterOptionList,
+  defaultSortList,
+} from "@/constants/tradeFilter";
+
 // 거래 검색 필터
 import SearchContainer from "./Search/SearchContainer";
 
@@ -27,16 +34,24 @@ import CommonPagination from "../../../components/pagination/Pagination";
 
 // API
 import { getTcgTradeList, getMyTcgTradeList } from "@/api/tcgTrade";
-import { parseQueryString } from "@/utils/queryString";
+import { parseQueryString, makeQueryString } from "@/utils/queryString";
 
-const parsingData = () => {};
+// 로그인 상태 체크
+import useAuthStore from "@/store/authStore";
 
 export default function TradeListContainer() {
   const [page, setPage] = useState(0);
   const [totalPage, setTotalPage] = useState(1);
   const [sort, setSort] = useState("id,desc");
+  const [totalCount, setTotalCount] = useState(0);
   const pageSize = 10;
 
+  // 로그인 상태 체크
+  const isLogin = useAuthStore((state) => state.isLogin);
+
+  const [contentList, setContentList] = useState([]);
+
+  // 카드 검색 상태
   const [isCardSearch, setIsCardSearch] = useState(false);
   const [currentFilterCardType, setCurrentFilterCardType] = useState(null);
 
@@ -45,42 +60,106 @@ export default function TradeListContainer() {
 
   const cardInfo = { code: null, name: null, type: null };
   const [filterCardList, setFilterCardList] = useState([
-    { ...cardInfo, filterCardType: "my" },
-    { ...cardInfo, filterCardType: "want-0" },
-    { ...cardInfo, filterCardType: "want-1" },
-    { ...cardInfo, filterCardType: "want-2" },
+    ...defaultFilterCardList,
   ]);
 
-  const [tradeStatus, setTradeStatus] = useState("all");
-  const [tradeStatusFilterList, setTradeStatusFilterList] = useState([
-    { value: "all", name: "전체 보기" },
-
-    { value: "request", name: "신청한 교환" },
-    { value: "progress", name: "진행 중인 교환" },
-    { value: "complete", name: "완료된 교환" },
-
-    { value: "my-all", name: "내 교환 전체 보기" },
-
-    { value: "my-request", name: "내가 신청한 교환" },
-    { value: "my-progress", name: "내 진행 중인 교환" },
-    { value: "my-complete", name: "내 완료된 교환" },
+  const [filterOption, setFilterOption] = useState("all");
+  const [filterOptionList, setFilterOptionList] = useState([
+    ...defaultFilterOptionList,
   ]);
 
-  const [sortList, setSortList] = useState([
-    { value: "id,desc", name: "최신순" },
-    { value: "id,asc", name: "오래된순" },
-  ]);
+  const [sortList, setSortList] = useState([...defaultSortList]);
+
+  // 사용하는 변수들로 API 파라미터 생성
+  const createParams = () => {
+    let tPage = page ?? 0;
+    tPage = Math.min(page, totalPage);
+
+    let myCardCode = null;
+    let wantCardCode = [];
+    filterCardList.forEach((card) => {
+      if (card.filterCardType === "my") {
+        myCardCode = card.code;
+      } else {
+        if (card.code && card.code.length > 0) {
+          wantCardCode.push(card.code);
+        }
+      }
+    });
+    wantCardCode = wantCardCode.join(",");
+
+    const params = {
+      myCardCode,
+      wantCardCode,
+      filterOption,
+      page: tPage,
+      size: pageSize,
+      sort: sort,
+    };
+
+    return params;
+  };
+
+  /*
+    현재 쿼리스트링을 적용하는 함수
+  */
+  const currentQueryApply = (params) => {
+    const queryString = params ?? window.location.search;
+    const queryParams = parseQueryString(queryString);
+
+    const myCardCode = queryParams?.myCardCode ?? null;
+    const wantCardCode = queryParams?.wantCardCode?.split(",") ?? [];
+
+    // 필터 카드 리스트 업데이트
+    setFilterCardList((prev) => {
+      return prev.map((card) => {
+        if (card.filterCardType === "my") {
+          return { ...card, code: myCardCode };
+        } else if (wantCardCode.length > 0) {
+          const temp = {
+            ...card,
+            code: wantCardCode[0].length > 0 ? wantCardCode.shift() : null,
+          };
+          return temp;
+        }
+        return card;
+      });
+    });
+
+    // 필터 옵션 업데이트
+    setFilterOption(queryParams.filterOption ?? "all");
+    setPage(queryParams.page ? Number(queryParams.page) : 0);
+    // size는 보류
+    setSort(queryParams.sort ?? "id,desc");
+
+    return queryString;
+  };
+
+  const parsingData = (res, setPage, setTotalPage, setTotalCount) => {
+    const data = res.data;
+    setPage(data?.number ?? 0);
+    setTotalPage(data?.totalPages ?? 1);
+    setTotalCount(data.totalElements ?? 0);
+    return data.content;
+  };
+
+  const isExistingCard = (cardData) => {
+    const existingCard = filterCardList.find(
+      (card) => card.filterCardType === currentFilterCardType
+    );
+    return existingCard && existingCard.code === cardData.code;
+  };
+
+  const checkMyTrade = () => {
+    return filterOption.includes("my-");
+  };
 
   useEffect(() => {
     // 마운트/새로고침/뒤로가기/앞으로가기 모두 처리
     const handlePopOrInit = () => {
       isPopState.current = true;
-      const params = parseQueryString(window.location.search);
-      const page = params.page ? Number(params.page) : 0;
-      delete params.page;
-      delete params.size;
-      setFilterQuery(params);
-      setPage(page);
+      const queryString = currentQueryApply();
+      setFilterQuery(queryString);
     };
 
     // 최초 마운트 시 실행
@@ -91,12 +170,54 @@ export default function TradeListContainer() {
     return () => window.removeEventListener("popstate", handlePopOrInit);
   }, []);
 
-  const isExistingCard = (cardData) => {
-    const existingCard = filterCardList.find(
-      (card) => card.filterCardType === currentFilterCardType
-    );
-    return existingCard && existingCard.code === cardData.code;
-  };
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const isMy = checkMyTrade();
+        const callApi = isMy ? getMyTcgTradeList : getTcgTradeList;
+
+        if (isMy && !isLogin) {
+          throw new Error("로그인이 필요한 서비스입니다.");
+        }
+
+        const params = createParams();
+        const res = await callApi(params);
+
+        if (res) {
+          const content = parsingData(
+            res,
+            setPage,
+            setTotalPage,
+            setTotalCount
+          );
+
+          // URL 업데이트 (popstate가 아닐 때만)
+          if (!isPopState.current) {
+            const queryString = makeQueryString(params);
+            window.history.pushState(null, "", queryString);
+          }
+          isPopState.current = false;
+
+          setContentList(content);
+        } else {
+          throw new Error("CONTENT_UNDEFINED");
+        }
+      } catch (error) {
+        alert(error.message);
+        onReset();
+      }
+    }
+    fetchData();
+  }, [filterQuery]);
+
+  // 페이지 변경 시 새로운 쿼리 생성
+  useEffect(() => {
+    if (!isPopState.current) {
+      const params = createParams();
+      const queryString = makeQueryString(params);
+      setFilterQuery(queryString);
+    }
+  }, [page]); // 페이지 변경 시에만 실행
 
   const onFilterCardButton = useCallback(
     (cardData) => {
@@ -146,56 +267,24 @@ export default function TradeListContainer() {
     [currentFilterCardType]
   );
 
-  const onTradeStatusChange = (value) => {
-    setTradeStatus(value);
+  const onFilterOptionChange = (value) => {
+    setFilterOption(value);
   };
 
   const onSortChange = (value) => {
     setSort(value);
   };
 
-  const onSubmit = async () => {
-    // console.log("쿼리 체크 : ", createParams());
-    const response = await getTcgTradeList(createParams());
-
-    console.log("response : ", response);
+  const onSubmit = () => {
+    const params = createParams();
+    const queryString = makeQueryString(params);
+    setFilterQuery(queryString);
   };
 
   const onReset = () => {
-    setFilterCardList([
-      { ...cardInfo, filterCardType: "my" },
-      { ...cardInfo, filterCardType: "want-0" },
-      { ...cardInfo, filterCardType: "want-1" },
-      { ...cardInfo, filterCardType: "want-2" },
-    ]);
-    setTradeStatus("all");
-  };
-
-  const createParams = () => {
-    let tPage = page ?? 0;
-    tPage = Math.min(page, totalPage);
-
-    let myCardCode = null;
-    let wantCardCode = [];
-    filterCardList.forEach((card) => {
-      if (card.filterCardType === "my") {
-        myCardCode = card.code;
-      } else {
-        if (card.code && card.code.length > 0) {
-          wantCardCode.push(card.code);
-        }
-      }
-    });
-    wantCardCode = wantCardCode.join(",");
-
-    return {
-      myCardCode,
-      wantCardCode,
-      filterOption: tradeStatus,
-      page: tPage,
-      size: pageSize,
-      sort: sort,
-    };
+    setFilterCardList([...defaultFilterCardList]);
+    setFilterOption("all");
+    setSort("id,desc");
   };
 
   return (
@@ -238,9 +327,9 @@ export default function TradeListContainer() {
         filterComponent={(props) => (
           <TradeStatusFilter
             {...props}
-            filterList={tradeStatusFilterList}
-            value={tradeStatus}
-            onChange={onTradeStatusChange}
+            filterList={filterOptionList}
+            value={filterOption}
+            onChange={onFilterOptionChange}
           />
         )}
         buttonsComponent={(props) => (
@@ -248,7 +337,7 @@ export default function TradeListContainer() {
         )}
       />
 
-      <TradeList />
+      <TradeList tradeList={contentList} />
 
       <CommonPagination
         page={page}

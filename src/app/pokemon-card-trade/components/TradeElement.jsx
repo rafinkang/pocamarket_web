@@ -4,7 +4,8 @@ import { Card } from "@/components/ui/card";
 import { POKEMON_CARD_TRADE } from "@/constants/path";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 /*
 testMode
     ? "/images/cardback.webp"
@@ -17,17 +18,24 @@ export default function TradeElement({
   tradeCode = "0",
   tradeUserNickname = "교환자 닉네임",
   myCard = {
-    code: "a1-001",
-    name: "테스트 마이 카드",
+    cardCode: "a1-001",
+    cardName: "테스트 마이 카드",
   },
   wantedCards = [
     {
-      code: "a1-002",
-      name: "테스트 원하는 카드",
+      cardCode: "a1-002",
+      cardName: "테스트 원하는 카드",
     },
   ], // 원하는 카드들의 배열
+  createAt = "2025-01-01",
+  status = "교환 요청 중",
+  requestCount = "0(보류)",
 }) {
   const [isError, setIsError] = useState(false);
+
+  useEffect(() => {
+    createAt = new Date(createAt).toLocaleDateString();
+  }, [createAt]);
 
   const imageHandleError = () => {
     setIsError(true);
@@ -69,7 +77,7 @@ export default function TradeElement({
               </div>
               <div className="flex flex-col min-w-0 flex-1">
                 <h3 className="text-lg font-semibold truncate">
-                  {myCard.name}
+                  {myCard.cardName}
                 </h3>
                 <p className="text-gray-600 truncate">
                   {tradeUserNickname}님의 카드
@@ -103,7 +111,7 @@ export default function TradeElement({
                   </div>
                   <div className="flex flex-col min-w-0 flex-1">
                     <h3 className="text-lg font-semibold truncate">
-                      {card.name}
+                      {card.cardName}
                     </h3>
                   </div>
                 </Card>
@@ -114,9 +122,9 @@ export default function TradeElement({
 
         {/* 교환 정보 */}
         <div className="flex flex-col items-center pl-2">
-          <p>교환 등록 날짜</p>
-          <p>교환 상태</p>
-          <p>교환 요청 건수</p>
+          <p>{createAt}</p>
+          <p>{status}</p>
+          {/* <p>{requestCount}</p> */}
         </div>
       </div>
     </Link>
