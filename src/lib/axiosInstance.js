@@ -30,27 +30,6 @@ axiosInstance.interceptors.response.use(
         return response;
     },
     (error) => {
-        const ERROR_CODE = error.response ? error.response.status : null;
-
-        // TODO modal 만든 후 alert 대체
-        // TODO 로그인 또는 권한 error는 지정된 페이지로 이동하도록 작업
-        switch (ERROR_CODE) {
-            case UN_AUTHORIZED: 
-                console.log('로그인 후 사용 가능합니다.');
-                window.location.href = LOGIN; 
-                break;
-            case FORBIDDEN:
-                console.log('권한이 없습니다.');
-                window.history.back();
-                break;
-            case INTERNAL_SERVER_ERROR:
-            case BAD_GATEWAY:
-            case SERVICE_UNAVAILABLE:
-            case GATEWAY_TIMEOUT: 
-                console.log(`[ERROR] ${ERROR_CODE}\n잠시후 다시 시도해주세요.`); 
-                break;
-        }
-
         return Promise.reject(error);
     }
 );
