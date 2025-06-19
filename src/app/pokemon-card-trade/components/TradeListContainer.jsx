@@ -181,7 +181,9 @@ export default function TradeListContainer() {
       if (card.filterCardType === "my") {
         myCardCode = card.code;
       } else {
-        wantCardCode.push(card.code);
+        if (card.code && card.code.length > 0) {
+          wantCardCode.push(card.code);
+        }
       }
     });
     wantCardCode = wantCardCode.join(",");
