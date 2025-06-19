@@ -1,11 +1,6 @@
-import TradeBox from "./components/TradeBox";
-import TradeList from "./components/TradeList";
-import ButtonGroup from "./components/ButtonGroup";
+import TradePageClient from "./components/TradePageClient";
 
 export default function PokemonCardTrade() {
-    return (<div className="flex flex-col gap-8">
-        <TradeBox />
-        <ButtonGroup/>
-        <TradeList />
-    </div>);
+
+  return (<TradePageClient/>);
 }

@@ -4,7 +4,9 @@ import { AnimatePresence, motion } from "motion/react";
 import { useOutsideClick } from "@/hooks/useOutsideClick";
 import { Badge } from "@/components/ui/badge"
 
-export default function TradeItemDialog({handleClick, active, id}) {
+import { Button } from "@/components/ui/button"
+
+export default function TradeItemDialog({handleClick, active, id, isMy}) {
   const ref = useOutsideClick(() => {
     handleClick(null);
   });
@@ -91,6 +93,8 @@ export default function TradeItemDialog({handleClick, active, id}) {
                   </motion.div>
                 </div>
               </div>
+              {/* TODO 교환 취소인 경우 버튼 숨기기 */}
+              {isMy ? <Button>교환 수락(교환 등록한 사람)</Button> : <Button variant="outline">교환 취소(요청한 사람)</Button>}
             </motion.div>
           </div>
         ) : null}

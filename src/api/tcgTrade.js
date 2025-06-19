@@ -34,3 +34,15 @@ export const getMyTcgTradeList = async (params) => {
     params,
   });
 };
+
+
+/**
+ * 교환 상세 조회
+ * @param {Number} [tradeId]
+ */
+export const getTcgTradeDetail = async (tradeId) => {
+  return callApi({
+    method: "GET",
+    url: `/tcg-trade/${tradeId}`,
+  });
+};
