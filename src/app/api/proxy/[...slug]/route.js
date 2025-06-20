@@ -30,7 +30,7 @@ async function apiRequest(slug, search, request, token) {
 // 토큰을 재발급하는 로직을 별도 함수로 분리
 async function refreshTokenAndCookies() {
   console.log("2222222222")
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const refreshToken = cookieStore.get("refreshToken")?.value;
 
   // 리프레쉬 토큰이 없는 경우 401 에러 반환(로그아웃 처리, 로그인 유도)
@@ -60,8 +60,9 @@ async function refreshTokenAndCookies() {
 async function handler(request, { params }) {
   console.log('start!!!!!!!!!!!!!!!')
   // 클라이언트가 요청한 경로 조합 (ex: /api/proxy/tcg-trade/1 -> /api/tcg-trade/1)
-  const slug = params.slug.join("/");
-  const cookieStore = cookies(); // HttpOnly 쿠키 읽어옴
+  const resolvedParams = await params;
+  const slug = resolvedParams.slug.join("/");
+  const cookieStore = await cookies(); // HttpOnly 쿠키 읽어옴
   const accessToken = cookieStore.get("accessToken")?.value;
   const queryString = request.nextUrl.search;
 
