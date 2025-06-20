@@ -29,7 +29,6 @@ async function apiRequest(slug, search, request, token) {
 
 // 토큰을 재발급하는 로직을 별도 함수로 분리
 async function refreshTokenAndCookies() {
-  console.log("2222222222 refreshTokenAndCookies")
   const cookieStore = await cookies();
   const refreshToken = cookieStore.get("refreshToken")?.value;
 
@@ -71,22 +70,36 @@ async function refreshTokenAndCookies() {
   return { newAccessToken, newCookies };
 }
 
+async function retry () {
+
+}
+
 // 모든 http 메소드 처리
 async function handler(request, { params }) {
-  console.log('start!!!!!!!!!!!!!!!')
+  console.log('route http 메소드 처리 시작')
   // 클라이언트가 요청한 경로 조합 (ex: /api/proxy/tcg-trade/1 -> /api/tcg-trade/1)
   const resolvedParams = await params;
   const slug = resolvedParams.slug.join("/");
   const cookieStore = await cookies(); // HttpOnly 쿠키 읽어옴
   const accessToken = cookieStore.get("accessToken")?.value;
+  const refreshToken = cookieStore.get("refreshToken")?.value;
+  const isRefreshTokenOnly = !accessToken && refreshToken
   const queryString = request.nextUrl.search;
+  let initialRes = null
+  
+  console.log('refreshToken >>>>>>>>>>>>>>>>>>>>>> ', refreshToken);
+  console.log("accessToken >>>>>>>>>>>>>>>>>>>>>> ", accessToken);
 
-  // 원래 요청
-  const initialRes = await apiRequest(slug, queryString, request, accessToken);
+  // refreshToken만 있는 경우
+  if (!isRefreshTokenOnly) {
+    // 원래 요청
+    initialRes = await apiRequest(slug, queryString, request, accessToken);
 
-  // 401에러(토큰 만료)가 아닌 경우 요청 반환
-  if (initialRes.status !== UN_AUTHORIZED) return initialRes;
-  console.log("1111111111")
+    // 401에러(토큰 만료)가 아닌 경우 요청 반환
+    if (initialRes.status !== UN_AUTHORIZED) return initialRes;
+  }
+
+  console.log('accessToken 재발급 시작');
 
   // 현재 다른 요청이 토큰 재발급을 진행하고 있는지 확인
   if (!refreshPromise) {
@@ -102,16 +115,16 @@ async function handler(request, { params }) {
   try {
     // 첫 요청이든, 기다리던 요청이든, 진행 중인 재발급 작업이 끝나기를 기다림.
     const { newAccessToken, newCookies } = await refreshPromise;
+    console.log('accessToken 재발급 완료');
 
     // 재발급 성공 후, 원래 실패했던 API를 새로운 토큰으로 재시도.
     console.log("Token refreshed. Retrying original request...");
     const retryResponse = await apiRequest(slug, queryString, request, newAccessToken);
-    console.log("33333333333")
 
     // 최종 응답에 새로운 쿠키를 담아 클라이언트에게 전달.
     const finalHeaders = new Headers(retryResponse.headers);
     newCookies.forEach(cookie => finalHeaders.append('Set-Cookie', cookie));
-    console.log("44444444444")
+    console.log("새로운 쿠키 셋팅 >>>>>>>>>>> ", newCookies)
 
     return new NextResponse(retryResponse.body, {
       status: retryResponse.status,
