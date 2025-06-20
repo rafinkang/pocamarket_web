@@ -16,14 +16,14 @@ import {
  */
 export default function SortFilter({ sortList, onChange, value = "id,desc" }) {
   return (
-    <div className="flex justify-end items-center px-4">
+    <div className="flex justify-end items-center px-2 lg:px-4">
       <Select
         value={value}
         onValueChange={(value) => {
           onChange?.(value);
         }}
       >
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="w-[120px] lg:w-[180px]">
           <SelectValue placeholder="전체 보기" />
         </SelectTrigger>
         <SelectContent side="bottom" align="end" sideOffset={4}>

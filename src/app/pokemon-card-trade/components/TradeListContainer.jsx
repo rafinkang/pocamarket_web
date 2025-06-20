@@ -328,21 +328,50 @@ export default function TradeListContainer() {
         />
       )}
       <SearchContainer
-        findCardComponent={(props) => (
+        filterCardComponent={(props) => (
           <FilterCardBox {...props}>
-            {filterCardList.map((card) => (
-              <React.Fragment key={card.filterCardType}>
-                <FilterCard
-                  data={card}
-                  type={card.filterCardType}
-                  onCardClick={onFilterCardButton}
-                  onCancelClick={onFilterCardCancel}
-                />
-                {card.filterCardType === "my" && (
-                  <RiArrowLeftRightFill size="50px" />
-                )}
-              </React.Fragment>
-            ))}
+            {/* 내 카드 (my) 섹션 */}
+            <div className="flex items-center justify-center w-full">
+              {filterCardList
+                .filter((card) => card.filterCardType === "my")
+                .map((card) => (
+                  <FilterCard
+                    key={card.filterCardType}
+                    data={card}
+                    type={card.filterCardType}
+                    onCardClick={onFilterCardButton}
+                    onCancelClick={onFilterCardCancel}
+                  />
+                ))}
+            </div>
+
+            {/* 교환 화살표 */}
+            <div className="flex justify-center items-center">
+              {/* 세로 배열일 때는 아래쪽 화살표, 가로 배열일 때는 좌우 화살표 */}
+              <RiArrowLeftRightFill 
+                size="40px" 
+                className="sm:text-[50px]" 
+              />
+            </div>
+
+            {/* 원하는 카드들 (want) 섹션 */}
+            <div className="
+              grid items-center justify-items-center w-full
+              grid-rows-3 grid-cols-1 gap-4
+              md:grid-rows-1 md:grid-cols-[1fr_1fr_1fr] md:gap-4"
+            >
+              {filterCardList
+                .filter((card) => card.filterCardType !== "my")
+                .map((card) => (
+                  <FilterCard
+                    key={card.filterCardType}
+                    data={card}
+                    type={card.filterCardType}
+                    onCardClick={onFilterCardButton}
+                    onCancelClick={onFilterCardCancel}
+                  />
+                ))}
+            </div>
           </FilterCardBox>
         )}
         sortComponent={(props) => (

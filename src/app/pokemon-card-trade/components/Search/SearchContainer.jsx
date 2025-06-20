@@ -1,14 +1,14 @@
 "use client";
 
 export default function SearchContainer({
-  findCardComponent: FindCardComponent,
+  filterCardComponent: FilterCardComponent,
   sortComponent: SortComponent,
   filterComponent: FilterComponent,
   buttonsComponent: ButtonsComponent,
 }) {
   return (
     <SearchContainerContent
-      findCardComponent={FindCardComponent}
+      filterCardComponent={FilterCardComponent}
       sortComponent={SortComponent}
       filterComponent={FilterComponent}
       buttonsComponent={ButtonsComponent}
@@ -17,17 +17,19 @@ export default function SearchContainer({
 }
 
 function SearchContainerContent({
-  findCardComponent: FindCardComponent,
+  filterCardComponent: FilterCardComponent,
   sortComponent: SortComponent,
   filterComponent: FilterComponent,
   buttonsComponent: ButtonsComponent,
 }) {
   return (
-    <section id="searchTradeCard" className="w-full flex flex-col gap-4">
-      {FindCardComponent && <FindCardComponent />}
-      <div className="flex justify-end gap-2">
-        {SortComponent && <SortComponent />}
-        {FilterComponent && <FilterComponent />}
+    <section id="searchTradeCard" className="w-full min-w-[360px] flex flex-col gap-4">
+      {FilterCardComponent && <FilterCardComponent />}
+      <div className="w-full flex flex-col justify-end gap-4 md:flex-row md:gap-2">
+        <div className="flex justify-end gap-2">
+          {SortComponent && <SortComponent />}
+          {FilterComponent && <FilterComponent />}
+        </div>
         {ButtonsComponent && <ButtonsComponent />}
       </div>
     </section>

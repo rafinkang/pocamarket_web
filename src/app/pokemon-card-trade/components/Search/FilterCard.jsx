@@ -16,12 +16,12 @@ const FilterCard = memo(function FilterCard({
   onCancelClick,
 }) {
   const title =
-    data.filterCardType === "my" ? "교환할 카드" : "교환 받고 싶은 카드";
+    data.filterCardType === "my" ? "교환 카드" : "받는 카드";
 
   return (
     <>
       {data.code ? (
-        <div className="max-w-[200px] w-[20vw] flex justify-center items-center aspect-[366/512] cursor-pointer hover:scale-105 transition-transform">
+        <div className="w-[130px] sm:w-[130px] md:w-[110px] lg:w-[180px] xl:w-[200px] min-w-[100px] max-w-[200px] flex justify-center items-center aspect-[366/512] cursor-pointer hover:scale-105 transition-transform">
           <FlippableCard
             key={data.code}
             cardKey={data.code}
@@ -32,21 +32,23 @@ const FilterCard = memo(function FilterCard({
             btnName="선택 취소"
             rotateY={180}
             duration={0.3}
+            width="100%"
+            maxWidth="100%"
           />
         </div>
       ) : (
         <HoverCard>
           <HoverCardTrigger asChild>
             <Card
-              className="max-w-[200px] w-[20vw] flex justify-center items-center aspect-[366/512] cursor-pointer hover:scale-105 transition-transform shadow-lg hover:shadow-xl"
+              className="w-[130px] sm:w-[130px] md:w-[110px] lg:w-[180px] xl:w-[200px] min-w-[100px] max-w-[200px] flex justify-center items-center aspect-[366/512] cursor-pointer hover:scale-105 transition-transform shadow-lg hover:shadow-xl"
               onClick={() => onCardClick(data)}
             >
               <CardContent className="flex justify-center items-center w-full h-full p-0">
-                <RiAddLine size="50px" />
+                <RiAddLine size="40px" className="sm:text-[50px]" />
               </CardContent>
             </Card>
           </HoverCardTrigger>
-          <HoverCardContent className="w-[200px]">
+          <HoverCardContent className="w-[130px] sm:w-[130px] md:w-[110px] lg:w-[180px] xl:w-[200px] min-w-[100px] max-w-[200px]">
             <p>{title}</p>
           </HoverCardContent>
         </HoverCard>
