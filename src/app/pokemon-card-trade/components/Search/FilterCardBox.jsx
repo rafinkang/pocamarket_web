@@ -2,8 +2,6 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 
-//grid-rows-[1fr_auto_3fr] grid-cols-1 gap-4
-
 export default function FilterCardBox({ children }) {
   return (
     <Card className="bg-card text-card-foreground flex gap-6 rounded-xl border py-6 shadow-sm filterCardBox">
