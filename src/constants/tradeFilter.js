@@ -13,11 +13,11 @@ export const defaultFilterOptionList = Object.freeze([
   { value: "progress", name: "진행 중인 교환" },
   { value: "complete", name: "완료된 교환" },
 
-  { value: "my-all", name: "내 교환 전체 보기" },
+  { value: "my-all", name: "내 교환 전체 보기", type: "my" },
 
-  { value: "my-request", name: "내가 신청한 교환" },
-  { value: "my-progress", name: "내 진행 중인 교환" },
-  { value: "my-complete", name: "내 완료된 교환" },
+  { value: "my-request", name: "내가 신청한 교환", type: "my" },
+  { value: "my-progress", name: "내 진행 중인 교환", type: "my" },
+  { value: "my-complete", name: "내 완료된 교환", type: "my" },
 ]);
 
 const statusList = Object.freeze([

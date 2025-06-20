@@ -44,7 +44,7 @@ export default function TradeListContainer() {
   const [totalPage, setTotalPage] = useState(1);
   const [sort, setSort] = useState("id,desc");
   const [totalCount, setTotalCount] = useState(0);
-  const pageSize = 10;
+  const pageSize = 3;
 
   // 로그인 상태 체크
   const isLogin = useAuthStore((state) => state.isLogin);
@@ -151,7 +151,7 @@ export default function TradeListContainer() {
   };
 
   const checkMyTrade = () => {
-    return filterOption.includes("my-");
+    return filterOptionList.find(option => option.value === filterOption)?.type === "my";
   };
 
   useEffect(() => {
@@ -203,7 +203,7 @@ export default function TradeListContainer() {
           throw new Error("CONTENT_UNDEFINED");
         }
       } catch (error) {
-        alert(error.message);
+        alert(`${error.response?.data?.message} errorCode : ${error.response?.data?.errorCode}`);
         onReset();
       }
     }
@@ -329,6 +329,7 @@ export default function TradeListContainer() {
             {...props}
             filterList={filterOptionList}
             value={filterOption}
+            isLogin={isLogin}
             onChange={onFilterOptionChange}
           />
         )}
