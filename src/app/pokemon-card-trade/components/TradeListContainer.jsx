@@ -103,9 +103,7 @@ export default function TradeListContainer() {
     return params;
   };
 
-  /*
-    현재 쿼리스트링을 적용하는 함수
-  */
+  // 현재 쿼리스트링을 필터 값에 적용하는 메서드
   const currentQueryApply = (params) => {
     const queryString = params ?? window.location.search;
     const queryParams = parseQueryString(queryString);
@@ -120,7 +118,6 @@ export default function TradeListContainer() {
         if (card.filterCardType === "my") {
           return { ...card, code: myCardCode };
         } else {
-          // want 카드들에 대해 순서대로 할당
           const currentWantCode = wantCardCode[wantCardIndex] || null;
           wantCardIndex++;
           return {
@@ -131,7 +128,6 @@ export default function TradeListContainer() {
       });
     });
 
-
     // 필터 옵션 업데이트
     setFilterOption(queryParams.filterOption ?? "all");
     setPage(queryParams.page ? Number(queryParams.page) : 0);
@@ -141,6 +137,7 @@ export default function TradeListContainer() {
     return queryString;
   };
 
+  // API 정상 응답 데이터 파싱 메서드
   const parsingData = (res, setPage, setTotalPage, setTotalCount) => {
     const data = res.data;
     setPage(data?.number ?? 0);
@@ -149,6 +146,7 @@ export default function TradeListContainer() {
     return data.content;
   };
 
+  // 카드 중복 체크 메서드
   const isExistingCard = (cardData) => {
     const existingCard = filterCardList.find(
       (card) => card.filterCardType === currentFilterCardType
@@ -156,12 +154,13 @@ export default function TradeListContainer() {
     return existingCard && existingCard.code === cardData.code;
   };
 
+  // 내 교환 체크 메서드
   const checkMyTrade = () => {
     return filterOptionList.find(option => option.value === filterOption)?.type === "my";
   };
 
+  // 마운트/새로고침/뒤로가기/앞으로가기 모두 처리
   useEffect(() => {
-    // 마운트/새로고침/뒤로가기/앞으로가기 모두 처리
     const handlePopOrInit = () => {
       // React Strict Mode에서 중복 실행 방지
       if (isInitialized.current && !isPopState.current) {
@@ -191,6 +190,7 @@ export default function TradeListContainer() {
     return () => window.removeEventListener("popstate", popStateHandler);
   }, []);
 
+  // 데이터 조회 메서드
   useEffect(() => {
     async function fetchData() {
 
@@ -241,7 +241,7 @@ export default function TradeListContainer() {
       const queryString = makeQueryString(params);
       setFilterQuery(queryString);
     }
-  }, [page]); // 페이지 변경 시에만 실행
+  }, [page]);
 
   const onFilterCardButton = useCallback(
     (cardData) => {
@@ -317,7 +317,12 @@ export default function TradeListContainer() {
         <ListPickerDialog
           key={`dialog-${currentFilterCardType}-${Date.now()}`}
           open={isCardSearch}
-          onOpenChange={setIsCardSearch}
+          onOpenChange={
+            (v) => {
+              setIsCardSearch(v);
+              if(!v) setCurrentFilterCardType(null);
+            }
+          }
           placeholder={"포켓몬 이름 검색"}
           onSelect={onCardClick}
         />
