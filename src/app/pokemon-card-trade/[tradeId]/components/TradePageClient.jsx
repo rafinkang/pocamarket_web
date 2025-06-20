@@ -30,11 +30,9 @@ export default function TradePageClient() {
   const handleOk = () => {
     if (backRouter) {
       router.back();
-      console.log('1');
     }
     else {
 
-      console.log('2');
       router.push(LOGIN);
     }
   }

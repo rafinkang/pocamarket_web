@@ -25,12 +25,12 @@ export default async function callApi({ method, url, params, data, headers }) {
 
   } catch (error) {
     
-    // ★★★ 1. 실행 환경 확인 ★★★
+    // 1. 실행 환경 확인 
     const isBrowser = typeof window !== 'undefined';
     const ERROR_CODE = error.response ? error.response.status : null;
     const ERROR_MESSAGE = error.response ? error.response.data.message : null;
 
-    // ★★★ 2. 환경에 따른 에러 처리 분기 ★★★
+    // 2. 환경에 따른 에러 처리 분기 
     if (isBrowser) {
       // --- 클라이언트(브라우저) 환경일 때만 실행 ---
       if (ERROR_MESSAGE) alert(ERROR_MESSAGE);
@@ -63,7 +63,7 @@ export default async function callApi({ method, url, params, data, headers }) {
       errorStatus: error.response?.status,
     });
 
-    // ★★★ 3. 에러를 다시 throw하여 호출한 쪽에서 후속 처리 ★★★
+    // 3. 에러를 다시 throw하여 호출한 쪽에서 후속 처리 
     // 이 부분이 매우 중요합니다. 특히 서버 사이드에서는 이 throw된 에러를 받아서
     // redirect나 notFound 처리를 해주어야 합니다.
     throw error;

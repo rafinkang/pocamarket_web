@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { NOT_FOUND, UN_AUTHORIZED, FORBIDDEN, INTERNAL_SERVER_ERROR, BAD_GATEWAY, SERVICE_UNAVAILABLE, GATEWAY_TIMEOUT } from '@/constants/httpStatusCode';
-import { LOGIN } from '@/constants/path';
 
 const baseURL = process.env.NEXT_PUBLIC_LOCAL_API_URL
+// const baseURL = '/api/proxy';
 
 const axiosInstance = axios.create({
     baseURL: `${baseURL}/api`,
+    // baseURL: baseURL,
     timeout: 10000, // 요청 타임아웃 (10초)
     headers: {
         'Content-Type': 'application/json',

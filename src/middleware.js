@@ -1,3 +1,4 @@
+// 페이지나 api 라우트로 요청이 도달하기 전에 실행
 import { NextResponse } from 'next/server';
 import { LOGIN } from './constants/path';
 
