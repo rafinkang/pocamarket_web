@@ -38,7 +38,7 @@ export default async function callApi({ method, url, params, data, headers }) {
       switch (ERROR_CODE) {
         case UN_AUTHORIZED:
           console.log('로그인 후 사용 가능합니다.');
-          window.location.href = LOGIN_URL;
+          window.location.href = LOGIN;
           break;
         case FORBIDDEN:
           console.log('권한이 없습니다.');
