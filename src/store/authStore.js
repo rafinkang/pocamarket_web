@@ -34,7 +34,12 @@ const useAuthStore = create(
         } catch (error) {
           console.error('Error in logout server action:', error);
         }
-      }
+      },
+
+      clear: () => set({
+        isLogin: false,
+        user: null
+      }),
     }),
     {
       name: 'auth-storage', // localStorage에 저장될 고유 키 이름

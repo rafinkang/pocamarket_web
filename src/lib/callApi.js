@@ -1,6 +1,7 @@
 import apiClient from '@/lib/axiosInstance'; // 기존 Axios 인스턴스
 import { BAD_REQUEST, UN_AUTHORIZED, FORBIDDEN, INTERNAL_SERVER_ERROR, BAD_GATEWAY, SERVICE_UNAVAILABLE, GATEWAY_TIMEOUT } from '@/constants/httpStatusCode';
 import { LOGIN } from '@/constants/path';
+import useAuthStore from '@/store/authStore'
 
 /**
  * 범용 API 호출 함수
@@ -37,16 +38,17 @@ export default async function callApi({ method, url, params, data, headers }) {
 
       switch (ERROR_CODE) {
         case UN_AUTHORIZED:
-          console.log('로그인 후 사용 가능합니다.');
+          alert('로그인 후 사용 가능합니다.');
+          useAuthStore.getState().clear();
           window.location.href = LOGIN;
           break;
         case FORBIDDEN:
-          console.log('권한이 없습니다.');
+          alert('권한이 없습니다.');
           window.history.back();
           break;
         case INTERNAL_SERVER_ERROR:
           // ... 기타 서버 에러 케이스
-          console.log(`서버에 문제가 발생했습니다. 잠시 후 다시 시도해주세요. (코드: ${ERROR_CODE})`);
+          alert(`서버에 문제가 발생했습니다. 잠시 후 다시 시도해주세요. (코드: ${ERROR_CODE})`);
           break;
       }
     } else {

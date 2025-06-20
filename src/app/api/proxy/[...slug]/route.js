@@ -118,11 +118,10 @@ async function handler(request, { params }) {
       statusText: retryResponse.statusText,
       headers: finalHeaders,
     });
-
   } catch (error) {
     // 재발급 자체가 실패한 경우 (예: 리프레시 토큰 만료)
     console.error("Could not refresh token:", error.message);
-    const response = NextResponse.json({ message: "Session expired. Please log in again." }, { status: 401 });
+    const response = NextResponse.json({ message: "Session expired. Please log in again." }, { status: UN_AUTHORIZED });
     response.cookies.delete('accessToken');
     response.cookies.delete('refreshToken');
     return response;
