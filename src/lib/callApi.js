@@ -1,5 +1,5 @@
 import apiClient from '@/lib/axiosInstance'; // 기존 Axios 인스턴스
-import { UN_AUTHORIZED, FORBIDDEN, INTERNAL_SERVER_ERROR, BAD_GATEWAY, SERVICE_UNAVAILABLE, GATEWAY_TIMEOUT } from '@/constants/httpStatusCode';
+import { BAD_REQUEST, UN_AUTHORIZED, FORBIDDEN, INTERNAL_SERVER_ERROR, BAD_GATEWAY, SERVICE_UNAVAILABLE, GATEWAY_TIMEOUT } from '@/constants/httpStatusCode';
 import { LOGIN } from '@/constants/path';
 
 /**
@@ -22,29 +22,31 @@ export default async function callApi({ method, url, params, data, headers }) {
       headers, // 추가적인 헤더 설정
     });
     return response.data; // 응답 데이터 반환
+
   } catch (error) {
+    
     // ★★★ 1. 실행 환경 확인 ★★★
     const isBrowser = typeof window !== 'undefined';
     const ERROR_CODE = error.response ? error.response.status : null;
+    const ERROR_MESSAGE = error.response ? error.response.data.message : null;
 
     // ★★★ 2. 환경에 따른 에러 처리 분기 ★★★
     if (isBrowser) {
       // --- 클라이언트(브라우저) 환경일 때만 실행 ---
+      if (ERROR_MESSAGE) alert(ERROR_MESSAGE);
+
       switch (ERROR_CODE) {
         case UN_AUTHORIZED:
           console.log('로그인 후 사용 가능합니다.');
-          // window.location.href 대신 Next.js의 router를 사용하는 것이 더 좋습니다.
-          // 하지만 공통 모듈에서는 window 객체를 직접 사용할 수밖에 없는 경우가 있습니다.
           window.location.href = LOGIN_URL;
           break;
         case FORBIDDEN:
           console.log('권한이 없습니다.');
-          // 사용자를 이전 페이지로 보내는 것은 클라이언트에서만 의미가 있습니다.
           window.history.back();
           break;
         case INTERNAL_SERVER_ERROR:
           // ... 기타 서버 에러 케이스
-          alert(`서버에 문제가 발생했습니다. 잠시 후 다시 시도해주세요. (코드: ${ERROR_CODE})`);
+          console.log(`서버에 문제가 발생했습니다. 잠시 후 다시 시도해주세요. (코드: ${ERROR_CODE})`);
           break;
       }
     } else {
