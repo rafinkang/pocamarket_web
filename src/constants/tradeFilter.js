@@ -26,9 +26,10 @@ const statusList = Object.freeze([
   { value: "3", name: "완료된 교환" },
 ]);
 
+export const defaultSort = "updatedAt,desc";
 export const defaultSortList = Object.freeze([
-  { value: "id,desc", name: "최신순" },
-  { value: "id,asc", name: "오래된순" },
+  { value: "updatedAt,desc", name: "최신순" },
+  { value: "updatedAt,asc", name: "오래된순" },
 ]);
 
 /**

@@ -7,6 +7,7 @@ import {
   defaultFilterCardList,
   defaultFilterOptionList,
   defaultSortList,
+  defaultSort,
 } from "@/constants/tradeFilter";
 
 // 거래 검색 필터
@@ -39,10 +40,11 @@ import { parseQueryString, makeQueryString } from "@/utils/queryString";
 // 로그인 상태 체크
 import useAuthStore from "@/store/authStore";
 
+
 export default function TradeListContainer() {
   const [page, setPage] = useState(0);
   const [totalPage, setTotalPage] = useState(1);
-  const [sort, setSort] = useState("id,desc");
+  const [sort, setSort] = useState(defaultSort);
   const [totalCount, setTotalCount] = useState(0);
   const pageSize = 3;
 
@@ -55,10 +57,10 @@ export default function TradeListContainer() {
   const [isCardSearch, setIsCardSearch] = useState(false);
   const [currentFilterCardType, setCurrentFilterCardType] = useState(null);
 
-  const [filterQuery, setFilterQuery] = useState({});
+  const [filterQuery, setFilterQuery] = useState(null);
   const isPopState = useRef(false);
+  const isInitialized = useRef(false);
 
-  const cardInfo = { code: null, name: null, type: null };
   const [filterCardList, setFilterCardList] = useState([
     ...defaultFilterCardList,
   ]);
@@ -86,7 +88,8 @@ export default function TradeListContainer() {
         }
       }
     });
-    wantCardCode = wantCardCode.join(",");
+
+    wantCardCode = wantCardCode.length > 0 ? wantCardCode.join(",") : null;
 
     const params = {
       myCardCode,
@@ -108,29 +111,32 @@ export default function TradeListContainer() {
     const queryParams = parseQueryString(queryString);
 
     const myCardCode = queryParams?.myCardCode ?? null;
-    const wantCardCode = queryParams?.wantCardCode?.split(",") ?? [];
+    const wantCardCode = queryParams?.wantCardCode?.split(",").filter(code => code && code.trim() !== "") ?? [];
 
     // 필터 카드 리스트 업데이트
     setFilterCardList((prev) => {
+      let wantCardIndex = 0;
       return prev.map((card) => {
         if (card.filterCardType === "my") {
           return { ...card, code: myCardCode };
-        } else if (wantCardCode.length > 0) {
-          const temp = {
+        } else {
+          // want 카드들에 대해 순서대로 할당
+          const currentWantCode = wantCardCode[wantCardIndex] || null;
+          wantCardIndex++;
+          return {
             ...card,
-            code: wantCardCode[0].length > 0 ? wantCardCode.shift() : null,
+            code: currentWantCode && currentWantCode.length > 0 ? currentWantCode : null,
           };
-          return temp;
         }
-        return card;
       });
     });
+
 
     // 필터 옵션 업데이트
     setFilterOption(queryParams.filterOption ?? "all");
     setPage(queryParams.page ? Number(queryParams.page) : 0);
     // size는 보류
-    setSort(queryParams.sort ?? "id,desc");
+    setSort(queryParams.sort ?? defaultSort);
 
     return queryString;
   };
@@ -157,21 +163,39 @@ export default function TradeListContainer() {
   useEffect(() => {
     // 마운트/새로고침/뒤로가기/앞으로가기 모두 처리
     const handlePopOrInit = () => {
+      // React Strict Mode에서 중복 실행 방지
+      if (isInitialized.current && !isPopState.current) {
+        return;
+      }
+      
       isPopState.current = true;
       const queryString = currentQueryApply();
-      setFilterQuery(queryString);
+      if(queryString == null || queryString == ""){
+        setFilterQuery(makeQueryString(createParams()));
+      }else{
+        setFilterQuery(queryString);
+      }
+      isInitialized.current = true;
     };
 
     // 최초 마운트 시 실행
     handlePopOrInit();
 
     // popstate 이벤트 등록
-    window.addEventListener("popstate", handlePopOrInit);
-    return () => window.removeEventListener("popstate", handlePopOrInit);
+    const popStateHandler = () => {
+      isPopState.current = true;
+      handlePopOrInit();
+    };
+    
+    window.addEventListener("popstate", popStateHandler);
+    return () => window.removeEventListener("popstate", popStateHandler);
   }, []);
 
   useEffect(() => {
     async function fetchData() {
+
+      if (!filterQuery) return;
+
       try {
         const isMy = checkMyTrade();
         const callApi = isMy ? getMyTcgTradeList : getTcgTradeList;
@@ -284,7 +308,7 @@ export default function TradeListContainer() {
   const onReset = () => {
     setFilterCardList([...defaultFilterCardList]);
     setFilterOption("all");
-    setSort("id,desc");
+    setSort(defaultSort);
   };
 
   return (
