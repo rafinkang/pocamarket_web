@@ -1,6 +1,7 @@
 
 import { Noto_Sans_KR } from 'next/font/google';
 
+import AuthProvider from '@/components/providers/AuthProvider';
 import { Geist, Geist_Mono } from "next/font/google";
 import "@/styles/globals.css";
 import { Header } from "@/components/layout/Header";
@@ -43,14 +44,16 @@ export default function RootLayout({ children }) {
           notoSansKr.variable
         )}
       >
-        <div className="max-w-[1280px] mx-auto">
-          <Header />
-          <main className="min-h-[calc(100vh_-_112px)] p-8 pb-20 sm:py-10 sm:px-20 w-full flex flex-col">
-            {children}
-          </main>
-          <Toaster />
-          <Footer />
-        </div>
+        <AuthProvider>
+          <div className="max-w-[1280px] mx-auto">
+            <Header />
+            <main className="min-h-[calc(100vh_-_112px)] p-8 pb-20 sm:py-10 sm:px-20 w-full flex flex-col">
+              {children}
+            </main>
+            <Toaster />
+            <Footer />
+          </div>
+        </AuthProvider>
       </body>
     </html>
   );
