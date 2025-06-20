@@ -1,10 +1,12 @@
 "use client";
 
+import PokemonCardImage from "@/components/list/PokemonCardImage";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { POKEMON_CARD_TRADE } from "@/constants/path";
-import Image from "next/image";
+import { getPackSetNameByText } from "@/utils/convertUtils";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 /*
 testMode
@@ -20,19 +22,20 @@ export default function TradeElement({
   myCard = {
     cardCode: "a1-001",
     cardName: "테스트 마이 카드",
+    cardPackSet: "최강의 유전자"
   },
   wantedCards = [
     {
       cardCode: "a1-002",
       cardName: "테스트 원하는 카드",
+      cardPackSet: "최강의 유전자",
     },
   ], // 원하는 카드들의 배열
   createAt = "2025-01-01",
   status = "교환 요청 중",
   requestCount = "0(보류)",
+  testMode = false,
 }) {
-  const [isError, setIsError] = useState(false);
-
   useEffect(() => {
     createAt = new Date(createAt).toLocaleDateString();
   }, [createAt]);
@@ -44,87 +47,65 @@ export default function TradeElement({
   return (
     <Link
       href={`${POKEMON_CARD_TRADE}/${tradeCode}`}
-      className="w-full h-[100%]"
+      className="w-full"
     >
-      <div className="flex flex-wrap items-center gap-4 p-4 border rounded-lg w-full mx-auto h-[100%]">
-        {/* 내 카드 섹션 */}
-        <div className="w-[300px] shrink-0 h-[100%]">
-          <div className="w-full h-full bg-[#f8f9fa] shadow-lg">
-            <Card className="flex flex-row items-center rounded-[12px] p-4 h-full">
-              <div className="relative w-[80px] aspect-[366/512] shrink-0">
-                {isError ? (
-                  <div className="errorBox">
-                    <img
-                      className="rounded-[12px]"
-                      src="/images/cardback.webp"
-                      alt="errorImg"
-                      style={{ objectFit: "contain" }}
-                      sizes="(max-width: 400px) 100vw, 400px"
-                    />
-                  </div>
-                ) : (
-                  <Image
-                    className="rounded-[12px]"
-                    src="/images/cardback.webp"
-                    alt="My Pokemon Card"
-                    fill
-                    sizes="(max-width: 400px) 100vw, 400px"
-                    style={{ objectFit: "contain" }}
-                    priority={true}
-                    onError={imageHandleError}
-                  />
-                )}
-              </div>
-              <div className="flex flex-col min-w-0 flex-1">
-                <h3 className="text-lg font-semibold truncate">
-                  {myCard.cardName}
-                </h3>
-                <p className="text-gray-600 truncate">
-                  {tradeUserNickname}님의 카드
-                </p>
-              </div>
-            </Card>
+      <div className="flex flex-col items-center gap-4 p-4 border rounded-lg w-full mx-auto">
+        <div>
+          <p className="text-black-800 truncate font-bold">
+                {tradeUserNickname}님의 교환 신청
+          </p>
+        </div>
+        <div className="w-full grid grid-cols-1 grid-rows-[1fr_auto_auto_auto] justify-center items-start gap-4 lg:grid-cols-[2fr_auto_6fr_1fr] lg:grid-rows-1 lg:justify-start lg:items-center">
+          {/* 내 카드 섹션 */}
+          <div className="flex items-center justify-center lg:justify-end">
+            <div className="bg-[#f8f9fa] shadow-lg">
+              <Card className="flex flex-col items-center rounded-[12px] p-4 w-[200px] gap-2">
+                <div className="relative w-[120px] aspect-[366/512]">
+                  <PokemonCardImage data={{code: myCard.cardCode}} testMode={testMode} />
+                </div>
+                <div className="flex flex-col min-w-0 justify-center items-center">
+                  <h3 className="text-lg font-semibold truncate">
+                    {myCard.cardName}
+                  </h3>
+                  <p>{getPackSetNameByText(myCard.cardPackSet)}</p>
+                </div>
+              </Card>
+            </div>
           </div>
-        </div>
 
-        {/* 교환 화살표 */}
-        <div className="flex items-center px-2">
-          <span className="text-2xl">↔</span>
-        </div>
+          {/* 교환 화살표 */}
+          <div className="flex items-center px-2">
+            <span className="text-2xl mx-auto lg:mx-0 lg:rotate-0 rotate-90 transition-transform duration-300">↔</span>
+          </div>
 
-        {/* 원하는 카드들 */}
-        <div className="flex-1 min-w-0 h-[100%]">
-          <div className="flex flex-wrap h-full gap-4">
+          {/* 원하는 카드들 */}
+          <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
             {wantedCards.map((card, index) => (
-              <div key={index} className="bg-[#f8f9fa] shadow-lg h-full">
-                <Card className="flex flex-row items-center rounded-[12px] p-4 h-full">
-                  <div className="relative w-[80px] aspect-[366/512] shrink-0">
-                    <Image
-                      className="rounded-[12px]"
-                      src="/images/cardback.webp"
-                      alt={`Wanted Pokemon Card ${index + 1}`}
-                      fill
-                      sizes="(max-width: 400px) 100vw, 400px"
-                      style={{ objectFit: "contain" }}
-                      onError={imageHandleError}
-                    />
+              <div key={index} className="bg-[#f8f9fa] shadow-lg">
+                <Card className="flex flex-col items-center rounded-[12px] p-4 min-w-[200px] gap-2">
+                  <div className="relative w-[120px] aspect-[366/512]">
+                    <PokemonCardImage data={{code: card.cardCode}} testMode={testMode} />
                   </div>
-                  <div className="flex flex-col min-w-0 flex-1">
+                  <div className="flex flex-col min-w-0 justify-center items-center">
                     <h3 className="text-lg font-semibold truncate">
                       {card.cardName}
                     </h3>
+                    <p>{getPackSetNameByText(card.cardPackSet)}</p>
                   </div>
                 </Card>
               </div>
             ))}
           </div>
-        </div>
 
-        {/* 교환 정보 */}
-        <div className="flex flex-col items-center pl-2">
-          <p>{createAt}</p>
-          <p>{status}</p>
-          {/* <p>{requestCount}</p> */}
+          {/* 교환 정보 */}
+          <div className="flex flex-col items-center pl-2 self-center w-full min-w-[100px]">
+            <p>{createAt}</p>
+            <p>{status}</p>
+            <Button variant="outline">
+              끌어올리기?
+            </Button>
+            {/* <p>{requestCount}</p> */}
+          </div>
         </div>
       </div>
     </Link>
