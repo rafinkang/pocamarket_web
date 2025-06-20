@@ -29,7 +29,7 @@ async function apiRequest(slug, search, request, token) {
 
 // 토큰을 재발급하는 로직을 별도 함수로 분리
 async function refreshTokenAndCookies() {
-  console.log("2222222222")
+  console.log("2222222222 refreshTokenAndCookies")
   const cookieStore = await cookies();
   const refreshToken = cookieStore.get("refreshToken")?.value;
 
@@ -46,12 +46,27 @@ async function refreshTokenAndCookies() {
   console.log("refreshRes >>>>>>>>>>>>>>>>>>>> ", refreshRes)
 
   // AccessToken 재발급 실패시 로그아웃 처리
-  if (!refreshRes.status !== SUCCESS) throw new Error("Token refresh request failed.");
+  if (refreshRes.status !== SUCCESS) throw new Error("Token refresh request failed.");
 
-  // AccessToken 재발급 성공 시, 새로운 쿠키와 AccessToken을 준비
-  const refreshData = await refreshRes.json();
-  const newAccessToken = refreshData.accessToken;
+  // Set-Cookie 헤더에서 새로운 쿠키들을 가져옴
   const newCookies = refreshRes.headers.getSetCookie();
+
+  // Set-Cookie 헤더에서 accessToken 추출
+  let newAccessToken = null;
+  for (const cookie of newCookies) {
+    if (cookie.startsWith('accessToken=')) {
+      // accessToken=value; 형태에서 value 부분만 추출
+      const match = cookie.match(/accessToken=([^;]+)/);
+      if (match) {
+        newAccessToken = match[1];
+        break;
+      }
+    }
+  }
+
+  if (!newAccessToken) {
+    throw new Error("No access token found in Set-Cookie headers.");
+  }
 
   return { newAccessToken, newCookies };
 }
@@ -91,12 +106,12 @@ async function handler(request, { params }) {
     // 재발급 성공 후, 원래 실패했던 API를 새로운 토큰으로 재시도.
     console.log("Token refreshed. Retrying original request...");
     const retryResponse = await apiRequest(slug, queryString, request, newAccessToken);
-  console.log("33333333333")
+    console.log("33333333333")
 
     // 최종 응답에 새로운 쿠키를 담아 클라이언트에게 전달.
     const finalHeaders = new Headers(retryResponse.headers);
     newCookies.forEach(cookie => finalHeaders.append('Set-Cookie', cookie));
-  console.log("44444444444")
+    console.log("44444444444")
 
     return new NextResponse(retryResponse.body, {
       status: retryResponse.status,
