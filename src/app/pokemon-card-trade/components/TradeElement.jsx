@@ -1,12 +1,14 @@
 "use client";
 
+import { patchTcgTradeRefresh } from "@/api/tcgTrade";
 import PokemonCardImage from "@/components/list/PokemonCardImage";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { POKEMON_CARD_TRADE } from "@/constants/path";
+import { convertStatus } from "@/constants/tradeFilter";
 import { getPackSetNameByText } from "@/utils/convertUtils";
+import { getTimeDifference } from "@/utils/dateUtils";
 import Link from "next/link";
-import { useEffect } from "react";
 
 /*
 testMode
@@ -22,7 +24,7 @@ export default function TradeElement({
   myCard = {
     cardCode: "a1-001",
     cardName: "테스트 마이 카드",
-    cardPackSet: "최강의 유전자"
+    cardPackSet: "최강의 유전자",
   },
   wantedCards = [
     {
@@ -31,18 +33,26 @@ export default function TradeElement({
       cardPackSet: "최강의 유전자",
     },
   ], // 원하는 카드들의 배열
-  createAt = "2025-01-01",
-  status = "교환 요청 중",
+  updatedAt = "오래 전",
+  status = 1,
+  isMyList = false,
   requestCount = "0(보류)",
   testMode = false,
 }) {
-  useEffect(() => {
-    createAt = new Date(createAt).toLocaleDateString();
-  }, [createAt]);
 
-  const imageHandleError = () => {
-    setIsError(true);
-  };
+  const handleRefresh = async (e) => {
+    try {
+      e.preventDefault();
+      e.stopPropagation();
+      const res = await patchTcgTradeRefresh(tradeCode, { status, updatedAt });
+      if(res.data && res.success) {
+        alert("교환글 갱신 되었습니다.");
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <Link
@@ -98,12 +108,14 @@ export default function TradeElement({
           </div>
 
           {/* 교환 정보 */}
-          <div className="flex flex-col items-center pl-2 self-center w-full min-w-[100px]">
-            <p>{createAt}</p>
-            <p>{status}</p>
-            <Button variant="outline">
-              끌어올리기?
-            </Button>
+          <div className="flex flex-col items-center pl-2 self-center w-full min-w-[100px] gap-2">
+            <p>{getTimeDifference(updatedAt)}</p>
+            <p>{convertStatus(status)}</p>
+            {isMyList && (
+              <Button variant="outline" onClick={handleRefresh}>
+                끌어올리기
+              </Button>
+            )}
             {/* <p>{requestCount}</p> */}
           </div>
         </div>

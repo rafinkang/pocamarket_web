@@ -58,3 +58,14 @@ export const getTcgTradeDetail = async (tradeId) => {
     url: `/tcg-trade/${tradeId}`,
   });
 };
+
+/**
+ * TCG 교환 최신화
+ */
+export const patchTcgTradeRefresh = async (tradeId, data) => {
+  return callApi({
+    method: "PATCH",
+    url: `/tcg-trade/refresh/${tradeId}`,
+    data,
+  });
+}

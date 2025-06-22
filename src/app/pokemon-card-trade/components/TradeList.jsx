@@ -1,8 +1,6 @@
 "use client";
 
 import TradeElement from "./TradeElement";
-import { convertStatus } from "@/constants/tradeFilter";
-import { getTimeDifference } from "@/utils/dateUtils";
 
 export default function TradeList({ tradeList }) {
   return (
@@ -18,8 +16,9 @@ export default function TradeList({ tradeList }) {
                     tradeUserNickname={trade.nickname}
                     myCard={trade.myCardInfo}
                     wantedCards={trade.wantCardInfo}
-                    createAt={getTimeDifference(trade.created_at)}
-                    status={convertStatus(trade.status)}
+                    updatedAt={trade.updated_at}
+                    status={trade.status}
+                    isMyList={trade.isMyList}
                     testMode={true}
                     // requestCount={trade.requestCount}
                   />
