@@ -10,3 +10,10 @@ export const getMyInfo = async () => {
         url: '/user/me',
     });
 };
+
+export const deleteMyInfo = async () => {
+    return callApi({
+        method: 'delete',
+        url: '/user/me',
+    });
+};

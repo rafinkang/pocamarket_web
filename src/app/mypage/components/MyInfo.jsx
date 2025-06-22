@@ -1,6 +1,6 @@
 "use client"
 
-import { getMyInfo } from "@/api/users"
+import { deleteMyInfo, getMyInfo } from "@/api/users"
 import AlertDialog from "@/components/dialog/AlertDialog"
 import {
   Avatar,
@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
+import useAuthStore from "@/store/authStore"
 import { useEffect, useState } from "react"
 
 export default function MyInfoPage({ className }) {
@@ -34,9 +35,22 @@ export default function MyInfoPage({ className }) {
     fetchMyInfo();
   }, [])
 
-  const withdraw = () => {
-    console.log('회원 탈퇴');
+  const withdrawUser = async () => {
+    const res = await deleteMyInfo().then((result) => {
+      console.log('result ::: ', result);
+      if (result && result.success == true) {
+        // 탍퇴처리 완료 후 로그아웃
+        useAuthStore.getState().logout();
+      }
+    }).catch((err) => {
+      console.log('err ::: ', err);
+    });
   }
+
+  const updateUserInfo = () => {
+    console.log('회원 정보 변경');
+  }
+
   return (
     <>
       <Card className={`${className}`}>
@@ -70,19 +84,21 @@ export default function MyInfoPage({ className }) {
                     <p className="min-w-20">이메일</p>
                     <Input type="text" placeholder="이메일" defaultValue={myInfo.email} />
                     <div className="flex flex-row gap-2 justify-end">
-                      <Button variant="outline" onClick={() => setIsUpdate(false)}>인증</Button>
+                      <Button variant="outline" onClick={() => alert("준비중입니다.")}>인증</Button>
                     </div>
                   </div>
                   <div className="flex flex-row gap-2 items-center">
                     <p className="min-w-20">전화번호</p>
                     <Input type="text" placeholder="전화번호" defaultValue={myInfo.phone} />
                     <div className="flex flex-row gap-2 justify-end">
-                      <Button variant="outline" onClick={() => setIsUpdate(false)}>인증</Button>
+                      <Button variant="outline" onClick={() => alert("준비중입니다.")}>인증</Button>
                     </div>
                   </div>
                 </CardContent>
                 <CardFooter className="flex justify-end gap-2">
-                  <Button variant="outline" onClick={() => setIsUpdate(false)}>저장</Button>
+                  <AlertDialog handleOk={updateUserInfo} isConfrim={true} title="회원 정보 변경" msg="입력하신 내용으로 회원정보가 변경됩니다.">
+                    <Button variant="outline">저장</Button>
+                  </AlertDialog>
                   <Button variant="outline" onClick={() => setIsUpdate(false)}>취소</Button>
                 </CardFooter>
               </>
@@ -112,7 +128,7 @@ export default function MyInfoPage({ className }) {
                 <CardFooter className="flex justify-end gap-2">
                   <Button variant="outline" onClick={() => setIsUpdate(true)}>회원 정보 변경</Button>
                   <Button variant="outline" onClick={() => setIsUpdate(true)}>비밀번호 변경</Button>
-                  <AlertDialog handleOk={withdraw} isConfrim={true} title="회원 탈퇴" msg="정말로 포카마켓을 탈퇴하시겠습니까ㅠㅠ?">
+                  <AlertDialog handleOk={withdrawUser} isConfrim={true} title="회원 탈퇴" msg="정말로 포카마켓을 탈퇴하시겠습니까ㅠㅠ?">
                     <Button variant="destructive">회원 탈퇴</Button>
                   </AlertDialog>
                 </CardFooter>
