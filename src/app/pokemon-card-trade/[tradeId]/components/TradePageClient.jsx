@@ -79,10 +79,13 @@ export default function TradePageClient() {
   const getDetail = async () => {
     try {
       const response = await getTcgTradeDetail(tradeId);
-      const tcgCodeList = await getTcgCodeList();
       setData(response.data);
       setIsMy(response.data.isMy);
-      setTcgCodeList(tcgCodeList.data);
+
+      if (isLogin) {
+        const tcgCodeList = await getTcgCodeList();
+        setTcgCodeList(tcgCodeList.data);
+      }
     } catch (error) {
       console.log(error);
       setAlertTitle("");
