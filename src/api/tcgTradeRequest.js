@@ -1,0 +1,16 @@
+import callApi from "@/lib/callApi";
+
+export const postTcgTradeRequest = async (tradeId, data) => {
+  return callApi({
+    method: "POST",
+    url: `/tcg-trade/${tradeId}/request`,
+    data,
+  });
+}
+
+export const getTcgTradeRequestList = async (tradeId) => {
+  return callApi({
+    method: "GET",
+    url: `/tcg-trade/request/${tradeId}`,
+  });
+}

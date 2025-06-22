@@ -11,7 +11,8 @@ import TradeBox from "./TradeBox";
 import TradeList from "./TradeList";
 
 import { getTcgCodeList } from "@/api/tcgCode";
-import { getTcgTradeDetail, postTcgTradeRequest } from "@/api/tcgTrade";
+import { getTcgTradeDetail } from "@/api/tcgTrade";
+import { getTcgTradeRequestList, postTcgTradeRequest } from "@/api/tcgTradeRequest";
 import { LOGIN } from "@/constants/path";
 
 export default function TradePageClient() {
@@ -22,6 +23,7 @@ export default function TradePageClient() {
   const [data, setData] = useState(null);
   const [isMy, setIsMy] = useState(false);
   const [tcgCodeList, setTcgCodeList] = useState([]);
+  const [requestList, setRequestList] = useState([]);
   const [alertTitle, setAlertTitle] = useState('로그인이 필요해요.');
   const [alertMsg, setAlertMsg] = useState('로그인 후 카드를 교환해보세요.');
   const [backRouter, setBackRouter] = useState(false);
@@ -79,8 +81,11 @@ export default function TradePageClient() {
   const getDetail = async () => {
     try {
       const response = await getTcgTradeDetail(tradeId);
+      const requestListResponse = await getTcgTradeRequestList(tradeId);
+
       setData(response.data);
       setIsMy(response.data.isMy);
+      setRequestList(requestListResponse.data.content);
 
       if (isLogin) {
         const tcgCodeList = await getTcgCodeList();
@@ -125,7 +130,7 @@ export default function TradePageClient() {
         <div className="flex flex-col gap-8 mt-2">
           <TradeBox checkLogin={checkLogin} data={data} isMy={isMy} tcgCodeList={tcgCodeList} onTradeRequest={handleTradeRequest} />
           {isMy && <ButtonGroup tradeId={tradeId} />}
-          <TradeList isMy={isMy} isLogin={isLogin} />
+          <TradeList isMy={isMy} isLogin={isLogin} requestList={requestList} />
         </div>
     </>
   );

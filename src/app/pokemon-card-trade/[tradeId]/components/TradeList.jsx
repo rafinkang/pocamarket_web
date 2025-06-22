@@ -1,12 +1,29 @@
 "use client";
 
-import React, { useEffect, useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 
+import { getTradeRequestMapping, REQUEST } from "@/constants/tradeStatus";
 import TradeListItem from "./TradeListItem";
 import TradeListItemDialog from "./TradeListItemDialog";
 
-export default function TradeList({isMy, isLogin}) {
-  const cards = [
+export default function TradeList({isMy, isLogin, requestList}) {
+  const cards = requestList ? 
+  requestList.map(request => {
+    return {
+      description: `${request.nickname}님이 [${request.cardNameKo}](으)로 교환 신청 하였습니다.`,
+      tcgCode: request.tcgCode,
+      code: request.requestCardCode,
+      status: getTradeRequestMapping(request.status),
+      content: () => {
+        return (
+          <>
+            <p>교환 성공 횟수 : {request.tradeCount ?? 0}</p>
+            <p>신고 횟수 : {request.reportCount ?? 0}</p>
+          </>
+        );
+      },
+    }
+  }) : [
     {
       description: "XXX님이 [캐터피](으)로 교환 신청 하였습니다.",
       code: "a1-001",
@@ -78,7 +95,7 @@ export default function TradeList({isMy, isLogin}) {
   }, [active]);
 
   useEffect(() => {
-    setActiveCard(cards.find(card => card.status.code === "TRADE"))
+    setActiveCard(cards.find(card => card.status.code === REQUEST))
   }, [])
 
   return (
