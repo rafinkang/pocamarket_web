@@ -25,9 +25,9 @@ const tradeStats = [
 const listItemClassName = "flex justify-center-safe items-center gap-2";
 const badgeClassName = "h-5 min-w-5 rounded-full px-1 font-mono tabular-nums";
 
-export default function MyTrade() {
+export default function MyTrade({ className }) {
   return (
-    <Card className="w-full">
+    <Card className={`${className}`}>
       <CardHeader>
         <CardTitle>나의 교환</CardTitle>
         <CardDescription>카드교환 상세정보</CardDescription>

@@ -1,21 +1,25 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { getMyInfo } from "@/api/users"
+import AlertDialog from "@/components/dialog/AlertDialog"
+import {
+  Avatar,
+  AvatarImage
+} from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Skeleton } from "@/components/ui/skeleton"
+import { useEffect, useState } from "react"
 
-export default function MyInfoPage() {
+export default function MyInfoPage({ className }) {
   const [myInfo, setMyInfo] = useState(null);
   const [isUpdate, setIsUpdate] = useState(false);
 
@@ -30,9 +34,12 @@ export default function MyInfoPage() {
     fetchMyInfo();
   }, [])
 
+  const withdraw = () => {
+    console.log('회원 탈퇴');
+  }
   return (
     <>
-      <Card className="w-full">
+      <Card className={`${className}`}>
         {!myInfo ? (
           <div className="flex flex-col space-y-3">
             <Skeleton className="mx-10 h-[125px] rounded-xl" />
@@ -44,37 +51,71 @@ export default function MyInfoPage() {
         ) : (
           <>
             <CardHeader>
-              <CardTitle>{myInfo.name}님의 정보</CardTitle>
-              <CardDescription>{myInfo.grade} 등급입니다.</CardDescription>
-              <CardAction>
-                {isUpdate ? (
-                  <Button variant="ghost" onClick={() => setIsUpdate(false)}>취소</Button>
-                ) : (
-                  <Button variant="ghost" onClick={() => setIsUpdate(true)}>수정</Button>
-                )}
-              </CardAction>
+              <CardTitle>{myInfo.nickname}님의 정보</CardTitle>
+              <CardDescription>현재 등급은 {myInfo.gradeDesc} 입니다.</CardDescription>
             </CardHeader>
             {isUpdate ? (
               <>
                 <CardContent className="flex flex-col gap-2">
-                  <Input type="text" placeholder="아이디" defaultValue={myInfo.loginId}  />
-                  <Input type="password" placeholder="비밀번호" defaultValue={myInfo.password} />
-                  <Input type="text" placeholder="닉네임" defaultValue={myInfo.nickname} />
-                  <Input type="text" placeholder="이메일" defaultValue={myInfo.email} />
-                  <Input type="text" placeholder="전화번호" defaultValue={myInfo.phone} />
+                  <div className="flex flex-row gap-2 items-center">
+                    <p className="min-w-20">아이디</p>
+                    <Input type="text" placeholder="아이디" defaultValue={myInfo.loginId} disabled />
+
+                  </div>
+                  <div className="flex flex-row gap-2 items-center">
+                    <p className="min-w-20">닉네임</p>
+                    <Input type="text" placeholder="닉네임" defaultValue={myInfo.nickname} disabled />
+                  </div>
+                  <div className="flex flex-row gap-2 items-center">
+                    <p className="min-w-20">이메일</p>
+                    <Input type="text" placeholder="이메일" defaultValue={myInfo.email} />
+                    <div className="flex flex-row gap-2 justify-end">
+                      <Button variant="outline" onClick={() => setIsUpdate(false)}>인증</Button>
+                    </div>
+                  </div>
+                  <div className="flex flex-row gap-2 items-center">
+                    <p className="min-w-20">전화번호</p>
+                    <Input type="text" placeholder="전화번호" defaultValue={myInfo.phone} />
+                    <div className="flex flex-row gap-2 justify-end">
+                      <Button variant="outline" onClick={() => setIsUpdate(false)}>인증</Button>
+                    </div>
+                  </div>
                 </CardContent>
-                <CardFooter>
-                  <Button variant="ghost" onClick={() => setIsUpdate(false)}>수정</Button>
+                <CardFooter className="flex justify-end gap-2">
+                  <Button variant="outline" onClick={() => setIsUpdate(false)}>저장</Button>
+                  <Button variant="outline" onClick={() => setIsUpdate(false)}>취소</Button>
                 </CardFooter>
               </>
             ) : (
               <>
-                <CardContent className="flex flex-col gap-2">
-                  <p>아이디: {myInfo.loginId}</p>
-                  <p>닉네임: {myInfo.nickname}</p>
-                  <p>이메일: {myInfo.email}</p>
-                  <p>전화번호: {myInfo.phone}</p>
+                <CardContent className="grid grid-cols-1 items-start md:grid-cols-2 gap-2">
+                  <div className="flex flex-row gap-2 items-center">
+                    <Avatar className="w-20 h-20">
+                      <AvatarImage src="/images/profile_default.png" alt="프로필이미지" />
+                    </Avatar>
+                    <div className="flex flex-col">
+                      <h3 className="text-lg font-bold">{myInfo.nickname}</h3>
+                      <p className="text-sm text-gray-500">{myInfo.gradeDesc}</p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <span>이름</span>
+                    <p>{myInfo.name}</p>
+                    <span>이메일</span>
+                    <p>{myInfo.email}</p>
+                    <span>전화번호</span>
+                    <p>{myInfo.phone}</p>
+                    <span>회원가입일</span>
+                    <p>{myInfo.createdAt.split('T')[0]}</p>
+                  </div>
                 </CardContent>
+                <CardFooter className="flex justify-end gap-2">
+                  <Button variant="outline" onClick={() => setIsUpdate(true)}>회원 정보 변경</Button>
+                  <Button variant="outline" onClick={() => setIsUpdate(true)}>비밀번호 변경</Button>
+                  <AlertDialog handleOk={withdraw} isConfrim={true} title="회원 탈퇴" msg="정말로 포카마켓을 탈퇴하시겠습니까ㅠㅠ?">
+                    <Button variant="destructive">회원 탈퇴</Button>
+                  </AlertDialog>
+                </CardFooter>
               </>
             )}
           </>

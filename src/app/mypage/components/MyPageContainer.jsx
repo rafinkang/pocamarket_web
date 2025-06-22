@@ -20,13 +20,13 @@ export default function MyPageContainer() {
 
   return (
     <>
-      <MyInfoPage />
+      <MyInfoPage className="w-full mb-4"/>
 
-      <TcgCode />
+      <TcgCode  className="w-full mb-4"/>
 
-      <MyTrade />
+      <MyTrade className="w-full mb-4"/>
       
-      <Card className="w-full">
+      <Card className="w-full mb-4">
         <CardHeader>
           <CardTitle>나의 덱</CardTitle>
           <CardDescription>Card Description</CardDescription>
@@ -42,7 +42,7 @@ export default function MyPageContainer() {
 
       
 
-      <MyReport />
+      <MyReport className="w-full mb-4"/>
       
     </>
   )

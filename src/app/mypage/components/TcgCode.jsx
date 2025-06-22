@@ -56,7 +56,7 @@ import {
   deleteTcgCode,
 } from "@/api/tcgCode";
 
-export default function TcgCode() {
+export default function TcgCode({ className }) {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
@@ -250,7 +250,7 @@ export default function TcgCode() {
   });
 
   return (
-    <Card className="w-full">
+    <Card className={`${className}`}>
       <CardHeader>
         <CardTitle>친구 코드</CardTitle>
         <CardDescription>

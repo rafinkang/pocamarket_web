@@ -19,7 +19,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export default function MyReport() {
+export default function MyReport({ className }) {
   const [reportList, setReportList] = useState([
     {
       reporterNickname: "test",
@@ -91,7 +91,7 @@ export default function MyReport() {
   }, []);
 
   return (
-    <Card className="w-full">
+    <Card className={`${className}`}>
       <CardHeader>
         <CardTitle>나의 신고페이지</CardTitle>
         <CardDescription>신고 내역을 확인할 수 있습니다.</CardDescription>
