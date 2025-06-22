@@ -51,12 +51,20 @@ export default function TradePageClient() {
 
     console.log(tradeCard, tcgCode);
 
-    const response = await postTcgTradeRequest(tradeId, {
-      tcgCode,
-      tradeCardId: tradeCard.id,
-    });
-
-    console.log(response);
+    try {
+      const response = await postTcgTradeRequest(tradeId, {
+        tcgCode,
+        cardCode: tradeCard.code,
+        cardName: tradeCard.nameKo,
+      });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+      setAlertTitle("카드 교환 신청 에러");
+      setAlertMsg(error.response.data.message);
+      setBackRouter(true);
+      setShowAlert(true);
+    }
   }
 
   const getDetail = async () => {
