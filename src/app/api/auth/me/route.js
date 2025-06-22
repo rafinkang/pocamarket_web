@@ -6,8 +6,8 @@ import { cookies } from 'next/headers';
  * 클라이언트(AuthProvider)가 앱 로드 시 호출.
  */
 export async function GET() {
-  const cookieStore = cookies();
-  const refreshToken = cookieStore.get('refreshToken')?.value;
+  const cookieStore = await cookies();
+  const refreshToken = cookieStore.get("refreshToken")?.value;
 
   if (!refreshToken) {
     return NextResponse.json({ isLogin: false, user: null });
