@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 
 import { Button } from "@/components/ui/button"
 
-export default function TradeItemDialog({handleClick, active, id, isMy}) {
+export default function TradeItemDialog({handleClick, active, id, isMy, isLogin}) {
   const ref = useOutsideClick(() => {
     handleClick(null);
   });
@@ -94,7 +94,7 @@ export default function TradeItemDialog({handleClick, active, id, isMy}) {
                 </div>
               </div>
               {/* TODO 교환 취소인 경우 버튼 숨기기 */}
-              {isMy ? <Button>교환 수락(교환 등록한 사람)</Button> : <Button variant="outline">교환 취소(요청한 사람)</Button>}
+              {isLogin && <>{isMy ? <Button>교환 수락(교환 등록한 사람)</Button> : <Button variant="outline">교환 취소(요청한 사람)</Button>}</>}
             </motion.div>
           </div>
         ) : null}

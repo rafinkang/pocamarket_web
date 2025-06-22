@@ -16,30 +16,31 @@ import { MYPAGE } from "@/constants/path";
 import Link from "next/link";
 
 
-export default function TradeCard({data, isMy, tcgCodeList, onTradeRequest}) {
+export default function TradeCard({checkLogin, data, isMy, tcgCodeList, onTradeRequest}) {
+  const [openDialog, setOpenDialog] = useState(false);
   const [tradeCard, setTradeCard] = useState({});
   const [myCard, setMyCard] = useState({});
   const [wantCards, setWantCards] = useState([]);
-  const [isDialog, setIsDialog] = useState(false);
   const [tcgCode, setTcgCode] = useState(null);
 
   const user = useAuthStore((state) => state.user);
   
-  const tradeMsg = `${user.nickname}님의 <span class="font-bold text-black">[ ${tradeCard.nameKo} ]</span>(으)로 교환 신청을 할까요?`
+  const tradeMsg = `${user ? user.nickname : "NONE"}님의 <span class="font-bold text-black">[ ${tradeCard.nameKo} ]</span>(으)로 교환 신청을 할까요?`
 
   const handleClick = cardData => {
+    if (!checkLogin()) return;
     setTradeCard(cardData)
-    setIsDialog(true)
+    setOpenDialog(true)
   }
 
   const handleOk = () => {
     onTradeRequest(tradeCard, tcgCode);
-    setIsDialog(false)
+    setOpenDialog(false)
   }
 
   const handleCancel = () => {
     console.log("handleCancel")
-    setIsDialog(false)
+    setOpenDialog(false)
   }
 
   const onTcgCodeChange = (value) => {
@@ -47,9 +48,9 @@ export default function TradeCard({data, isMy, tcgCodeList, onTradeRequest}) {
   }
 
   useEffect(() => {
-    if (!data) return
-    setMyCard(data.myCard)
-    setWantCards(data.wantCards)
+    if (!data) return;
+    setMyCard(data.myCard);
+    setWantCards(data.wantCards);
   }, [data])
 
   const cardContent = (
@@ -107,17 +108,35 @@ export default function TradeCard({data, isMy, tcgCodeList, onTradeRequest}) {
         cardContent
       ) : (
         <>
-          {cardContent}
-          <AlertDialog 
-            open={isDialog} 
-            onOpenChange={setIsDialog}
-            handleOk={handleOk} 
-            isConfrim={false} 
+          <AlertDialog
+            open={openDialog}
+            onOpenChange={setOpenDialog}
+            handleOk={handleOk}
             handleCancel={handleCancel} 
-            title="카드 교환 신청" 
+            isConfrim={false}
+            title="카드 교환 신청"
             msg={tradeMsg}
-            content={tradeRequestContent}
           />
+          <Card className="shadow-none">
+            <CardContent
+              className="flex justify-center items-center w-full gap-4 h-64"
+            >
+              <div className="relative aspect-[366/512]" style={{ width: "20vw", maxWidth: "200px" }}>
+                <PokemonCard data={myCard} showInfo={false} className="relative aspect-[366/512]" />
+              </div>
+
+              <RiArrowLeftRightFill size="50px" />
+
+              {wantCards.map(card => (
+                isMy ? 
+                  <div key={card.code} className="relative aspect-[366/512]" style={{ width: "20vw", maxWidth: "200px" }}>
+                    <PokemonCard data={card} showInfo={false} className="relative aspect-[366/512]" />
+                  </div>
+                : 
+                  <FlippableCard handleClick={handleClick} key={card.code} cardKey={card.code} data={card} btnName="교환 신청" />
+              ))}
+            </CardContent>
+          </Card>
         </>
       )}
     </>

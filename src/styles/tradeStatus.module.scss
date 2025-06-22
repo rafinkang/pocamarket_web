@@ -1,0 +1,59 @@
+$color-registration: #a18ae0;
+$color-deleted: #929599;
+$color-request: #28afa4;
+$color-select: #e0a22f;
+$color-process: #267bdc;
+$color-complete: rgb(10, 19, 49);
+
+.text-registration {
+  color: $color-registration;
+}
+
+.text-deleted {
+  color: $color-deleted;
+}
+.text-request {
+  color: $color-request;
+}
+.text-select {
+  color: $color-select;
+}
+.text-process {
+  color: $color-process;
+}
+.text-complete {
+  color: $color-complete;
+}
+
+@mixin basic-badge-style {
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.badge-registration {
+  @include basic-badge-style;
+  background-color: $color-registration;
+}
+.badge-deleted {
+  @include basic-badge-style;
+  background-color: $color-deleted;
+}
+.badge-request {
+  @include basic-badge-style;
+  background-color: $color-request;
+}
+.badge-select {
+  @include basic-badge-style;
+  background-color: $color-select;
+}
+.badge-process {
+  @include basic-badge-style;
+  background-color: $color-process;
+}
+.badge-complete {
+  @include basic-badge-style;
+  background-color: $color-complete;
+}

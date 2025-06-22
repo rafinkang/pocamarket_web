@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import AlertDialog from "@/components/dialog/AlertDialog";
+import TradeHeader from "./TradeHeader";
 import ButtonGroup from "./ButtonGroup";
 import TradeBox from "./TradeBox";
 import TradeList from "./TradeList";
@@ -67,6 +68,14 @@ export default function TradePageClient() {
     }
   }
 
+  const checkLogin = () => {
+    if (isLogin) return true;
+    setAlertTitle('로그인이 필요해요.');
+    setAlertMsg('로그인 후 카드를 교환해보세요.');
+    setShowAlert(true)
+    return false;
+  }
+
   const getDetail = async () => {
     try {
       const response = await getTcgTradeDetail(tradeId);
@@ -90,8 +99,7 @@ export default function TradePageClient() {
   useEffect(() => {
     // store에서 로그인 상태를 가져오기 전에 실행되지 않도록 isMounted추가
     if (!isMounted) return
-    if (isLogin) getDetail();
-    else setShowAlert(true);
+    getDetail();
   }, [isLogin, isMounted])
 
   if (!isMounted) {
@@ -100,7 +108,7 @@ export default function TradePageClient() {
 
 
   return (
-    <div className="flex flex-col gap-8">
+    <>
       <AlertDialog
         open={showAlert}
         onOpenChange={setShowAlert}
@@ -110,13 +118,12 @@ export default function TradePageClient() {
         title={alertTitle}
         msg={alertMsg}
       />
-      {isLogin && (
-        <>
-          <TradeBox data={data} isMy={isMy} tcgCodeList={tcgCodeList} onTradeRequest={handleTradeRequest} />
+        <TradeHeader data={data} />
+        <div className="flex flex-col gap-8 mt-2">
+          <TradeBox checkLogin={checkLogin} data={data} isMy={isMy} tcgCodeList={tcgCodeList} onTradeRequest={handleTradeRequest} />
           {isMy && <ButtonGroup tradeId={tradeId} />}
-          <TradeList isMy={isMy} />
-        </>
-      )}
-    </div>
+          <TradeList isMy={isMy} isLogin={isLogin} />
+        </div>
+    </>
   );
 }

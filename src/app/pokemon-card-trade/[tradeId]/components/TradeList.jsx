@@ -5,7 +5,7 @@ import React, { useEffect, useId, useState } from "react";
 import TradeListItem from "./TradeListItem";
 import TradeListItemDialog from "./TradeListItemDialog";
 
-export default function TradeList({isMy}) {
+export default function TradeList({isMy, isLogin}) {
   const cards = [
     {
       description: "XXX님이 [캐터피](으)로 교환 신청 하였습니다.",
@@ -83,7 +83,7 @@ export default function TradeList({isMy}) {
 
   return (
     <>
-      <TradeListItemDialog handleClick={setActive} id={id} isMy={isMy} active={active} />
+      <TradeListItemDialog handleClick={setActive} id={id} isMy={isMy} isLogin={isLogin} active={active} />
       <ul className="max-w-2xl mx-auto w-full gap-4">
         {cards.map(card => 
         <TradeListItem
