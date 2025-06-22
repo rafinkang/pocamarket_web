@@ -9,7 +9,8 @@ import ButtonGroup from "./ButtonGroup";
 import TradeBox from "./TradeBox";
 import TradeList from "./TradeList";
 
-import { getTcgTradeDetail } from "@/api/tcgTrade";
+import { getTcgCodeList } from "@/api/tcgCode";
+import { getTcgTradeDetail, postTcgTradeRequest } from "@/api/tcgTrade";
 import { LOGIN } from "@/constants/path";
 
 export default function TradePageClient() {
@@ -19,6 +20,7 @@ export default function TradePageClient() {
 
   const [data, setData] = useState(null);
   const [isMy, setIsMy] = useState(false);
+  const [tcgCodeList, setTcgCodeList] = useState([]);
   const [alertTitle, setAlertTitle] = useState('로그인이 필요해요.');
   const [alertMsg, setAlertMsg] = useState('로그인 후 카드를 교환해보세요.');
   const [backRouter, setBackRouter] = useState(false);
@@ -32,16 +34,38 @@ export default function TradePageClient() {
       router.back();
     }
     else {
-
       router.push(LOGIN);
     }
+  }
+  
+  const handleTradeRequest = async (tradeCard, tcgCode) => {
+    if(!tcgCode) {
+      alert("친구 코드를 선택해주세요.");
+      return;
+    }
+
+    if(!tradeCard) {
+      alert("카드를 선택해주세요.");
+      return;
+    }
+
+    console.log(tradeCard, tcgCode);
+
+    const response = await postTcgTradeRequest(tradeId, {
+      tcgCode,
+      tradeCardId: tradeCard.id,
+    });
+
+    console.log(response);
   }
 
   const getDetail = async () => {
     try {
       const response = await getTcgTradeDetail(tradeId);
+      const tcgCodeList = await getTcgCodeList();
       setData(response.data);
       setIsMy(response.data.isMy);
+      setTcgCodeList(tcgCodeList.data);
     } catch (error) {
       console.log(error);
       setAlertTitle("");
@@ -66,6 +90,7 @@ export default function TradePageClient() {
     return null;
   }
 
+
   return (
     <div className="flex flex-col gap-8">
       <AlertDialog
@@ -79,7 +104,7 @@ export default function TradePageClient() {
       />
       {isLogin && (
         <>
-          <TradeBox data={data} isMy={isMy} />
+          <TradeBox data={data} isMy={isMy} tcgCodeList={tcgCodeList} onTradeRequest={handleTradeRequest} />
           {isMy && <ButtonGroup tradeId={tradeId} />}
           <TradeList isMy={isMy} />
         </>

@@ -59,6 +59,14 @@ export const getTcgTradeDetail = async (tradeId) => {
   });
 };
 
+export const postTcgTradeRequest = async (tradeId, data) => {
+  return callApi({
+    method: "POST",
+    url: `/tcg-trade/${tradeId}/request`,
+    data,
+  });
+}
+
 /**
  * TCG 교환 최신화
  */
