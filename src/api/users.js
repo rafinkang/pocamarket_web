@@ -25,3 +25,10 @@ export const deleteMyInfo = async () => {
         url: '/user/me',
     });
 };
+
+export const checkNickname = async (nickname) => {
+    return callApi({
+        method: 'GET',
+        url: `/user/checkNickname/${nickname}`,
+    });
+};
