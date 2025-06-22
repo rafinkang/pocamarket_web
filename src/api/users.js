@@ -11,6 +11,14 @@ export const getMyInfo = async () => {
     });
 };
 
+export const updateMyInfo = async (data) => {
+    return callApi({
+        method: 'put',
+        url: '/user/me',
+        data,
+    });
+};
+
 export const deleteMyInfo = async () => {
     return callApi({
         method: 'delete',

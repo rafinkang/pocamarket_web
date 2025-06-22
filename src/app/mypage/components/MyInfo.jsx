@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import useAuthStore from "@/store/authStore"
 import { useEffect, useState } from "react"
+import PasswordChangeDialog from "./PasswordChangeDialog"
 
 export default function MyInfoPage({ className }) {
   const [myInfo, setMyInfo] = useState(null);
@@ -127,7 +128,9 @@ export default function MyInfoPage({ className }) {
                 </CardContent>
                 <CardFooter className="flex justify-end gap-2">
                   <Button variant="outline" onClick={() => setIsUpdate(true)}>회원 정보 변경</Button>
-                  <Button variant="outline" onClick={() => setIsUpdate(true)}>비밀번호 변경</Button>
+                  <PasswordChangeDialog>
+                    <Button variant="outline">비밀번호 변경</Button>
+                  </PasswordChangeDialog>
                   <AlertDialog handleOk={withdrawUser} isConfrim={true} title="회원 탈퇴" msg="정말로 포카마켓을 탈퇴하시겠습니까ㅠㅠ?">
                     <Button variant="destructive">회원 탈퇴</Button>
                   </AlertDialog>
