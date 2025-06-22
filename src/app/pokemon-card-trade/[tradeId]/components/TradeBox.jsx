@@ -116,6 +116,7 @@ export default function TradeCard({checkLogin, data, isMy, tcgCodeList, onTradeR
             isConfrim={false}
             title="카드 교환 신청"
             msg={tradeMsg}
+            content={tradeRequestContent}
           />
           <Card className="shadow-none">
             <CardContent
