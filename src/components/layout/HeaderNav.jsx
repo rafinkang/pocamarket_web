@@ -50,7 +50,7 @@ export function HeaderNav() {
                   <Link href={MYPAGE}>안녕하세요 {user.nickname}님😎</Link>
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid w-[200px] gap-4">
+                  <ul className="grid w-40 gap-4">
                     <li>
                       <NavigationMenuLink asChild>
                         <Link href={MYPAGE}>마이페이지</Link>
