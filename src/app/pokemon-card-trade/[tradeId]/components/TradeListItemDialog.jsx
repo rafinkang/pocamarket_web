@@ -10,7 +10,7 @@ import PokemonCard from "@/components/list/PokemonCard";
 import TradeReportDialog from "./TradeReportDialog";
 import { useState } from "react";
 
-export default function TradeListItemDialog({handleClick, active, id, isMy, isLogin}) {
+export default function TradeListItemDialog({handleClick, active, id, isMy, isLogin, onRequestCancel}) {
   const [isReportOpen, setIsReportOpen] = useState(false);
   const ref = useOutsideClick(() => {
     console.log('isReportOpen ::: ', isReportOpen)
@@ -116,7 +116,7 @@ export default function TradeListItemDialog({handleClick, active, id, isMy, isLo
                       </Button>
                     </>
                   }
-                  {!isMy && active.isMy &&<Button variant="outline">교환 취소(요청한 사람)</Button>}
+                  {!isMy && active.isMy &&<Button variant="outline" onClick={() => onRequestCancel(active.id)}>교환 취소(요청한 사람)</Button>}
                 </>
               )}
             </motion.div>

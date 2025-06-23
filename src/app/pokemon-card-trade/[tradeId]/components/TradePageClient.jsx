@@ -13,7 +13,7 @@ import TradeReport from "./TradeReport";
 
 import { getTcgCodeList } from "@/api/tcgCode";
 import { getTcgTradeDetail } from "@/api/tcgTrade";
-import { getTcgTradeRequestList, postTcgTradeRequest } from "@/api/tcgTradeRequest";
+import { postTcgTradeRequest, getTcgTradeRequestList, deleteTcgTradeRequest } from "@/api/tcgTradeRequest";
 import { LOGIN } from "@/constants/path";
 
 export default function TradePageClient() {
@@ -76,10 +76,29 @@ export default function TradePageClient() {
         setRequestList(requestListResponse.data.content); 
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setAlertTitle("카드 교환 신청 에러");
       setAlertMsg(`error code : ${error.errorCode}, message : ${error.message}`);
-      setBackRouter(true);
+      setShowAlert(true);
+    }
+  }
+
+  const handleRequestCancel = async (tcgTradeRequestId) => {
+    try {
+      const response = await deleteTcgTradeRequest(tradeId, {
+        tcgTradeRequestId,
+      });
+
+      if(response.data == true && response.success == true) {
+        alert("카드 교환 요청이 취소되었습니다.");
+        const requestListResponse = await getTcgTradeRequestList(tradeId);
+        setRequestList(requestListResponse.data.content); 
+      }
+
+    } catch (error) {
+      console.error(error);
+      setAlertTitle("카드 교환 취소 에러");
+      setAlertMsg(`error code : ${error.errorCode}, message : ${error.message}`);
       setShowAlert(true);
     }
   }
@@ -106,7 +125,7 @@ export default function TradePageClient() {
         setTcgCodeList(tcgCodeList.data);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setAlertTitle("");
       setAlertMsg("잘못된 접근입니다.");
       setBackRouter(true);
@@ -145,7 +164,9 @@ export default function TradePageClient() {
           <TradeBox checkLogin={checkLogin} data={data} isMy={isMy} tcgCodeList={tcgCodeList} onTradeRequest={handleTradeRequest} />
           {isMy && <ButtonGroup tradeId={tradeId} />}
           {!isMy && isLogin && <TradeReport />}
-          <TradeList isMy={isMy} isLogin={isLogin} requestList={requestList} />
+          <TradeList isMy={isMy} isLogin={isLogin} requestList={requestList} 
+            onRequestCancel={handleRequestCancel} 
+          />
         </div>
     </>
   );
