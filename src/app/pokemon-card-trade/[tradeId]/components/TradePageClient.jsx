@@ -55,7 +55,7 @@ export default function TradePageClient() {
     if (response.data === true && response.success === true) {
       alert(successMessage);
       const requestListResponse = await getTcgTradeRequestList(tradeId);
-      setRequestList(requestListResponse.data.content);
+      setRequestList(requestListResponse.data);
       return true;
     } else {
       setAlertTitle(errorTitle);
@@ -144,7 +144,7 @@ export default function TradePageClient() {
 
       setData(response.data);
       setIsMy(response.data.isMy);
-      setRequestList(requestListResponse.data.content);
+      setRequestList(requestListResponse.data);
 
       if (isLogin) {
         const tcgCodeList = await getTcgCodeList();
