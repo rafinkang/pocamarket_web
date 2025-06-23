@@ -2,8 +2,10 @@
 
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
+import { POKEMON_CARD } from "@/constants/path";
+import Link from "next/link";
 
-export const ThreeDMarquee = ({
+export const PokemonThreeDMarquee = ({
   images,
   className
 }) => {
@@ -24,7 +26,7 @@ export const ThreeDMarquee = ({
     // 실제 렌더링 시 width가 약 200px 정도로 설정되므로 높이는 약 280px
     const imageHeight = 280; // 실제 렌더링되는 이미지 높이
     const gap = 32; // gap-8 = 32px
-    
+
     return (imageHeight + gap) * imageCount - gap; // 마지막 gap 제외
   };
 
@@ -46,14 +48,14 @@ export const ThreeDMarquee = ({
               const columnHeight = calculateColumnHeight(subarray.length);
               // 애니메이션 범위: 컬럼 높이의 절반 정도로 설정하여 모든 이미지가 보이도록 함
               const animationRange = columnHeight * 0.25;
-              
+
               return (
                 <motion.div
-                  animate={{ 
-                    y: colIndex % 2 === 0 ? animationRange : -animationRange 
+                  animate={{
+                    y: colIndex % 2 === 0 ? animationRange : -animationRange
                   }}
                   transition={{
-                    duration: colIndex % 2 === 0 ? 
+                    duration: colIndex % 2 === 0 ?
                       12 + (subarray.length * 0.5) : // 이미지 개수에 따라 duration 조정
                       15 + (subarray.length * 0.5),
                     repeat: Infinity,
@@ -62,25 +64,28 @@ export const ThreeDMarquee = ({
                   }}
                   key={colIndex + "marquee"}
                   className="flex flex-col items-start gap-8">
-                  <GridLineVertical className="-left-4" offset="80px" />
+                  {/* <GridLineVertical className="-left-4" offset="80px" /> */}
                   {subarray.map((image, imageIndex) => (
                     <div className="relative" key={imageIndex + image}>
-                      <GridLineHorizontal className="-top-4" offset="20px" />
-                      <motion.img
-                        whileHover={{
-                          y: -10,
-                          scale: 1.05, // 호버 시 약간 확대
-                        }}
-                        transition={{
-                          duration: 0.3,
-                          ease: "easeInOut",
-                        }}
-                        key={imageIndex + image}
-                        src={image}
-                        alt={`Image ${imageIndex + 1}`}
-                        className="aspect-[366/512] rounded-lg object-cover ring ring-gray-950/5 hover:shadow-2xl"
-                        width={366}
-                        height={512} />
+                      {/* <GridLineHorizontal className="-top-4" offset="20px" /> */}
+                      <Link href={`${POKEMON_CARD}/${image}`}>
+                        <motion.img
+                          whileHover={{
+                            y: -10,
+                            scale: 1.05, // 호버 시 약간 확대
+                          }}
+                          transition={{
+                            duration: 0.3,
+                            ease: "easeInOut",
+                          }}
+                          key={imageIndex + image}
+                          src={`/Excards/${image}.webp`}
+                          alt={`Image ${imageIndex + 1}`}
+                          className="aspect-[366/512] rounded-lg object-cover ring ring-gray-950/5 hover:shadow-2xl"
+                          width={366}
+                          height={512} />
+                      </Link>
+
                     </div>
                   ))}
                 </motion.div>

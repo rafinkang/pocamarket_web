@@ -2,7 +2,7 @@
 // components
 import Image from "next/image";
 import ImageCarousel from "@/components/carousel/ImageCarousel.jsx";
-import { ThreeDMarquee } from "@/components/ui/3d-marquee.jsx";
+import { PokemonThreeDMarquee } from "@/components/ui/pokemon-3d-marquee.jsx";
 import { useEffect, useState } from "react";
 
 /**
@@ -11,68 +11,63 @@ import { useEffect, useState } from "react";
  */
 const generateEXCardImages = () => {
   const imageFiles = [
-    `/Excards/a1-251.webp`,
-    `/Excards/a1-252.webp`,
-    `/Excards/a1-253.webp`,
-    `/Excards/a1-254.webp`,
-    `/Excards/a1-255.webp`,
-    `/Excards/a1-256.webp`,
-    `/Excards/a1-257.webp`,
-    `/Excards/a1-258.webp`,
-    `/Excards/a1-259.webp`,
-    `/Excards/a1-260.webp`,
-    `/Excards/a1-261.webp`,
-    `/Excards/a1-262.webp`,
-    `/Excards/a1-263.webp`,
-    `/Excards/a1-264.webp`,
-    `/Excards/a1-265.webp`,
-    `/Excards/a1-274.webp`,
-    `/Excards/a1-275.webp`,
-
-    `/Excards/a1-284.webp`,
-    `/Excards/a1-285.webp`,
-    `/Excards/a1-286.webp`,
-
-    `/Excards/a1-276.webp`,
-    `/Excards/a1-277.webp`,
-    `/Excards/a1-278.webp`,
-    `/Excards/a1-279.webp`,
-    `/Excards/a1-280.webp`,
-    `/Excards/a1-281.webp`,
-    `/Excards/a1-282.webp`,
-    `/Excards/a1-283.webp`,
-    
-
-    `/Excards/a1a-075.webp`,
-    `/Excards/a1a-076.webp`,
-    `/Excards/a1a-077.webp`,
-    `/Excards/a1a-078.webp`,
-    `/Excards/a1a-079.webp`,
-    `/Excards/a1a-083.webp`,
-    `/Excards/a1a-084.webp`,
-    `/Excards/a1a-085.webp`,
-    `/Excards/a1a-086.webp`,
-
-    `/Excards/a2-180.webp`,
-    `/Excards/a2-181.webp`,
-    `/Excards/a2-182.webp`,
-    `/Excards/a2-183.webp`,
-    `/Excards/a2-184.webp`,
-    `/Excards/a2-185.webp`,
-    `/Excards/a2-186.webp`,
-    `/Excards/a2-187.webp`,
-    `/Excards/a2-188.webp`,
-    `/Excards/a2-189.webp`,
-    `/Excards/a2-198.webp`,
-    `/Excards/a2-199.webp`,
-    `/Excards/a2-200.webp`,
-    `/Excards/a2-201.webp`,
-    `/Excards/a2-202.webp`,
-    `/Excards/a2-203.webp`,
-    `/Excards/a2-204.webp`,
-    `/Excards/a2-205.webp`,
-    `/Excards/a2-206.webp`,
-    `/Excards/a2-207.webp`,
+    `a1-251`,
+    `a1-252`,
+    `a1-253`,
+    `a1-254`,
+    `a1-255`,
+    `a1-256`,
+    `a1-257`,
+    `a1-258`,
+    `a1-259`,
+    `a1-260`,
+    `a1-261`,
+    `a1-262`,
+    `a1-263`,
+    `a1-264`,
+    `a1-265`,
+    `a1-274`,
+    `a1-275`,
+    `a1-284`,
+    `a1-285`,
+    `a1-286`,
+    `a1-276`,
+    `a1-277`,
+    `a1-278`,
+    `a1-279`,
+    `a1-280`,
+    `a1-281`,
+    `a1-282`,
+    `a1-283`,
+    `a1a-075`,
+    `a1a-076`,
+    `a1a-077`,
+    `a1a-078`,
+    `a1a-079`,
+    `a1a-083`,
+    `a1a-084`,
+    `a1a-085`,
+    `a1a-086`,
+    `a2-180`,
+    `a2-181`,
+    `a2-182`,
+    `a2-183`,
+    `a2-184`,
+    `a2-185`,
+    `a2-186`,
+    `a2-187`,
+    `a2-188`,
+    `a2-189`,
+    `a2-198`,
+    `a2-199`,
+    `a2-200`,
+    `a2-201`,
+    `a2-202`,
+    `a2-203`,
+    `a2-204`,
+    `a2-205`,
+    `a2-206`,
+    `a2-207`,
   ];;
   
   return imageFiles.map(fileName => `${fileName}`);
@@ -109,7 +104,7 @@ export default function HomeContainer() {
   return (
     <>
       <div className="w-full">
-        {isClient && <ThreeDMarquee images={randomizedImages} />}
+        {isClient && <PokemonThreeDMarquee images={randomizedImages} />}
         
         <ImageCarousel images={images} className="w-full max-h-[220px]" />
         <Image
