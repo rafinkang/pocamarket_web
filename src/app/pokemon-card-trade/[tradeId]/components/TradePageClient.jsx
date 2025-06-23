@@ -42,17 +42,26 @@ export default function TradePageClient() {
   }
   
   const handleTradeRequest = async (tradeCard, tcgCode) => {
-    if(!tcgCode) {
-      alert("친구 코드를 선택해주세요.");
+
+    if(!isLogin || !tcgCode || !tradeCard) {
+
+      let alertTitle = "";
+      let alertMsg = "";
+
+      if(!isLogin) {
+        alertTitle = "로그인이 필요해요.";
+        alertMsg = "로그인 후 카드를 교환해보세요.";
+      } else if(!tcgCode) {
+        alertMsg = "친구 코드를 선택해주세요.";
+      } else if(!tradeCard) {
+        alertMsg = "카드를 선택해주세요.";
+      }
+
+      setAlertTitle(alertTitle);
+      setAlertMsg(alertMsg);
+      setShowAlert(true);
       return;
     }
-
-    if(!tradeCard) {
-      alert("카드를 선택해주세요.");
-      return;
-    }
-
-    console.log(tradeCard, tcgCode);
 
     try {
       const response = await postTcgTradeRequest(tradeId, {
@@ -60,11 +69,15 @@ export default function TradePageClient() {
         cardCode: tradeCard.code,
         cardName: tradeCard.nameKo,
       });
-      console.log(response);
+
+      if(response.data == true && response.success == true) {
+        const requestListResponse = await getTcgTradeRequestList(tradeId);
+        setRequestList(requestListResponse.data.content); 
+      }
     } catch (error) {
       console.log(error);
       setAlertTitle("카드 교환 신청 에러");
-      setAlertMsg(error.response.data.message);
+      setAlertMsg(`error code : ${error.errorCode}, message : ${error.message}`);
       setBackRouter(true);
       setShowAlert(true);
     }

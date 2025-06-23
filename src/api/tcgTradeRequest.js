@@ -14,3 +14,11 @@ export const getTcgTradeRequestList = async (tradeId) => {
     url: `/tcg-trade/request/${tradeId}`,
   });
 }
+
+export const deleteTcgTradeRequest = async (tradeId, data) => {
+  return callApi({
+    method: "DELETE",
+    url: `/tcg-trade/request/${tradeId}`,
+    data,
+  });
+}

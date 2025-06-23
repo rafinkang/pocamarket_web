@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge"
 
 import { Button } from "@/components/ui/button"
 
+import PokemonCard from "@/components/list/PokemonCard";
+
 export default function TradeItemDialog({handleClick, active, id, isMy, isLogin}) {
   const ref = useOutsideClick(() => {
     handleClick(null);
@@ -26,7 +28,7 @@ export default function TradeItemDialog({handleClick, active, id, isMy, isLogin}
         {active && typeof active === "object" ? (
           <div className="fixed inset-0 grid place-items-center z-[100]">
             <motion.button
-              key={`button-${active.code}-${id}`}
+              key={`button-${active.id}-${id}`}
               layout
               initial={{
                 opacity: 0,
@@ -45,34 +47,32 @@ export default function TradeItemDialog({handleClick, active, id, isMy, isLogin}
               <CloseIcon />
             </motion.button>
             <motion.div
-              layoutId={`card-${active.code}-${id}`}
+              layoutId={`card-${active.id}-${id}`}
               ref={ref}
               className="w-full max-w-[500px]  h-full md:h-fit md:max-h-[90%]  flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden  px-8 py-8">
-              <motion.div layoutId={`image-${active.code}-${id}`}>
-                  <img
-                    src="/images/cardback.webp"
-                    width={100}
-                    height={100}
-                    alt="Pokemon Card"
-                    style={{ objectFit: "contain" }}
-                    className="w-full h-80 lg:h-80 sm:rounded-tr-lg sm:rounded-tl-lg object-cover object-top" />
+              <motion.div layoutId={`image-${active.code}-${active.id}-${id}`}>
+                <div className="flex justify-center items-center w-full h-80 lg:h-80 sm:rounded-tr-lg sm:rounded-tl-lg">
+                  <div className="relative aspect-[366/512]" style={{ width: "20vw", maxWidth: "200px" }}>
+                    <PokemonCard data={{code : active.code}} showInfo={false} className="relative aspect-[366/512]" />
+                  </div>
+                </div>
               </motion.div>
 
               <div>
                 <div className="flex justify-between items-start p-4">
                   <div className="">
-                    <motion.span layoutId={`code-${active.code}-${id}`}>
+                    <motion.span layoutId={`code-${active.code}-${active.id}-${id}`}>
                       <Badge variant="secondary">{active.status.text}</Badge>
                     </motion.span>
                     <motion.p
-                      layoutId={`description-${active.description}-${id}`}
+                      layoutId={`description-${active.description}-${active.id}-${id}`}
                       className="text-neutral-600 dark:text-neutral-400">
                       {active.description}
                     </motion.p>
                   </div>
 
                   {active.ctaText && <motion.a
-                      layoutId={`button-${active.code}-${id}`}
+                      layoutId={`button-${active.code}-${active.id}-${id}`}
                       href={active.ctaLink}
                       target="_blank"
                       className="px-4 py-3 text-sm rounded-full font-bold bg-green-500 text-white">
@@ -94,7 +94,12 @@ export default function TradeItemDialog({handleClick, active, id, isMy, isLogin}
                 </div>
               </div>
               {/* TODO 교환 취소인 경우 버튼 숨기기 */}
-              {isLogin && <>{isMy ? <Button>교환 수락(교환 등록한 사람)</Button> : <Button variant="outline">교환 취소(요청한 사람)</Button>}</>}
+              {isLogin && (
+                <>
+                  {isMy && <Button>교환 수락(교환 등록한 사람)</Button>}
+                  {!isMy && active.isMy &&<Button variant="outline">교환 취소(요청한 사람)</Button>}
+                </>
+              )}
             </motion.div>
           </div>
         ) : null}
