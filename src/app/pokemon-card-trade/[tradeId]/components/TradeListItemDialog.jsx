@@ -35,17 +35,17 @@ export default function TradeListItemDialog({handleClick, active, id, isMy, isLo
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/20 h-full w-full" />
+            className="fixed inset-0 bg-black/20 h-full w-full z-[100]" />
         )}
       </AnimatePresence>
       <AnimatePresence>
         {active && typeof active === "object" ? (
-          <div className="fixed inset-0 grid place-items-center">
+          <div className="fixed inset-0 grid place-items-center z-[101]">
             {/* 모바일용 닫기 버튼 */}
             <motion.button
               {...closeButtonProps}
               key={`button-mobile-${active.id}-${id}`}
-              className="flex absolute top-15 right-2 md:hidden items-center justify-center bg-white rounded-full h-8 w-8 z-10"
+              className="flex absolute top-15 right-2 md:hidden items-center justify-center bg-white rounded-full h-8 w-8 z-[105]"
             >
               <CloseIcon />
             </motion.button>
@@ -53,18 +53,22 @@ export default function TradeListItemDialog({handleClick, active, id, isMy, isLo
             {/* 모달 body */}
             <motion.div
               layoutId={`card-${active.id}-${id}`}
+              style={{ zIndex: 102 }}
               className="relative w-full md:max-w-[500px] h-full md:h-fit md:max-h-[90%] flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden px-8 py-8">
               {/* 데스크탑용 닫기 버튼 */}
               <motion.button
                 {...closeButtonProps}
                 key={`button-desktop-${active.id}-${id}`}
-                className="hidden absolute top-4 right-4 md:flex items-center justify-center bg-gray-200 hover:bg-gray-300 dark:bg-neutral-700 dark:hover:bg-neutral-600 rounded-full h-8 w-8 z-10"
+                className="hidden absolute top-4 right-4 md:flex items-center justify-center bg-gray-200 hover:bg-gray-300 dark:bg-neutral-700 dark:hover:bg-neutral-600 rounded-full h-8 w-8 z-[105]"
               >
                 <CloseIcon />
               </motion.button>
 
               {/* 카드 */}
-              <motion.div layoutId={`image-${active.code}-${active.id}-${id}`}>
+              <motion.div 
+                layoutId={`image-${active.code}-${active.id}-${id}`}
+                style={{ zIndex: 103 }}
+              >
                 <div className="flex justify-center items-center w-full h-80 lg:h-80 sm:rounded-tr-lg sm:rounded-tl-lg">
                   <div className="relative aspect-[366/512]" style={{ width: "20vw", maxWidth: "200px" }}>
                     <PokemonCard data={{code : active.code}} showInfo={false} className="relative aspect-[366/512]" />
@@ -73,14 +77,18 @@ export default function TradeListItemDialog({handleClick, active, id, isMy, isLo
               </motion.div>
 
               {/* 내용 */}
-              <div>
+              <div className="relative z-[104]">
                 <div className="flex justify-between items-start p-4">
                   <div className="">
-                    <motion.span layoutId={`code-${active.id}-${id}`}>
+                    <motion.span 
+                      layoutId={`code-${active.id}-${id}`}
+                      style={{ zIndex: 104 }}
+                    >
                       <Badge variant="secondary">{active.status.text}</Badge>
                     </motion.span>
                     <motion.p
                       layoutId={`description-${active.description}-${active.id}-${id}`}
+                      style={{ zIndex: 104 }}
                       className="text-neutral-600 dark:text-neutral-400">
                       {active.description}
                     </motion.p>
@@ -88,6 +96,7 @@ export default function TradeListItemDialog({handleClick, active, id, isMy, isLo
 
                   {active.ctaText && <motion.a
                       layoutId={`button-${active.code}-${active.id}-${id}`}
+                      style={{ zIndex: 104 }}
                       href={active.ctaLink}
                       target="_blank"
                       className="px-4 py-3 text-sm rounded-full font-bold bg-green-500 text-white">
@@ -110,7 +119,7 @@ export default function TradeListItemDialog({handleClick, active, id, isMy, isLo
               </div>
               {/* TODO 교환 취소인 경우 버튼 숨기기 */}
               {isLogin && (
-                <>
+                <div className="relative z-[104]">
                   {isMy && 
                     <div className="flex justify-end gap-1">
                       <Button variant="ghost" onClick={() => setIsReportOpen(true)}>
@@ -128,7 +137,7 @@ export default function TradeListItemDialog({handleClick, active, id, isMy, isLo
                         교환 취소(요청한 사람)
                       </Button>
                     )}
-                </>
+                </div>
               )}
             </motion.div>
           </div>
