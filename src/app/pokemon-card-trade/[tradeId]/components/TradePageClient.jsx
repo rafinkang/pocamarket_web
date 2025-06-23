@@ -46,7 +46,7 @@ export default function TradePageClient() {
   const showErrorAlert = (title, error) => {
     console.error(error);
     setAlertTitle(title);
-    setAlertMsg(`error code : ${error.errorCode}, message : ${error.message}`);
+    setAlertMsg(`error code : ${error.response.data.errorCode}, message : ${error.response.data.message}`);
     setShowAlert(true);
   }
 
