@@ -72,7 +72,7 @@ export default function TradeReportDialog({ open, onOpenChange, handleReport }) 
       title="신고하기"
       okBtnName="신고하기"
       cancelBtnName="취소"
-      contentClassName="z-[150]" 
+      contentClassName="z-[150]"
     />
   );
 }

@@ -190,7 +190,7 @@ export default function TradePageClient() {
           <TradeBox checkLogin={checkLogin} data={data} isMy={isMy} tcgCodeList={tcgCodeList} onTradeRequest={handleTradeRequest} />
           {isMy && <ButtonGroup tradeId={tradeId} />}
           {!isMy && isLogin && <TradeReport />}
-          <TradeList isMy={isMy} isLogin={isLogin} requestList={requestList} 
+          <TradeList isMy={isMy} isLogin={isLogin} requestList={Array.isArray(requestList) ? requestList : requestList.content}
             onRequestAccept={handleRequestAccept} 
             onRequestCancel={handleRequestCancel} 
           />

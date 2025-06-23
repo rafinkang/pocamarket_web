@@ -45,7 +45,7 @@ export default function TradeListItemDialog({handleClick, active, id, isMy, isLo
             <motion.button
               {...closeButtonProps}
               key={`button-mobile-${active.id}-${id}`}
-              className="flex absolute top-15 right-2 md:hidden items-center justify-center bg-white rounded-full h-8 w-8 z-[105]"
+              className="flex absolute top-4 right-4 md:hidden items-center justify-center bg-white rounded-full h-8 w-8 z-[105]"
             >
               <CloseIcon />
             </motion.button>
@@ -120,7 +120,7 @@ export default function TradeListItemDialog({handleClick, active, id, isMy, isLo
               {/* TODO 교환 취소인 경우 버튼 숨기기 */}
               {isLogin && (
                 <div className="relative z-[104]">
-                  {isMy && 
+                  {/* {isMy &&  */}
                     <div className="flex justify-end gap-1">
                       <Button variant="ghost" onClick={() => setIsReportOpen(true)}>
                         신고하기
@@ -131,7 +131,7 @@ export default function TradeListItemDialog({handleClick, active, id, isMy, isLo
                         </Button>
                       )}
                     </div>
-                  }
+                  {/* } */}
                   {!isMy && active.isMy && (active.status.code !== COMPLETE || active.status.code !== DELETED) && (
                       <Button variant="outline" onClick={() => onRequestCancel(active.id)}>
                         교환 취소(요청한 사람)
