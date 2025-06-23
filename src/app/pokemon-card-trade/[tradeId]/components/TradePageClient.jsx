@@ -13,7 +13,7 @@ import TradeReport from "./TradeReport";
 
 import { getTcgCodeList } from "@/api/tcgCode";
 import { getTcgTradeDetail } from "@/api/tcgTrade";
-import { postTcgTradeRequest, getTcgTradeRequestList, deleteTcgTradeRequest } from "@/api/tcgTradeRequest";
+import { postTcgTradeRequest, getTcgTradeRequestList, updateTcgTradeRequestStatus, deleteTcgTradeRequest } from "@/api/tcgTradeRequest";
 import { LOGIN } from "@/constants/path";
 
 export default function TradePageClient() {
@@ -42,27 +42,54 @@ export default function TradePageClient() {
     }
   }
   
-  const handleTradeRequest = async (tradeCard, tcgCode) => {
+  // 공통 에러 처리 함수
+  const showErrorAlert = (title, error) => {
+    console.error(error);
+    setAlertTitle(title);
+    setAlertMsg(`error code : ${error.errorCode}, message : ${error.message}`);
+    setShowAlert(true);
+  }
 
-    if(!isLogin || !tcgCode || !tradeCard) {
-
-      let alertTitle = "";
-      let alertMsg = "";
-
-      if(!isLogin) {
-        alertTitle = "로그인이 필요해요.";
-        alertMsg = "로그인 후 카드를 교환해보세요.";
-      } else if(!tcgCode) {
-        alertMsg = "친구 코드를 선택해주세요.";
-      } else if(!tradeCard) {
-        alertMsg = "카드를 선택해주세요.";
-      }
-
-      setAlertTitle(alertTitle);
-      setAlertMsg(alertMsg);
+  // 공통 성공 처리 함수
+  const handleSuccessResponse = async (response, successMessage, errorTitle) => {
+    if (response.data === true && response.success === true) {
+      alert(successMessage);
+      const requestListResponse = await getTcgTradeRequestList(tradeId);
+      setRequestList(requestListResponse.data.content);
+      return true;
+    } else {
+      setAlertTitle(errorTitle);
+      setAlertMsg(`error code : ${response.errorCode}, message : ${response.message}`);
       setShowAlert(true);
-      return;
+      return false;
     }
+  }
+
+  // 유효성 검사 함수
+  const validateTradeRequest = (tradeCard, tcgCode) => {
+    if (!isLogin) {
+      setAlertTitle("로그인이 필요해요.");
+      setAlertMsg("로그인 후 카드를 교환해보세요.");
+      setShowAlert(true);
+      return false;
+    }
+    if (!tcgCode) {
+      setAlertTitle("");
+      setAlertMsg("친구 코드를 선택해주세요.");
+      setShowAlert(true);
+      return false;
+    }
+    if (!tradeCard) {
+      setAlertTitle("");
+      setAlertMsg("카드를 선택해주세요.");
+      setShowAlert(true);
+      return false;
+    }
+    return true;
+  }
+
+  const handleTradeRequest = async (tradeCard, tcgCode) => {
+    if (!validateTradeRequest(tradeCard, tcgCode)) return;
 
     try {
       const response = await postTcgTradeRequest(tradeId, {
@@ -71,15 +98,22 @@ export default function TradePageClient() {
         cardName: tradeCard.nameKo,
       });
 
-      if(response.data == true && response.success == true) {
-        const requestListResponse = await getTcgTradeRequestList(tradeId);
-        setRequestList(requestListResponse.data.content); 
-      }
+      await handleSuccessResponse(response, "카드 교환 요청이 완료되었습니다.", "카드 교환 신청 에러");
     } catch (error) {
-      console.error(error);
-      setAlertTitle("카드 교환 신청 에러");
-      setAlertMsg(`error code : ${error.errorCode}, message : ${error.message}`);
-      setShowAlert(true);
+      showErrorAlert("카드 교환 신청 에러", error);
+    }
+  }
+
+  const handleRequestAccept = async (tcgTradeRequestId, statusNum) => {
+    try {
+      const response = await updateTcgTradeRequestStatus(tradeId, {
+        tcgTradeRequestId,
+        status: statusNum,
+      });
+
+      await handleSuccessResponse(response, "카드 교환 요청이 수락되었습니다.", "카드 교환 에러");
+    } catch (error) {
+      showErrorAlert("카드 교환 에러", error);
     }
   }
 
@@ -89,17 +123,9 @@ export default function TradePageClient() {
         tcgTradeRequestId,
       });
 
-      if(response.data == true && response.success == true) {
-        alert("카드 교환 요청이 취소되었습니다.");
-        const requestListResponse = await getTcgTradeRequestList(tradeId);
-        setRequestList(requestListResponse.data.content); 
-      }
-
+      await handleSuccessResponse(response, "카드 교환 요청이 취소되었습니다.", "카드 교환 취소 에러");
     } catch (error) {
-      console.error(error);
-      setAlertTitle("카드 교환 취소 에러");
-      setAlertMsg(`error code : ${error.errorCode}, message : ${error.message}`);
-      setShowAlert(true);
+      showErrorAlert("카드 교환 취소 에러", error);
     }
   }
 
@@ -165,6 +191,7 @@ export default function TradePageClient() {
           {isMy && <ButtonGroup tradeId={tradeId} />}
           {!isMy && isLogin && <TradeReport />}
           <TradeList isMy={isMy} isLogin={isLogin} requestList={requestList} 
+            onRequestAccept={handleRequestAccept} 
             onRequestCancel={handleRequestCancel} 
           />
         </div>

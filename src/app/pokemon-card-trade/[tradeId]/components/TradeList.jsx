@@ -6,7 +6,7 @@ import { getTradeRequestMapping, REQUEST } from "@/constants/tradeStatus";
 import TradeListItem from "./TradeListItem";
 import TradeListItemDialog from "./TradeListItemDialog";
 
-export default function TradeList({isMy, isLogin, requestList, onRequestCancel}) {
+export default function TradeList({isMy, isLogin, requestList, onRequestAccept, onRequestCancel}) {
   const cards = requestList && requestList.length > 0 ? 
   requestList.map(request => {
     return {
@@ -53,7 +53,7 @@ export default function TradeList({isMy, isLogin, requestList, onRequestCancel})
 
   return (
     <>
-      <TradeListItemDialog handleClick={setActive} id={id} isMy={isMy} isLogin={isLogin} active={active} onRequestCancel={onRequestCancel} />
+      <TradeListItemDialog handleClick={setActive} id={id} isMy={isMy} isLogin={isLogin} active={active} onRequestAccept={onRequestAccept} onRequestCancel={onRequestCancel} />
       <ul className="max-w-2xl mx-auto w-full gap-4">
         {cards.map(card => 
           <TradeListItem

@@ -1,15 +1,16 @@
 "use client"
 
+import { Badge } from "@/components/ui/badge";
 import { AnimatePresence, motion } from "motion/react";
-import { Badge } from "@/components/ui/badge"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 
 import PokemonCard from "@/components/list/PokemonCard";
-import TradeReportDialog from "./TradeReportDialog";
+import { COMPLETE, DELETED, PROCESS, REQUEST } from "@/constants/tradeStatus";
 import { useState } from "react";
+import TradeReportDialog from "./TradeReportDialog";
 
-export default function TradeListItemDialog({handleClick, active, id, isMy, isLogin, onRequestCancel}) {
+export default function TradeListItemDialog({handleClick, active, id, isMy, isLogin, onRequestAccept, onRequestCancel}) {
   const [isReportOpen, setIsReportOpen] = useState(false);
   
   const handleReport = async ({reportReason, reportDetail}) => {
@@ -115,10 +116,18 @@ export default function TradeListItemDialog({handleClick, active, id, isMy, isLo
                       <Button variant="ghost" onClick={() => setIsReportOpen(true)}>
                         신고하기
                       </Button>
-                      <Button>교환 수락</Button>
+                      {(active.status.code === REQUEST || active.status.code === PROCESS) && (
+                        <Button onClick={() => onRequestAccept(active.id, active.status.num)}>
+                          {active.status.code === REQUEST ? "교환 수락" : "교환 완료"}
+                        </Button>
+                      )}
                     </div>
                   }
-                  {!isMy && active.isMy &&<Button variant="outline" onClick={() => onRequestCancel(active.id)}>교환 취소(요청한 사람)</Button>}
+                  {!isMy && active.isMy && (active.status.code !== COMPLETE || active.status.code !== DELETED) && (
+                      <Button variant="outline" onClick={() => onRequestCancel(active.id)}>
+                        교환 취소(요청한 사람)
+                      </Button>
+                    )}
                 </>
               )}
             </motion.div>
