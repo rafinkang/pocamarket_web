@@ -1,7 +1,6 @@
 "use client"
 
 import { AnimatePresence, motion } from "motion/react";
-import { useOutsideClick } from "@/hooks/useOutsideClick";
 import { Badge } from "@/components/ui/badge"
 
 import { Button } from "@/components/ui/button"
@@ -12,17 +11,19 @@ import { useState } from "react";
 
 export default function TradeListItemDialog({handleClick, active, id, isMy, isLogin, onRequestCancel}) {
   const [isReportOpen, setIsReportOpen] = useState(false);
-  const ref = useOutsideClick(() => {
-    console.log('isReportOpen ::: ', isReportOpen)
-    if (!isReportOpen) {
-      handleClick(null);
-    }
-  });
   
   const handleReport = async ({reportReason, reportDetail}) => {
     console.log("신고 사유:", reportReason);
     console.log("상세 내용:", reportDetail);
     console.log("신고 API 호출...");
+  }
+
+  const closeButtonProps = {
+    layout: true,
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0, transition: { duration: 0.05 } },
+    onClick: () => handleClick(null),
   }
 
   return (
@@ -39,29 +40,29 @@ export default function TradeListItemDialog({handleClick, active, id, isMy, isLo
       <AnimatePresence>
         {active && typeof active === "object" ? (
           <div className="fixed inset-0 grid place-items-center">
+            {/* 모바일용 닫기 버튼 */}
             <motion.button
-              key={`button-${active.id}-${id}`}
-              layout
-              initial={{
-                opacity: 0,
-              }}
-              animate={{
-                opacity: 1,
-              }}
-              exit={{
-                opacity: 0,
-                transition: {
-                  duration: 0.05,
-                },
-              }}
-              className="flex absolute top-2 right-2 items-center justify-center bg-white rounded-full h-6 w-6"
-              onClick={() => handleClick(null)}>
+              {...closeButtonProps}
+              key={`button-mobile-${active.id}-${id}`}
+              className="flex absolute top-15 right-2 md:hidden items-center justify-center bg-white rounded-full h-8 w-8 z-10"
+            >
               <CloseIcon />
             </motion.button>
+
+            {/* 모달 body */}
             <motion.div
               layoutId={`card-${active.id}-${id}`}
-              ref={ref}
-              className="w-full max-w-[500px]  h-full md:h-fit md:max-h-[90%]  flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden  px-8 py-8">
+              className="relative w-full md:max-w-[500px] h-full md:h-fit md:max-h-[90%] flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden px-8 py-8">
+              {/* 데스크탑용 닫기 버튼 */}
+              <motion.button
+                {...closeButtonProps}
+                key={`button-desktop-${active.id}-${id}`}
+                className="hidden absolute top-4 right-4 md:flex items-center justify-center bg-gray-200 hover:bg-gray-300 dark:bg-neutral-700 dark:hover:bg-neutral-600 rounded-full h-8 w-8 z-10"
+              >
+                <CloseIcon />
+              </motion.button>
+
+              {/* 카드 */}
               <motion.div layoutId={`image-${active.code}-${active.id}-${id}`}>
                 <div className="flex justify-center items-center w-full h-80 lg:h-80 sm:rounded-tr-lg sm:rounded-tl-lg">
                   <div className="relative aspect-[366/512]" style={{ width: "20vw", maxWidth: "200px" }}>
@@ -70,6 +71,7 @@ export default function TradeListItemDialog({handleClick, active, id, isMy, isLo
                 </div>
               </motion.div>
 
+              {/* 내용 */}
               <div>
                 <div className="flex justify-between items-start p-4">
                   <div className="">
@@ -109,12 +111,12 @@ export default function TradeListItemDialog({handleClick, active, id, isMy, isLo
               {isLogin && (
                 <>
                   {isMy && 
-                    <>
-                      <Button>교환 수락(교환 등록한 사람)</Button>
-                      <Button variant="destructive" onClick={() => setIsReportOpen(true)}>
+                    <div className="flex justify-end gap-1">
+                      <Button variant="ghost" onClick={() => setIsReportOpen(true)}>
                         신고하기
                       </Button>
-                    </>
+                      <Button>교환 수락</Button>
+                    </div>
                   }
                   {!isMy && active.isMy &&<Button variant="outline" onClick={() => onRequestCancel(active.id)}>교환 취소(요청한 사람)</Button>}
                 </>
