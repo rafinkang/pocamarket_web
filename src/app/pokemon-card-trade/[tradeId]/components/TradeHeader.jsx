@@ -1,3 +1,5 @@
+"use client"
+
 import { useEffect, useState } from "react"
 import { getTradeStatusName, REGISTRATION, PROCESS, COMPLETE } from "@/constants/tradeStatus";
 import styles from "src/styles/tradeStatus.module.scss"

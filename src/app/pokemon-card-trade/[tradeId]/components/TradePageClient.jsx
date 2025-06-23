@@ -9,6 +9,7 @@ import TradeHeader from "./TradeHeader";
 import ButtonGroup from "./ButtonGroup";
 import TradeBox from "./TradeBox";
 import TradeList from "./TradeList";
+import TradeReport from "./TradeReport";
 
 import { getTcgCodeList } from "@/api/tcgCode";
 import { getTcgTradeDetail } from "@/api/tcgTrade";
@@ -143,6 +144,7 @@ export default function TradePageClient() {
         <div className="flex flex-col gap-8 mt-2">
           <TradeBox checkLogin={checkLogin} data={data} isMy={isMy} tcgCodeList={tcgCodeList} onTradeRequest={handleTradeRequest} />
           {isMy && <ButtonGroup tradeId={tradeId} />}
+          {!isMy && isLogin && <TradeReport />}
           <TradeList isMy={isMy} isLogin={isLogin} requestList={requestList} />
         </div>
     </>

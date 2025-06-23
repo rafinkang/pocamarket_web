@@ -113,7 +113,7 @@ export default function TradeCard({checkLogin, data, isMy, tcgCodeList, onTradeR
             onOpenChange={setOpenDialog}
             handleOk={handleOk}
             handleCancel={handleCancel} 
-            isConfrim={false}
+            isConfrim={true}
             title="카드 교환 신청"
             msg={tradeMsg}
             content={tradeRequestContent}

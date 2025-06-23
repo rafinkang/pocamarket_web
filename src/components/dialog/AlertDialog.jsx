@@ -76,10 +76,10 @@ export default function ConfirmDialog({
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button onClick={handleOk} type="submit">{okBtnName}</Button>
+            {isConfrim && <Button onClick={handleCancel} variant="outline">{cancelBtnName}</Button>}
           </DialogClose>
           <DialogClose asChild>
-            {isConfrim && <Button onClick={handleCancel} variant="outline">{cancelBtnName}</Button>}
+            <Button onClick={handleOk} type="submit">{okBtnName}</Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>
