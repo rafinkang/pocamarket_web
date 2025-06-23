@@ -47,6 +47,16 @@ export const getMyTcgTradeList = async (params) => {
   });
 };
 
+/**
+ * 내 TCG 교환 목록 조회
+ */
+export const getMyTcgTradeInfo = async () => {
+  return callApi({
+    method: "GET",
+    url: "/tcg-trade/my/info",
+  });
+};
+
 
 /**
  * 교환 상세 조회
