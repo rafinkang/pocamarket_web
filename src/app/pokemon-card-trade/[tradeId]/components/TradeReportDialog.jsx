@@ -1,13 +1,13 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
 import AlertDialog from "@/components/dialog/AlertDialog";
+
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Textarea } from "@/components/ui/textarea"
 import { useState } from "react";
 
-export default function TradeReport({handleReport}) {
+export default function TradeReportDialog({ open, onOpenChange, handleReport }) {
   const reportReasonList = [
     {value: 0, content: "잘못된 친구 코드로 지속적인 거래 시도"},
     {value: 1, content: "교환에 등록한 카드와 다른 카드로 거래"},
@@ -20,10 +20,12 @@ export default function TradeReport({handleReport}) {
   const handleOk = async () => {
     await handleReport({reportReason, reportDetail});
     resetContent();
+    onOpenChange(false);
   };
 
   const handleCancel = () => {
     resetContent();
+    onOpenChange(false);
   };
 
   const resetContent = () =>{
@@ -60,15 +62,17 @@ export default function TradeReport({handleReport}) {
 
   return (
     <AlertDialog 
+      open={open}
+      onOpenChange={onOpenChange}
       handleOk={handleOk} 
       handleCancel={handleCancel} 
       content={reportContent} 
-      isConfrim={true} 
+      isConfirm={true} 
+      preventCloseOnOutsideClick={true}
       title="신고하기"
       okBtnName="신고하기"
       cancelBtnName="취소"
-    >
-        <Button variant="destructive" className="text-xs px-3 h-[30px] font-bold w-[80px]">신고하기</Button>
-    </AlertDialog>
+      contentClassName="z-[150]" 
+    />
   );
 }

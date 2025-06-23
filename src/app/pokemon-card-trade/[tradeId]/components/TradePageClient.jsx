@@ -136,7 +136,7 @@ export default function TradePageClient() {
         onOpenChange={setShowAlert}
         preventCloseOnOutsideClick={true}
         handleOk={handleOk}
-        isConfrim={false}
+        isConfirm={false}
         title={alertTitle}
         msg={alertMsg}
       />

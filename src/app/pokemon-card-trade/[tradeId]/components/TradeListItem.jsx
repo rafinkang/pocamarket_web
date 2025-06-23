@@ -36,7 +36,7 @@ export default function TradeItem ({id, card, isActiveCard, disabled, handleClic
           </motion.p>
         </div>
       </div>
-      <motion.button
+      {/* <motion.button
         layoutId={`button-${card.id}-${id}`}
         className="mt-1 px-3 text-xs rounded-full font-bold h-[24px]" 
         style={{backgroundColor: '#f1f3f3', color: '#404949'}}
@@ -44,7 +44,7 @@ export default function TradeItem ({id, card, isActiveCard, disabled, handleClic
         disabled={disabled}
       >
         자세히 보기
-      </motion.button>
+      </motion.button> */}
     </motion.div>
     )
 }

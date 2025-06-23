@@ -1,5 +1,6 @@
 "use client"
 
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -26,6 +27,7 @@ import {
  * @param {() => void} [props.handleCancel=()=>{}] - 취소 버튼 클릭 시 실행될 콜백 함수.
  * @param {() => void} [props.handleOk=()=>{}] - 확인 버튼 클릭 시 실행될 콜백 함수.
  * @param {boolean} [props.preventCloseOnOutsideClick=false] - 다이얼로그 바깥 영역 클릭 시 닫히지 않도록 할지 여부.
+ * @param {string} [props.contentClassName=""] - 부모에서 추가한 class.
  * @returns {JSX.Element}
  */
 export default function ConfirmDialog({ 
@@ -35,12 +37,13 @@ export default function ConfirmDialog({
     title = "", 
     msg = "", 
     content = null, 
-    isConfrim = false, 
+    isConfirm = false, 
     cancelBtnName = "취소", 
     okBtnName = "확인", 
     handleCancel = () => { }, 
     handleOk = () => { },
-    preventCloseOnOutsideClick = false
+    preventCloseOnOutsideClick = false,
+    contentClassName = "", 
   }) {
   const isControlled = open !== null;
   const dialogProps = {};
@@ -64,7 +67,7 @@ export default function ConfirmDialog({
           {children}
         </DialogTrigger>
       )}
-      <DialogContent onInteractOutside={handleInteractOutside} showCloseButton={false} className="sm:max-w-[425px]">
+      <DialogContent onInteractOutside={handleInteractOutside} showCloseButton={false} className={cn("sm:max-w-[425px]", contentClassName)}>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription asChild style={{ paddingTop : msg && '12px' }}>
@@ -76,7 +79,7 @@ export default function ConfirmDialog({
 
         <DialogFooter>
           <DialogClose asChild>
-            {isConfrim && <Button onClick={handleCancel} variant="outline">{cancelBtnName}</Button>}
+            {isConfirm && <Button onClick={handleCancel} variant="outline">{cancelBtnName}</Button>}
           </DialogClose>
           <DialogClose asChild>
             <Button onClick={handleOk} type="submit">{okBtnName}</Button>

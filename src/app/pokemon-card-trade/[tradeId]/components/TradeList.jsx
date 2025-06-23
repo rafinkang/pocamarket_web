@@ -7,7 +7,7 @@ import TradeListItem from "./TradeListItem";
 import TradeListItemDialog from "./TradeListItemDialog";
 
 export default function TradeList({isMy, isLogin, requestList}) {
-  const cards = requestList && requestList.length > 0 ? 
+  const cards = requestList && requestList.length > 0 ?
   requestList.map(request => {
     return {
       id: request.tradeRequestId,
@@ -25,59 +25,7 @@ export default function TradeList({isMy, isLogin, requestList}) {
         );
       },
     }
-  }) : [
-    {
-      description: "XXX님이 [캐터피](으)로 교환 신청 하였습니다.",
-      id : 1,
-      code: "a1-001",
-      status: {
-        text: "교환 취소",
-        code: "CANCEL"
-      },
-      content: () => {
-        return (
-          <>
-            <p>교환 성공 횟수 : 13</p>
-            <p>신고 횟수 : 2</p>
-          </>
-        );
-      },
-    },
-    {
-      description: "XXX님이 [개무소](으)로 교환 신청 하였습니다.",
-      id : 2,
-      code: "a1-002",
-      status: {
-        text: "교환중",
-        code: "TRADE"
-      },
-      content: () => {
-        return (
-          <>
-            <p>교환 성공 횟수 : 13</p>
-            <p>신고 횟수 : 2</p>
-          </>
-        );
-      },
-    },
-    {
-      description: "XXX님이 [뿔충이](으)로 교환 신청 하였습니다.",
-      id : 3,
-      code: "a1-003",
-      status: {
-        text: "교환 신청",
-        code: "REQUEST"
-      },
-      content: () => {
-        return (
-          <>
-            <p>교환 성공 횟수 : 13</p>
-            <p>신고 횟수 : 2</p>
-          </>
-        );
-      },
-    },
-  ];
+  }) : [];
   const [active, setActive] = useState(null);
   const id = useId();
   const [activeCard, setActiveCard] = useState(null);

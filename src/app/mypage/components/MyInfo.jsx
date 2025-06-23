@@ -201,7 +201,7 @@ export default function MyInfoPage({ className }) {
                   </div>
                 </CardContent>
                 <CardFooter className="flex justify-end gap-2">
-                  <AlertDialog handleOk={updateUserInfo} isConfrim={true} title="회원 정보 변경" msg="입력하신 내용으로 회원정보가 변경됩니다.">
+                  <AlertDialog handleOk={updateUserInfo} isConfirm={true} title="회원 정보 변경" msg="입력하신 내용으로 회원정보가 변경됩니다.">
                     <Button variant="outline">저장</Button>
                   </AlertDialog>
                   <Button variant="outline" onClick={() => setIsUpdate(false)}>취소</Button>
@@ -235,7 +235,7 @@ export default function MyInfoPage({ className }) {
                   <PasswordChangeDialog>
                     <Button variant="outline">비밀번호 변경</Button>
                   </PasswordChangeDialog>
-                  <AlertDialog handleOk={withdrawUser} isConfrim={true} title="회원 탈퇴" msg="정말로 포카마켓을 탈퇴하시겠습니까ㅠㅠ?">
+                  <AlertDialog handleOk={withdrawUser} isConfirm={true} title="회원 탈퇴" msg="정말로 포카마켓을 탈퇴하시겠습니까ㅠㅠ?">
                     <Button variant="destructive">회원 탈퇴</Button>
                   </AlertDialog>
                 </CardFooter>

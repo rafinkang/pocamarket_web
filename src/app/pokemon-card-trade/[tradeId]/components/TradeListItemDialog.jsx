@@ -7,11 +7,23 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 
 import PokemonCard from "@/components/list/PokemonCard";
+import TradeReportDialog from "./TradeReportDialog";
+import { useState } from "react";
 
-export default function TradeItemDialog({handleClick, active, id, isMy, isLogin}) {
+export default function TradeListItemDialog({handleClick, active, id, isMy, isLogin}) {
+  const [isReportOpen, setIsReportOpen] = useState(false);
   const ref = useOutsideClick(() => {
-    handleClick(null);
+    console.log('isReportOpen ::: ', isReportOpen)
+    if (!isReportOpen) {
+      handleClick(null);
+    }
   });
+  
+  const handleReport = async ({reportReason, reportDetail}) => {
+    console.log("신고 사유:", reportReason);
+    console.log("상세 내용:", reportDetail);
+    console.log("신고 API 호출...");
+  }
 
   return (
     <>
@@ -21,12 +33,12 @@ export default function TradeItemDialog({handleClick, active, id, isMy, isLogin}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/20 h-full w-full z-51" />
+            className="fixed inset-0 bg-black/20 h-full w-full" />
         )}
       </AnimatePresence>
       <AnimatePresence>
         {active && typeof active === "object" ? (
-          <div className="fixed inset-0 grid place-items-center z-[100]">
+          <div className="fixed inset-0 grid place-items-center">
             <motion.button
               key={`button-${active.id}-${id}`}
               layout
@@ -42,7 +54,7 @@ export default function TradeItemDialog({handleClick, active, id, isMy, isLogin}
                   duration: 0.05,
                 },
               }}
-              className="flex absolute top-2 right-2 lg:hidden items-center justify-center bg-white rounded-full h-6 w-6"
+              className="flex absolute top-2 right-2 items-center justify-center bg-white rounded-full h-6 w-6"
               onClick={() => handleClick(null)}>
               <CloseIcon />
             </motion.button>
@@ -61,7 +73,7 @@ export default function TradeItemDialog({handleClick, active, id, isMy, isLogin}
               <div>
                 <div className="flex justify-between items-start p-4">
                   <div className="">
-                    <motion.span layoutId={`code-${active.code}-${active.id}-${id}`}>
+                    <motion.span layoutId={`code-${active.id}-${id}`}>
                       <Badge variant="secondary">{active.status.text}</Badge>
                     </motion.span>
                     <motion.p
@@ -96,7 +108,14 @@ export default function TradeItemDialog({handleClick, active, id, isMy, isLogin}
               {/* TODO 교환 취소인 경우 버튼 숨기기 */}
               {isLogin && (
                 <>
-                  {isMy && <Button>교환 수락(교환 등록한 사람)</Button>}
+                  {isMy && 
+                    <>
+                      <Button>교환 수락(교환 등록한 사람)</Button>
+                      <Button variant="destructive" onClick={() => setIsReportOpen(true)}>
+                        신고하기
+                      </Button>
+                    </>
+                  }
                   {!isMy && active.isMy &&<Button variant="outline">교환 취소(요청한 사람)</Button>}
                 </>
               )}
@@ -104,6 +123,11 @@ export default function TradeItemDialog({handleClick, active, id, isMy, isLogin}
           </div>
         ) : null}
       </AnimatePresence>
+      <TradeReportDialog
+        open={isReportOpen}
+        onOpenChange={setIsReportOpen}
+        handleReport={handleReport}
+      />
     </>
   )
 }

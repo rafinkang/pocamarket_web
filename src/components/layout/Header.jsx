@@ -21,7 +21,7 @@ export function Header() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full transition-shadow duration-300 bg-background text-card-foreground",
+        "sticky top-0 z-40 w-full transition-shadow duration-300 bg-background text-card-foreground",
         {
           "shadow-[0_1px_1px_rgba(0,0,0,0.1)]": isScrolled,
         }
