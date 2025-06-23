@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 
 import PokemonCard from "@/components/list/PokemonCard";
 
-export default function TradeItemDialog({handleClick, active, id, isMy, isLogin}) {
+export default function TradeItemDialog({handleClick, active, id, isMy, isLogin, onRequestCancel}) {
   const ref = useOutsideClick(() => {
     handleClick(null);
   });
@@ -97,7 +97,7 @@ export default function TradeItemDialog({handleClick, active, id, isMy, isLogin}
               {isLogin && (
                 <>
                   {isMy && <Button>교환 수락(교환 등록한 사람)</Button>}
-                  {!isMy && active.isMy &&<Button variant="outline">교환 취소(요청한 사람)</Button>}
+                  {!isMy && active.isMy &&<Button variant="outline" onClick={() => onRequestCancel(active.id)}>교환 취소(요청한 사람)</Button>}
                 </>
               )}
             </motion.div>
