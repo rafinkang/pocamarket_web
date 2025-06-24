@@ -184,6 +184,7 @@ export default function TradePageClient() {
         isConfirm={false}
         title={alertTitle}
         msg={alertMsg}
+        contentClassName={"z-[151]"}
       />
         <TradeHeader data={data} />
         <div className="flex flex-col gap-8 mt-2">

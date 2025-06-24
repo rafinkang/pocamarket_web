@@ -86,7 +86,7 @@ export default function TradeCard({checkLogin, data, isMy, tcgCodeList, onTradeR
         <SelectTrigger className="w-[300px]">
           <SelectValue placeholder="TCG 코드 선택" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="z-[152]">
           <SelectGroup>
             <SelectLabel>TCG 코드 선택</SelectLabel>
             {tcgCodeList.map((tcgCode) => (
@@ -116,7 +116,9 @@ export default function TradeCard({checkLogin, data, isMy, tcgCodeList, onTradeR
             isConfirm={true}
             title="카드 교환 신청"
             msg={tradeMsg}
+
             content={tradeRequestContent}
+            contentClassName={"z-[151]"}
           />
           <Card className="shadow-none">
             <CardContent
