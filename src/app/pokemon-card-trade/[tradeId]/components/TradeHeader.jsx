@@ -1,13 +1,13 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { getTradeStatusName, REGISTRATION, PROCESS, COMPLETE } from "@/constants/tradeStatus";
+import { getTradeStatusName, REQUEST, PROCESS, COMPLETE } from "@/constants/tradeStatus";
 import styles from "src/styles/tradeStatus.module.scss"
 import moment from "moment";
 import { cn } from "@/lib/utils";
 
 const statusClassMap = {
-  [REGISTRATION]: styles['badge-registration'],
+  [REQUEST]: styles['badge-request'],
   [PROCESS]: styles['badge-process'],
   [COMPLETE]: styles['badge-complete'],
 };
@@ -20,7 +20,7 @@ export default function TradeHeader ({data}) {
 
   useEffect(() => {
     if (!data) return;
-    const dataStatus = [PROCESS, COMPLETE].includes(data.status) ? data.status : REGISTRATION;
+    const dataStatus = [PROCESS, COMPLETE].includes(data.status) ? data.status : REQUEST;
 
     setNickname(data.nickname);
     setStatus(getTradeStatusName(dataStatus));

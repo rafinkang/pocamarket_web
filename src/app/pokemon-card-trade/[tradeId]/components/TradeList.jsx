@@ -5,11 +5,13 @@ import { useEffect, useState } from "react";
 import { getTradeRequestMapping, REQUEST } from "@/constants/tradeStatus";
 import TradeListItem from "./TradeListItem";
 import TradeListItemDialog from "./TradeListItemDialog";
+import AlertDialog from "@/components/dialog/AlertDialog";
 
 export default function TradeList({isMy, isLogin, requestList, onRequestAccept, onRequestCancel}) {
   const [cards, setCards] = useState([]);
-  const [active, setActive] = useState(null);
+  const [dialogData, setDialogData] = useState(null);
   const [activeCard, setActiveCard] = useState(null);
+  const [openOk, onOpenOkChange] = useState(false)
 
   useEffect(() => {
     console.log('requestList ::: ', requestList)
@@ -37,12 +39,12 @@ export default function TradeList({isMy, isLogin, requestList, onRequestAccept, 
   }, [requestList]) 
 
   useEffect(() => {
-    if (active) {
+    if (dialogData) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
     }
-  }, [active]);
+  }, [dialogData]);
 
   useEffect(() => {
     setActiveCard(cards.find(card => card.status.code === REQUEST))
@@ -50,19 +52,28 @@ export default function TradeList({isMy, isLogin, requestList, onRequestAccept, 
 
   return (
     <>
-      <TradeListItemDialog handleClick={setActive} isMy={isMy} isLogin={isLogin} active={active} onRequestAccept={onRequestAccept} onRequestCancel={onRequestCancel} />
+      <TradeListItemDialog handleClick={setDialogData} isMy={isMy} isLogin={isLogin} dialogData={dialogData} onRequestAccept={onRequestAccept} onRequestCancel={onRequestCancel} onOpenOkChange={onOpenOkChange} />
       <ul className="max-w-2xl mx-auto w-full gap-4">
         {cards.map(card => 
           <TradeListItem
-            handleClick={setActive}
+            handleClick={setDialogData}
             key={card.id}
             card={card}
             isActiveCard={activeCard && activeCard.id === card.id}
-            isVisible={active === null}
+            isVisible={dialogData === null}
             disabled={activeCard && activeCard.id !== card.id}
           />
         )}
       </ul>
+      <AlertDialog 
+        open={openOk}
+        onOpenChange={onOpenOkChange}
+        isConfirm={false} 
+        preventCloseOnOutsideClick={true}
+        title="신고 접수 완료"
+        msg="신고 접수가 완료됐습니다.<br/>자세한 내용은 마이페이지에서 확인하세요."
+        okBtnName="확인"
+      />
     </>
   );
 }

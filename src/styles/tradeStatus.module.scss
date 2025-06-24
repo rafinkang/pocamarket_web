@@ -1,13 +1,8 @@
-$color-registration: #a18ae0;
 $color-deleted: #929599;
 $color-request: #28afa4;
 $color-select: #e0a22f;
 $color-process: #267bdc;
 $color-complete: rgb(10, 19, 49);
-
-.text-registration {
-  color: $color-registration;
-}
 
 .text-deleted {
   color: $color-deleted;
@@ -33,10 +28,6 @@ $color-complete: rgb(10, 19, 49);
   font-weight: 700;
 }
 
-.badge-registration {
-  @include basic-badge-style;
-  background-color: $color-registration;
-}
 .badge-deleted {
   @include basic-badge-style;
   background-color: $color-deleted;
