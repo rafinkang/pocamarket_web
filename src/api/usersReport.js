@@ -8,3 +8,11 @@ export const postUserReport = async (data) => {
     });
 };
 
+export const getUserReport = async (params) => {
+    return callApi({
+        method: 'get',
+        url: '/user-report',
+        params,
+    });
+};
+
