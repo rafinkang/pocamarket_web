@@ -1,7 +1,7 @@
 import callApi from "@/lib/callApi";
 
 /**
- * TCG 교환 등록
+ * TCG 교환글 등록
  * @param {object} [data] - { myCardCode: '', wantCardCode: '', tcgCode: '' }
  */
 export const postTcgTrade = async (data) => {
@@ -13,7 +13,8 @@ export const postTcgTrade = async (data) => {
 };
 
 /**
- * TCG 교환 수정
+ * TCG 교환글 수정
+ * @param {Number} [tradeId]
  * @param {object} [data] - { myCardCode: '', wantCardCode: '', tcgCode: '' }
  */
 export const putTcgTrade = async (tradeId, data) => {
@@ -21,6 +22,17 @@ export const putTcgTrade = async (tradeId, data) => {
     method: 'PUT',
     url: `/tcg-trade/${tradeId}`,
     data,
+  });
+};
+
+/**
+ * TCG 교환글 삭제
+ * @param {Number} [tradeId]
+ */
+export const deleteTcgTrade = async (tradeId) => {
+  return callApi({
+    method: 'DELETE',
+    url: `/tcg-trade/${tradeId}`,
   });
 };
 

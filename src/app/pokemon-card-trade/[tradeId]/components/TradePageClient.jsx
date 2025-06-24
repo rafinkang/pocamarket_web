@@ -9,7 +9,6 @@ import TradeHeader from "./TradeHeader";
 import ButtonGroup from "./ButtonGroup";
 import TradeBox from "./TradeBox";
 import TradeList from "./TradeList";
-import TradeReport from "./TradeReport";
 
 import { getTcgCodeList } from "@/api/tcgCode";
 import { getTcgTradeDetail } from "@/api/tcgTrade";
@@ -41,7 +40,7 @@ export default function TradePageClient() {
       router.push(LOGIN);
     }
   }
-  
+
   // 공통 에러 처리 함수
   const showErrorAlert = (title, error) => {
     console.error(error);
@@ -186,16 +185,15 @@ export default function TradePageClient() {
         msg={alertMsg}
         contentClassName={"z-[151]"}
       />
-        <TradeHeader data={data} />
-        <div className="flex flex-col gap-8 mt-2">
-          <TradeBox checkLogin={checkLogin} data={data} isMy={isMy} tcgCodeList={tcgCodeList} onTradeRequest={handleTradeRequest} />
-          {isMy && <ButtonGroup tradeId={tradeId} />}
-          {!isMy && isLogin && <TradeReport />}
-          <TradeList isMy={isMy} isLogin={isLogin} requestList={Array.isArray(requestList) ? requestList : requestList.content}
-            onRequestAccept={handleRequestAccept} 
-            onRequestCancel={handleRequestCancel} 
-          />
-        </div>
+      <TradeHeader data={data} />
+      <div className="flex flex-col gap-2 mt-2">
+        <TradeBox checkLogin={checkLogin} data={data} isMy={isMy} tcgCodeList={tcgCodeList} onTradeRequest={handleTradeRequest} />
+        <ButtonGroup tradeId={tradeId} data={data} isMy={isMy} isLogin={isLogin}/>
+        <TradeList isMy={isMy} isLogin={isLogin} requestList={Array.isArray(requestList) ? requestList : requestList.content}
+          onRequestAccept={handleRequestAccept}
+          onRequestCancel={handleRequestCancel}
+        />
+      </div>
     </>
   );
 }
