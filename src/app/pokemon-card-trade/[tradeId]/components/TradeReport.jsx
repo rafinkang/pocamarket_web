@@ -1,16 +1,27 @@
 "use client"
 
+import AlertDialog from "@/components/dialog/AlertDialog";
 import { useState } from "react";
 import TradeReportDialog from "./TradeReportDialog";
 import { Button } from "@/components/ui/button";
 
-export default function TradeReport () {
+import { postUserReport } from "@/api/usersReport";
+
+export default function TradeReport ({data}) {
+  const [openOk, onOpenOkChange] = useState(false)
   const [isReportOpen, setIsReportOpen] = useState(false);
 
   const handleReport = async ({reportReason, reportDetail}) => {
-    console.log("신고 사유:", reportReason);
-    console.log("상세 내용:", reportDetail);
-    console.log("신고 API 호출...");
+    const requestData = {
+      refId: data.tradeId,
+      refType: "TRADE",
+      refStatus: data.status,
+      link: window.location.href,
+      content: `${reportReason}:${reportDetail}`,
+    };
+
+    await postUserReport(requestData);
+    onOpenOkChange(true);
   }
 
   return (
@@ -18,11 +29,19 @@ export default function TradeReport () {
       <Button variant="destructive" onClick={() => setIsReportOpen(true)}>
         신고하기
       </Button>
-      {/* <TradeReportDialog handleReport={handleReport} /> */}
       <TradeReportDialog
         open={isReportOpen}
         onOpenChange={setIsReportOpen}
         handleReport={handleReport}
+      />
+      <AlertDialog 
+        open={openOk}
+        onOpenChange={onOpenOkChange}
+        isConfirm={false} 
+        preventCloseOnOutsideClick={true}
+        title="신고 접수 완료"
+        msg="신고 접수가 완료됐습니다.<br/>자세한 내용은 마이페이지에서 확인하세요."
+        okBtnName="확인"
       />
     </div>
   )

@@ -8,17 +8,17 @@ import { Textarea } from "@/components/ui/textarea"
 import { useState } from "react";
 
 export default function TradeReportDialog({ open, onOpenChange, handleReport }) {
-  const reportReasonList = [
-    {value: 0, content: "잘못된 친구 코드로 지속적인 거래 시도"},
-    {value: 1, content: "교환에 등록한 카드와 다른 카드로 거래"},
-    {value: 2, content: "사기 또는 허위 정보"},
-    {value: 3, content: "기타"},
+  const reportReasonIdxList = [
+    {idx: 0, content: "잘못된 친구 코드로 지속적인 거래 시도"},
+    {idx: 1, content: "교환에 등록한 카드와 다른 카드로 거래"},
+    {idx: 2, content: "사기 또는 허위 정보"},
+    {idx: 3, content: "기타"},
   ]
-  const [reportReason, setReportReason] = useState(reportReasonList[0].value);
+  const [reportReasonIdx, setReportReasonIdx] = useState(reportReasonIdxList[0].idx);
   const [reportDetail, setReportDetail] = useState("");
 
   const handleOk = async () => {
-    await handleReport({reportReason, reportDetail});
+    await handleReport({reportReason: reportReasonIdxList[reportReasonIdx].content, reportDetail});
     resetContent();
     onOpenChange(false);
   };
@@ -29,7 +29,7 @@ export default function TradeReportDialog({ open, onOpenChange, handleReport }) 
   };
 
   const resetContent = () =>{
-    setReportReason(reportReasonList[0].value);
+    setReportReasonIdx(reportReasonIdxList[0].idx);
     setReportDetail("");
   }
 
@@ -39,14 +39,14 @@ export default function TradeReportDialog({ open, onOpenChange, handleReport }) 
         신고 이유를 선택해주세요.
       </p>
       <RadioGroup 
-        defaultValue={reportReasonList[0].value} 
+        defaultValue={reportReasonIdxList[0].idx} 
         className="grid gap-2"
-        onValueChange={(value) => setReportReason(value)}
+        onValueChange={(idx) => setReportReasonIdx(idx)}
       >
-        {reportReasonList.map(item => 
-          <div key={`tr-${item.value}`} className="flex items-center space-x-2">
-            <RadioGroupItem value={item.value} id={`r${item.value}`} />
-            <Label htmlFor={`r${item.value}`}>{item.content}</Label>
+        {reportReasonIdxList.map(item => 
+          <div key={`tr-${item.idx}`} className="flex items-center space-x-2">
+            <RadioGroupItem value={item.idx} id={`r${item.idx}`} />
+            <Label htmlFor={`r${item.idx}`}>{item.content}</Label>
           </div>
         )}
       </RadioGroup>

@@ -7,7 +7,6 @@ import CancelTradeBtn from "./CancelTradeBtn";
 import TradeReport from "./TradeReport";
 
 export default function ButtonGroup({ tradeId, data, isMy, isLogin }) {
-  console.log("buttonGroup data", data);
   return (
     <div className="flex justify-end gap-1 md:mx-3">
       {/* 거래 요청 단계에서만 수정 */}

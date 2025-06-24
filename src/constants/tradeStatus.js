@@ -1,18 +1,18 @@
 const status = Object.freeze({
-  REGISTRATION: "교환 등록",
-  DELETED: "교환 삭제",
-  REQUEST: "교환 요청",
-  SELECT: "교환 선택",
-  PROCESS: "교환 진행중",
-  COMPLETE: "교환 완료"
+  10: "교환 등록",
+  0: "교환 삭제",
+  1: "교환 요청",
+  2: "교환 선택",
+  3: "교환 진행중",
+  4: "교환 완료"
 })
 
-export const REGISTRATION = "REGISTRATION";
-export const DELETED = "DELETED";
-export const REQUEST = "REQUEST";
-export const SELECT = "SELECT";
-export const PROCESS = "PROCESS";
-export const COMPLETE = "COMPLETE";
+export const REGISTRATION = 10;
+export const DELETED = 0;
+export const REQUEST = 1;
+export const SELECT = 2;
+export const PROCESS = 3;
+export const COMPLETE = 4;
 
 export const getTradeRequestMapping = (statusCode) => {
   switch (statusCode) {
