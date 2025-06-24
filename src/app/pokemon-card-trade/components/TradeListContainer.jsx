@@ -1,22 +1,23 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 // 거래 필터
 import {
   defaultFilterCardList,
   defaultFilterOptionList,
-  defaultSortList,
   defaultSort,
+  defaultSortList,
 } from "@/constants/tradeFilter";
 
 // 거래 검색 필터
 import SearchContainer from "./Search/SearchContainer";
 
 // - 카드 필터
-import FilterCardBox from "./Search/FilterCardBox";
-import FilterCard from "./Search/FilterCard";
 import { RiArrowLeftRightFill } from "react-icons/ri";
+import FilterCard from "./Search/FilterCard";
+import FilterCardBox from "./Search/FilterCardBox";
 
 // - 거래 글 검색 필터
 import SortFilter from "./Search/SortFilter";
@@ -34,305 +35,294 @@ import TradeList from "./TradeList";
 import CommonPagination from "../../../components/pagination/Pagination";
 
 // API
-import { getTcgTradeList, getMyTcgTradeList } from "@/api/tcgTrade";
-import { parseQueryString, makeQueryString } from "@/utils/queryString";
+import { getMyTcgTradeList, getTcgTradeList } from "@/api/tcgTrade";
 
 // 로그인 상태 체크
 import useAuthStore from "@/store/authStore";
 
-
 export default function TradeListContainer() {
-  const [page, setPage] = useState(0);
-  const [totalPage, setTotalPage] = useState(1);
-  const [sort, setSort] = useState(defaultSort);
-  const [totalCount, setTotalCount] = useState(0);
-  const pageSize = 3;
+  // Next.js 라우팅 훅들
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
 
   // 로그인 상태 체크
   const isLogin = useAuthStore((state) => state.isLogin);
 
-  const [contentList, setContentList] = useState([]);
-
-  // 카드 검색 상태
+  // UI 상태
   const [isCardSearch, setIsCardSearch] = useState(false);
   const [currentFilterCardType, setCurrentFilterCardType] = useState(null);
+  const [contentList, setContentList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [filterQuery, setFilterQuery] = useState(null);
-  const isPopState = useRef(false);
-  const isInitialized = useRef(false);
+  // 페이지네이션 상태
+  const [totalPage, setTotalPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const pageSize = 3;
 
-  const [filterCardList, setFilterCardList] = useState([
-    ...defaultFilterCardList,
-  ]);
+  // URL에서 확정된 검색 조건 파싱 (API 호출용)
+  const confirmedParams = useMemo(() => {
+    const params = Object.fromEntries(searchParams.entries());
+    return {
+      myCardCode: params.myCardCode || null,
+      wantCardCode: params.wantCardCode?.split(",").filter(code => code?.trim()) || [],
+      filterOption: params.filterOption || "all",
+      page: Math.max(0, Number(params.page) || 0),
+      sort: params.sort || defaultSort,
+    };
+  }, [searchParams]);
 
-  const [filterOption, setFilterOption] = useState("all");
-  const [filterOptionList, setFilterOptionList] = useState([
-    ...defaultFilterOptionList,
-  ]);
+  // 로컬 필터 상태 (임시 검색 조건, UI 표시용)
+  const [localFilterState, setLocalFilterState] = useState(() => ({
+    filterCardList: [...defaultFilterCardList],
+    filterOption: confirmedParams.filterOption,
+    sort: confirmedParams.sort,
+  }));
 
-  const [sortList, setSortList] = useState([...defaultSortList]);
+  // 초기 로드 시 URL 기반으로 로컬 필터 상태 동기화
+  useEffect(() => {
+    let wantCardIndex = 0;
+    const syncedFilterCardList = defaultFilterCardList.map((card) => {
+      if (card.filterCardType === "my") {
+        return { ...card, code: confirmedParams.myCardCode };
+      } else {
+        const currentWantCode = confirmedParams.wantCardCode[wantCardIndex] || null;
+        wantCardIndex++;
+        return {
+          ...card,
+          code: currentWantCode && currentWantCode.length > 0 ? currentWantCode : null,
+        };
+      }
+    });
 
-  // 사용하는 변수들로 API 파라미터 생성
-  const createParams = () => {
-    let tPage = page ?? 0;
-    tPage = Math.min(page, totalPage);
+    setLocalFilterState({
+      filterCardList: syncedFilterCardList,
+      filterOption: confirmedParams.filterOption,
+      sort: confirmedParams.sort,
+    });
+  }, [confirmedParams.myCardCode, confirmedParams.wantCardCode, confirmedParams.filterOption, confirmedParams.sort]);
 
+  // API 요청 파라미터 생성 (확정된 검색 조건 기반)
+  const apiParams = useMemo(() => {
+    const adjustedPage = Math.min(confirmedParams.page, Math.max(0, totalPage - 1));
+    
     let myCardCode = null;
     let wantCardCode = [];
-    filterCardList.forEach((card) => {
-      if (card.filterCardType === "my") {
-        myCardCode = card.code;
-      } else {
-        if (card.code && card.code.length > 0) {
-          wantCardCode.push(card.code);
-        }
+    
+    // 확정된 파라미터에서 직접 추출
+    myCardCode = confirmedParams.myCardCode;
+    wantCardCode = confirmedParams.wantCardCode;
+
+    return {
+      myCardCode,
+      wantCardCode: wantCardCode.length > 0 ? wantCardCode.join(",") : null,
+      filterOption: confirmedParams.filterOption,
+      page: adjustedPage,
+      size: pageSize,
+      sort: confirmedParams.sort,
+    };
+  }, [confirmedParams, totalPage]);
+
+  // URL 업데이트 함수
+  const updateURL = useCallback((newParams, options = {}) => {
+    const params = new URLSearchParams();
+    
+    Object.entries(newParams).forEach(([key, value]) => {
+      if (value !== null && value !== undefined && value !== "" && value !== "all") {
+        params.set(key, String(value));
       }
     });
 
-    wantCardCode = wantCardCode.length > 0 ? wantCardCode.join(",") : null;
+    const queryString = params.toString();
+    const newUrl = queryString ? `${pathname}?${queryString}` : pathname;
+    
+    if (options.replace) {
+      router.replace(newUrl, { scroll: false });
+    } else {
+      router.push(newUrl, { scroll: false });
+    }
+  }, [router, pathname]);
 
-    const params = {
-      myCardCode,
-      wantCardCode,
-      filterOption,
-      page: tPage,
-      size: pageSize,
-      sort: sort,
-    };
+  // 내 교환 체크
+  const isMy = useMemo(() => {
+    return defaultFilterOptionList.find(option => option.value === confirmedParams.filterOption)?.type === "my";
+  }, [confirmedParams.filterOption]);
 
-    return params;
-  };
-
-  // 현재 쿼리스트링을 필터 값에 적용하는 메서드
-  const currentQueryApply = (params) => {
-    const queryString = params ?? window.location.search;
-    const queryParams = parseQueryString(queryString);
-
-    const myCardCode = queryParams?.myCardCode ?? null;
-    const wantCardCode = queryParams?.wantCardCode?.split(",").filter(code => code && code.trim() !== "") ?? [];
-
-    // 필터 카드 리스트 업데이트
-    setFilterCardList((prev) => {
-      let wantCardIndex = 0;
-      return prev.map((card) => {
-        if (card.filterCardType === "my") {
-          return { ...card, code: myCardCode };
-        } else {
-          const currentWantCode = wantCardCode[wantCardIndex] || null;
-          wantCardIndex++;
-          return {
-            ...card,
-            code: currentWantCode && currentWantCode.length > 0 ? currentWantCode : null,
-          };
-        }
-      });
-    });
-
-    // 필터 옵션 업데이트
-    setFilterOption(queryParams.filterOption ?? "all");
-    setPage(queryParams.page ? Number(queryParams.page) : 0);
-    // size는 보류
-    setSort(queryParams.sort ?? defaultSort);
-
-    return queryString;
-  };
-
-  // API 정상 응답 데이터 파싱 메서드
-  const parsingData = (res, setPage, setTotalPage, setTotalCount) => {
-    const data = res.data;
-    setPage(data?.number ?? 0);
-    setTotalPage(data?.totalPages ?? 1);
-    setTotalCount(data.totalElements ?? 0);
-    return data.content;
-  };
-
-  // 카드 중복 체크 메서드
-  const isExistingCard = (cardData) => {
-    const existingCard = filterCardList.find(
-      (card) => card.filterCardType === currentFilterCardType
-    );
-    return existingCard && existingCard.code === cardData.code;
-  };
-
-  // 내 교환 체크 메서드
-  const checkMyTrade = () => {
-    return filterOptionList.find(option => option.value === filterOption)?.type === "my";
-  };
-
-  // 마운트/새로고침/뒤로가기/앞으로가기 모두 처리
+  // 데이터 로딩
   useEffect(() => {
-    const handlePopOrInit = () => {
-      // React Strict Mode에서 중복 실행 방지
-      if (isInitialized.current && !isPopState.current) {
+    let isCancelled = false;
+
+    async function fetchData() {
+      if (!searchParams.toString() && confirmedParams.filterOption === "all") {
+        // 초기 로드 시 기본 파라미터로 URL 설정
+        updateURL(apiParams, { replace: true });
         return;
       }
-      
-      isPopState.current = true;
-      const queryString = currentQueryApply();
-      if(queryString == null || queryString == ""){
-        setFilterQuery(makeQueryString(createParams()));
-      }else{
-        setFilterQuery(queryString);
-      }
-      isInitialized.current = true;
-    };
 
-    // 최초 마운트 시 실행
-    handlePopOrInit();
-
-    // popstate 이벤트 등록
-    const popStateHandler = () => {
-      isPopState.current = true;
-      handlePopOrInit();
-    };
-    
-    window.addEventListener("popstate", popStateHandler);
-    return () => window.removeEventListener("popstate", popStateHandler);
-  }, []);
-
-  // 데이터 조회 메서드
-  useEffect(() => {
-    async function fetchData() {
-
-      if (!filterQuery) return;
+      setIsLoading(true);
 
       try {
-        const isMy = checkMyTrade();
         const callApi = isMy ? getMyTcgTradeList : getTcgTradeList;
 
         if (isMy && !isLogin) {
           throw new Error("로그인이 필요한 서비스입니다.");
         }
 
-        const params = createParams();
-        const res = await callApi(params);
+        const res = await callApi(apiParams);
 
-        if (res) {
-          const content = parsingData(
-            res,
-            setPage,
-            setTotalPage,
-            setTotalCount
-          );
+        if (isCancelled) return;
 
-          // URL 업데이트 (popstate가 아닐 때만)
-          if (!isPopState.current) {
-            const queryString = makeQueryString(params);
-            window.history.pushState(null, "", queryString);
-          }
-          isPopState.current = false;
-
-          setContentList(content);
+        if (res?.data) {
+          const data = res.data;
+          setTotalPage(data.totalPages ?? 1);
+          setTotalCount(data.totalElements ?? 0);
+          setContentList(data.content ?? []);
         } else {
-          throw new Error("CONTENT_UNDEFINED");
+          throw new Error("데이터를 불러올 수 없습니다.");
         }
       } catch (error) {
-        alert(`${error.response?.data?.message} errorCode : ${error.response?.data?.errorCode}`);
-        onReset();
+        if (isCancelled) return;
+        
+        console.error("데이터 로딩 에러:", error);
+        alert(`${error.response?.data?.message || error.message} errorCode : ${error.response?.data?.errorCode || "UNKNOWN"}`);
+        handleReset();
+      } finally {
+        if (!isCancelled) {
+          setIsLoading(false);
+        }
       }
     }
+
     fetchData();
-  }, [filterQuery]);
 
-  // 페이지 변경 시 새로운 쿼리 생성
-  useEffect(() => {
-    if (!isPopState.current) {
-      const params = createParams();
-      const queryString = makeQueryString(params);
-      setFilterQuery(queryString);
-    }
-  }, [page]);
+    return () => {
+      isCancelled = true;
+    };
+  }, [apiParams, isMy, isLogin, updateURL, searchParams]);
 
-  const onFilterCardButton = useCallback(
-    (cardData) => {
-      if (cardData.filterCardType === currentFilterCardType) return;
+  // 페이지 변경 핸들러 (즉시 URL 업데이트)
+  const handlePageChange = useCallback((newPage) => {
+    updateURL({ ...confirmedParams, page: newPage });
+  }, [confirmedParams, updateURL]);
 
-      setCurrentFilterCardType(cardData.filterCardType);
-      setIsCardSearch(true);
-    },
-    [currentFilterCardType]
-  );
+  // 필터 옵션 변경 핸들러 (로컬 상태만 변경)
+  const handleFilterOptionChange = useCallback((value) => {
+    setLocalFilterState(prev => ({
+      ...prev,
+      filterOption: value
+    }));
+  }, []);
 
-  const onFilterCardCancel = (cardData) => {
-    setFilterCardList((prev) => {
-      return prev.map((findCard) =>
-        findCard.filterCardType === cardData.filterCardType
-          ? { ...cardData }
-          : findCard
-      );
+  // 정렬 변경 핸들러 (로컬 상태만 변경)
+  const handleSortChange = useCallback((value) => {
+    setLocalFilterState(prev => ({
+      ...prev,
+      sort: value
+    }));
+  }, []);
+
+  // 필터 적용 핸들러 (로컬 상태를 URL에 반영)
+  const handleSubmit = useCallback(() => {
+    // 로컬 필터 카드 리스트에서 파라미터 추출
+    let myCardCode = null;
+    const wantCardCode = [];
+    
+    localFilterState.filterCardList.forEach((card) => {
+      if (card.filterCardType === "my") {
+        myCardCode = card.code;
+      } else if (card.code && card.code.length > 0) {
+        wantCardCode.push(card.code);
+      }
     });
 
+    // 로컬 상태를 URL에 반영
+    const newParams = {
+      myCardCode,
+      wantCardCode: wantCardCode.join(","),
+      filterOption: localFilterState.filterOption,
+      sort: localFilterState.sort,
+      page: 0 // 필터 변경 시 첫 페이지로
+    };
+
+    updateURL(newParams);
+  }, [localFilterState, updateURL]);
+
+  // 리셋 핸들러 (로컬 상태와 URL 모두 초기화)
+  const handleReset = useCallback(() => {
+    // 로컬 상태 초기화
+    setLocalFilterState({
+      filterCardList: [...defaultFilterCardList],
+      filterOption: "all",
+      sort: defaultSort,
+    });
+
+    // URL 초기화
+    updateURL({
+      filterOption: "all",
+      sort: defaultSort,
+      page: 0
+    });
+  }, [updateURL]);
+
+  // 카드 선택 핸들러들
+  const onFilterCardButton = useCallback((cardData) => {
+    if (cardData.filterCardType === currentFilterCardType) return;
+    setCurrentFilterCardType(cardData.filterCardType);
+    setIsCardSearch(true);
+  }, [currentFilterCardType]);
+
+  const onFilterCardCancel = useCallback((cardData) => {
+    // 로컬 필터 카드 리스트에서 해당 카드 초기화
+    setLocalFilterState(prev => ({
+      ...prev,
+      filterCardList: prev.filterCardList.map((findCard) =>
+        findCard.filterCardType === cardData.filterCardType
+          ? { ...findCard, code: null } // 카드 코드 초기화
+          : findCard
+      )
+    }));
+    
     setCurrentFilterCardType(null);
-  };
+  }, []);
 
-  const onCardClick = useCallback(
-    (cardData) => {
-      if (!currentFilterCardType || !cardData) return;
+  const onCardClick = useCallback((cardData) => {
+    if (!currentFilterCardType || !cardData) return;
 
-      setFilterCardList((prev) => {
-        if (isExistingCard(cardData)) {
-          return prev;
-        }
-
-        const newList = prev.map((findCard) =>
-          findCard.filterCardType === currentFilterCardType
-            ? { ...findCard, ...cardData }
-            : findCard
-        );
-        return newList;
-      });
-
-      // 상태 업데이트를 배치로 처리
-      Promise.resolve().then(() => {
-        setIsCardSearch(false);
-        setCurrentFilterCardType(null);
-      });
-    },
-    [currentFilterCardType]
-  );
-
-  const onFilterOptionChange = (value) => {
-    setFilterOption(value);
-  };
-
-  const onSortChange = (value) => {
-    setSort(value);
-  };
-
-  const onSubmit = () => {
-    const params = createParams();
-    const queryString = makeQueryString(params);
-    setFilterQuery(queryString);
-  };
-
-  const onReset = () => {
-    setFilterCardList([...defaultFilterCardList]);
-    setFilterOption("all");
-    setSort(defaultSort);
-  };
+    // 로컬 필터 카드 리스트 업데이트
+    setLocalFilterState(prev => ({
+      ...prev,
+      filterCardList: prev.filterCardList.map((findCard) =>
+        findCard.filterCardType === currentFilterCardType
+          ? { ...findCard, ...cardData } // 선택한 카드로 업데이트
+          : findCard
+      )
+    }));
+    
+    setIsCardSearch(false);
+    setCurrentFilterCardType(null);
+  }, [currentFilterCardType]);
 
   return (
     <>
       {isCardSearch && (
         <ListPickerDialog
-          key={`dialog-${currentFilterCardType}-${Date.now()}`}
+          key={`dialog-${currentFilterCardType}`}
           open={isCardSearch}
-          onOpenChange={
-            (v) => {
-              setIsCardSearch(v);
-              if(!v) setCurrentFilterCardType(null);
-            }
-          }
+          onOpenChange={(open) => {
+            setIsCardSearch(open);
+            if (!open) setCurrentFilterCardType(null);
+          }}
           placeholder={"포켓몬 이름 검색"}
           onSelect={onCardClick}
         />
       )}
+
       <SearchContainer
         filterCardComponent={(props) => (
           <FilterCardBox {...props}>
             {/* 내 카드 (my) 섹션 */}
             <div className="flex items-center justify-center w-full">
-              {filterCardList
+              {localFilterState.filterCardList
                 .filter((card) => card.filterCardType === "my")
                 .map((card) => (
                   <FilterCard
@@ -347,7 +337,6 @@ export default function TradeListContainer() {
 
             {/* 교환 화살표 */}
             <div className="flex justify-center items-center">
-              {/* 세로 배열일 때는 아래쪽 화살표, 가로 배열일 때는 좌우 화살표 */}
               <RiArrowLeftRightFill 
                 size="40px" 
                 className="sm:text-[50px]" 
@@ -360,7 +349,7 @@ export default function TradeListContainer() {
               grid-rows-3 grid-cols-1 gap-4
               md:grid-rows-1 md:grid-cols-[1fr_1fr_1fr] md:gap-4"
             >
-              {filterCardList
+              {localFilterState.filterCardList
                 .filter((card) => card.filterCardType !== "my")
                 .map((card) => (
                   <FilterCard
@@ -377,31 +366,37 @@ export default function TradeListContainer() {
         sortComponent={(props) => (
           <SortFilter
             {...props}
-            sortList={sortList}
-            value={sort}
-            onChange={onSortChange}
+            sortList={defaultSortList}
+            value={localFilterState.sort}
+            onChange={handleSortChange}
           />
         )}
         filterComponent={(props) => (
           <TradeStatusFilter
             {...props}
-            filterList={filterOptionList}
-            value={filterOption}
+            filterList={defaultFilterOptionList}
+            value={localFilterState.filterOption}
             isLogin={isLogin}
-            onChange={onFilterOptionChange}
+            onChange={handleFilterOptionChange}
           />
         )}
         buttonsComponent={(props) => (
-          <Buttons {...props} onSumbmit={onSubmit} onReset={onReset} />
+          <Buttons {...props} onSumbmit={handleSubmit} onReset={handleReset} />
         )}
       />
 
-      <TradeList tradeList={contentList} />
+      {isLoading ? (
+        <div className="flex justify-center items-center py-8">
+          <div className="text-gray-500">로딩 중...</div>
+        </div>
+      ) : (
+        <TradeList tradeList={contentList} />
+      )}
 
       <CommonPagination
-        page={page}
+        page={confirmedParams.page}
         totalPage={totalPage}
-        onPageChange={setPage}
+        onPageChange={handlePageChange}
       />
     </>
   );

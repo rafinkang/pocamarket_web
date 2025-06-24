@@ -36,5 +36,8 @@ export const defaultSortList = Object.freeze([
  * 유틸 메서드
  */
 export const convertStatus = (status) => {
+  if (status == 0) {
+    return "삭제된 글입니다.";
+  }
   return statusList.find((option) => option.value == status)?.name ?? "잘못된 상태 값입니다.";
 };
