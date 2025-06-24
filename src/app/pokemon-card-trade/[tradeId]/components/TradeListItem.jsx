@@ -20,7 +20,6 @@ export default function TradeItem ({id, card, isActiveCard, disabled, handleClic
       <div className="flex gap-4 flex-col md:flex-row">
         <motion.div 
           layoutId={`image-${card.code}-${card.id}-${id}`} 
-          style={{ zIndex: 1 }}
           className="flex justify-center items-center"
         >
           <div className="relative aspect-[366/512]" style={{ width: "20vw", maxWidth: "80px" }}>
