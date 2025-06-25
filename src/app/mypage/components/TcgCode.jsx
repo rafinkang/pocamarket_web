@@ -1,43 +1,33 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
 
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 
 import {
-  ColumnDef,
-  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  SortingState,
-  useReactTable,
-  VisibilityState,
+  useReactTable
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import {
   Table,
@@ -50,10 +40,10 @@ import {
 import TcgCodeDialog from "./TcgCodeDialog";
 
 import {
-  postTcgCode,
-  getTcgCodeList,
-  updateTcgCode,
   deleteTcgCode,
+  getTcgCodeList,
+  postTcgCode,
+  updateTcgCode,
 } from "@/api/tcgCode";
 
 export default function TcgCode({ className }) {
@@ -126,10 +116,13 @@ export default function TcgCode({ className }) {
           memo: formData.memo,
         };
         const result = await postTcgCode(newItem);
-
         handleFailCheck(result);
-
-        setData((prevData) => [...prevData, newItem]);
+        
+        const listResponse = await getTcgCodeList();
+        handleFailCheck(listResponse);
+        if (listResponse && listResponse.data) {
+          setData(listResponse.data);
+        }
       }
       setIsDialogOpen(false);
       return true; // 성공 시 true 반환

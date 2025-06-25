@@ -33,3 +33,10 @@ export const deleteTcgCode = async (tcgCodeId) => {
     url: `/tcg-code/${tcgCodeId}`,
   });
 };
+
+export const getTradeRequestTcgCode = async (tradeId, tradeRequestId) => {
+  return callApi({
+    method: 'GET',
+    url: `/tcg-code/${tradeId}/${tradeRequestId}`,
+  });
+};
