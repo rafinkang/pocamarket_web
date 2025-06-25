@@ -8,6 +8,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/sonner"
 import { cn } from "@/lib/utils";
+import { siteConfig } from "@/config/siteConfig";
 
 // 폰트 설정
 const notoSansKr = Noto_Sans_KR({
@@ -27,10 +28,43 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+
+// export const metadata = { ... } 형태로 기본 메타데이터를 정의합니다.
 export const metadata = {
-  title: "Pocamarket",
-  description: "포카마켓 프로젝트",
+  // title.template을 사용하면 각 페이지의 제목을 손쉽게 커스텀할 수 있습니다.
+  title: {
+    default: siteConfig.title, // 기본 제목 (홈페이지 등)
+    template: `%s | ${siteConfig.title}`, // 각 페이지 제목 형식. %s에 페이지 제목이 들어감
+  },
+  description: siteConfig.description,
+  keywords: siteConfig.keywords,
+  metadataBase: new URL(siteConfig.url), // 상대 경로의 기준 URL 설정
+  openGraph: {
+    title: siteConfig.title,
+    description: siteConfig.description,
+    url: siteConfig.url,
+    siteName: siteConfig.title,
+    images: [
+      {
+        url: siteConfig.ogImage,
+        width: siteConfig.ogImageWidth,
+        height: siteConfig.ogImageHeight,
+        alt: siteConfig.ogImageAlt,
+      },
+    ],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: siteConfig.title,
+    description: siteConfig.description,
+    images: [siteConfig.ogImage],
+  },
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
+
 
 export default function RootLayout({ children }) {
   return (

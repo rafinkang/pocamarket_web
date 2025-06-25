@@ -3,6 +3,7 @@ import CardDetailContainer from "./CardDetailContainer";
 import { notFound } from "next/navigation";
 import { S3_IMAGES_BASE_URL } from "@/constants/config";
 import { cache } from "react";
+import { siteConfig } from "@/config/siteConfig";
 
 /**
  * 캐시된 포켓몬 카드 상세 조회 함수
@@ -28,7 +29,7 @@ export async function generateMetadata({ params }) {
 
     if (!res?.data) {
       return {
-        title: '카드를 찾을 수 없습니다 | PocaMarket',
+        title: '카드를 찾을 수 없습니다',
         description: '요청하신 포켓몬 카드를 찾을 수 없습니다.',
       };
     }
@@ -37,20 +38,17 @@ export async function generateMetadata({ params }) {
     const cardImageUrl = cardData.code ? `${S3_IMAGES_BASE_URL}/${cardData.code}.webp` : '/images/cardback.webp';
 
     return {
-      title: `${cardData.nameKo || '포켓몬 카드'} | PocaMarket`,
+      title: `${cardData.nameKo || '포켓몬 카드'}`,
       description: `${cardData.nameKo || '포켓몬 카드'} - ${cardData.type || '카드 타입'} | ${cardData.packSet || '확장팩'} | ${cardData.rarity || '희귀도'}`,
       keywords: [
         cardData.nameKo,
         cardData.type,
         cardData.packSet,
         cardData.rarity,
-        '포켓몬 카드',
-        '포켓몬 TCG',
-        '포켓몬 카드 거래',
-        'PocaMarket'
+        ...siteConfig.keywords
       ].filter(Boolean).join(', '),
       openGraph: {
-        title: `${cardData.nameKo || '포켓몬 카드'} | PocaMarket`,
+        title: `${cardData.nameKo || '포켓몬 카드'}`,
         description: `${cardData.nameKo || '포켓몬 카드'} - ${cardData.type || '카드 타입'} | ${cardData.packSet || '확장팩'}`,
         type: 'website',
         url: `/pokemon-card/${code}`,
@@ -65,7 +63,7 @@ export async function generateMetadata({ params }) {
       },
       twitter: {
         card: 'summary_large_image',
-        title: `${cardData.nameKo || '포켓몬 카드'} | PocaMarket`,
+        title: `${cardData.nameKo || '포켓몬 카드'}`,
         description: `${cardData.nameKo || '포켓몬 카드'} - ${cardData.type || '카드 타입'} | ${cardData.packSet || '확장팩'}`,
         image: cardImageUrl,
       },
@@ -73,7 +71,7 @@ export async function generateMetadata({ params }) {
   } catch (error) {
     console.error('메타데이터 생성 오류:', error);
     return {
-      title: '포켓몬 카드 | PocaMarket',
+      title: '포켓몬 카드',
       description: '포켓몬 카드 상세 정보를 확인해보세요.',
     };
   }
