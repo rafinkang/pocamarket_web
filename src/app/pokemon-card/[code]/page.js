@@ -88,6 +88,7 @@ export default async function PokemonCardDetailPage({ params }) {
     console.log("PokemonCardDetailPage 실행 - code:", code);
     
     const res = await getCachedPokemonCardDetail(code);
+    console.log("data ::: ", res.data)
     console.log("PokemonCardDetailPage - 데이터 받음:", !!res?.data, "(캐시에서 가져옴)");
 
     if (!res?.data) {
