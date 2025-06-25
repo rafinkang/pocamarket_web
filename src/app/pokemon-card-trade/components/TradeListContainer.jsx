@@ -39,6 +39,7 @@ import { getMyTcgTradeList, getTcgTradeList } from "@/api/tcgTrade";
 
 // 로그인 상태 체크
 import useAuthStore from "@/store/authStore";
+import MyCheck from "./Search/MyCheck";
 
 export default function TradeListContainer() {
   // Next.js 라우팅 훅들
@@ -66,17 +67,19 @@ export default function TradeListContainer() {
     return {
       myCardCode: params.myCardCode || null,
       wantCardCode: params.wantCardCode?.split(",").filter(code => code?.trim()) || [],
-      filterOption: params.filterOption || "all",
+      status: Number(params.status) || 99,
       page: Math.max(0, Number(params.page) || 0),
       sort: params.sort || defaultSort,
+      isMy: params.isMy === 'true' && isLogin ? true : false,
     };
-  }, [searchParams]);
+  }, [searchParams, isLogin]);
 
   // 로컬 필터 상태 (임시 검색 조건, UI 표시용)
   const [localFilterState, setLocalFilterState] = useState(() => ({
     filterCardList: [...defaultFilterCardList],
-    filterOption: confirmedParams.filterOption,
+    status: confirmedParams.status,
     sort: confirmedParams.sort,
+    isMy: confirmedParams.isMy,
   }));
 
   // 초기 로드 시 URL 기반으로 로컬 필터 상태 동기화
@@ -97,10 +100,11 @@ export default function TradeListContainer() {
 
     setLocalFilterState({
       filterCardList: syncedFilterCardList,
-      filterOption: confirmedParams.filterOption,
+      status: confirmedParams.status,
       sort: confirmedParams.sort,
+      isMy: confirmedParams.isMy,
     });
-  }, [confirmedParams.myCardCode, confirmedParams.wantCardCode, confirmedParams.filterOption, confirmedParams.sort]);
+  }, [confirmedParams.myCardCode, confirmedParams.wantCardCode, confirmedParams.status, confirmedParams.sort, confirmedParams.isMy]);
 
   // API 요청 파라미터 생성 (확정된 검색 조건 기반)
   const apiParams = useMemo(() => {
@@ -116,7 +120,7 @@ export default function TradeListContainer() {
     return {
       myCardCode,
       wantCardCode: wantCardCode.length > 0 ? wantCardCode.join(",") : null,
-      filterOption: confirmedParams.filterOption,
+      status: confirmedParams.status,
       page: adjustedPage,
       size: pageSize,
       sort: confirmedParams.sort,
@@ -128,8 +132,11 @@ export default function TradeListContainer() {
     const params = new URLSearchParams();
     
     Object.entries(newParams).forEach(([key, value]) => {
-      if (value !== null && value !== undefined && value !== "" && value !== "all") {
-        params.set(key, String(value));
+      if (value !== null && value !== undefined && value !== "") {
+        // isMy는 boolean 값이므로 false도 포함해야 함
+        if (key === 'isMy' || value !== false) {
+          params.set(key, String(value));
+        }
       }
     });
 
@@ -143,17 +150,12 @@ export default function TradeListContainer() {
     }
   }, [router, pathname]);
 
-  // 내 교환 체크
-  const isMy = useMemo(() => {
-    return defaultFilterOptionList.find(option => option.value === confirmedParams.filterOption)?.type === "my";
-  }, [confirmedParams.filterOption]);
-
   // 데이터 로딩
   useEffect(() => {
     let isCancelled = false;
 
     async function fetchData() {
-      if (!searchParams.toString() && confirmedParams.filterOption === "all") {
+      if (!searchParams.toString() && confirmedParams.status != 99) {
         // 초기 로드 시 기본 파라미터로 URL 설정
         updateURL(apiParams, { replace: true });
         return;
@@ -162,9 +164,9 @@ export default function TradeListContainer() {
       setIsLoading(true);
 
       try {
-        const callApi = isMy ? getMyTcgTradeList : getTcgTradeList;
+        const callApi = confirmedParams.isMy ? getMyTcgTradeList : getTcgTradeList;
 
-        if (isMy && !isLogin) {
+        if (confirmedParams.isMy && !isLogin) {
           throw new Error("로그인이 필요한 서비스입니다.");
         }
 
@@ -198,7 +200,7 @@ export default function TradeListContainer() {
     return () => {
       isCancelled = true;
     };
-  }, [apiParams, isMy, isLogin, updateURL, searchParams]);
+  }, [apiParams, confirmedParams.isMy, isLogin, updateURL, searchParams]);
 
   // 페이지 변경 핸들러 (즉시 URL 업데이트)
   const handlePageChange = useCallback((newPage) => {
@@ -209,7 +211,15 @@ export default function TradeListContainer() {
   const handleFilterOptionChange = useCallback((value) => {
     setLocalFilterState(prev => ({
       ...prev,
-      filterOption: value
+      status: value
+    }));
+  }, []);
+
+  const handleMyCheckChange = useCallback((value) => {
+    console.log('value ::: ', value)
+    setLocalFilterState(prev => ({
+      ...prev,
+      isMy: value
     }));
   }, []);
 
@@ -239,8 +249,9 @@ export default function TradeListContainer() {
     const newParams = {
       myCardCode,
       wantCardCode: wantCardCode.join(","),
-      filterOption: localFilterState.filterOption,
+      status: localFilterState.status,
       sort: localFilterState.sort,
+      isMy: localFilterState.isMy,
       page: 0 // 필터 변경 시 첫 페이지로
     };
 
@@ -252,14 +263,16 @@ export default function TradeListContainer() {
     // 로컬 상태 초기화
     setLocalFilterState({
       filterCardList: [...defaultFilterCardList],
-      filterOption: "all",
+      status: 99,
       sort: defaultSort,
+      isMy: false,
     });
 
     // URL 초기화
     updateURL({
-      filterOption: "all",
+      status: 99,
       sort: defaultSort,
+      isMy: false,
       page: 0
     });
   }, [updateURL]);
@@ -375,11 +388,19 @@ export default function TradeListContainer() {
           <TradeStatusFilter
             {...props}
             filterList={defaultFilterOptionList}
-            value={localFilterState.filterOption}
-            isLogin={isLogin}
+            value={localFilterState.status}
             onChange={handleFilterOptionChange}
           />
         )}
+        myCheckComponent={(props) => {
+          if (!isLogin) return null;
+          return (
+          <MyCheck 
+            {...props} 
+            isMy={localFilterState.isMy}
+            onChange={handleMyCheckChange}
+          />
+        )}}
         buttonsComponent={(props) => (
           <Buttons {...props} onSumbmit={handleSubmit} onReset={handleReset} />
         )}

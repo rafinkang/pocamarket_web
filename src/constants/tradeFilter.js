@@ -7,17 +7,12 @@ export const defaultFilterCardList = Object.freeze([
 ]);
 
 export const defaultFilterOptionList = Object.freeze([
-  { value: "all", name: "전체 보기" },
-
-  { value: "request", name: "신청한 교환" },
-  { value: "progress", name: "진행 중인 교환" },
-  { value: "complete", name: "완료된 교환" },
-
-  { value: "my-all", name: "내 교환 전체 보기", type: "my" },
-
-  { value: "my-request", name: "내가 신청한 교환", type: "my" },
-  { value: "my-progress", name: "내 진행 중인 교환", type: "my" },
-  { value: "my-complete", name: "내 완료된 교환", type: "my" },
+  // { value: 0, name: "요청 삭제" },
+  { value: 99, name: "전체 보기" },
+  { value: 1, name: "요청 등록" },
+  { value: 2, name: "요청 선택중" },
+  { value: 3, name: "요청 진행중" },
+  { value: 4, name: "요청 완료" }
 ]);
 
 export const defaultSort = "sortedAt,desc";

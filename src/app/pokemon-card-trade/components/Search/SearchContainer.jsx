@@ -4,6 +4,7 @@ export default function SearchContainer({
   filterCardComponent: FilterCardComponent,
   sortComponent: SortComponent,
   filterComponent: FilterComponent,
+  myCheckComponent: MyCheckComponent,
   buttonsComponent: ButtonsComponent,
 }) {
   return (
@@ -11,6 +12,7 @@ export default function SearchContainer({
       filterCardComponent={FilterCardComponent}
       sortComponent={SortComponent}
       filterComponent={FilterComponent}
+      myCheckComponent={MyCheckComponent}
       buttonsComponent={ButtonsComponent}
     />
   );
@@ -20,6 +22,7 @@ function SearchContainerContent({
   filterCardComponent: FilterCardComponent,
   sortComponent: SortComponent,
   filterComponent: FilterComponent,
+  myCheckComponent: MyCheckComponent,
   buttonsComponent: ButtonsComponent,
 }) {
   return (
@@ -29,6 +32,7 @@ function SearchContainerContent({
         <div className="flex justify-end gap-2">
           {SortComponent && <SortComponent />}
           {FilterComponent && <FilterComponent />}
+          {MyCheckComponent && <MyCheckComponent />}
         </div>
         {ButtonsComponent && <ButtonsComponent />}
       </div>

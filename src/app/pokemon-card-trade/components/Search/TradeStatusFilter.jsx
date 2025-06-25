@@ -17,15 +17,14 @@ import {
 export default function TradeStatusFilter({
   filterList,
   onChange,
-  value = "all",
-  isLogin = false,
+  value = 99,
 }) {
   return (
     <div className="flex justify-end items-center px-2 lg:px-4">
       <Select
-        value={value}
+        value={String(value)}
         onValueChange={(value) => {
-          onChange?.(value);
+          onChange?.(Number(value));
         }}
       >
         <SelectTrigger className="w-[120px] lg:w-[180px]">
@@ -34,11 +33,8 @@ export default function TradeStatusFilter({
         <SelectContent side="bottom" align="end" sideOffset={4}>
           {filterList &&
             filterList.map((filter) => {
-              if (!isLogin && filter.type === "my") {
-                return null;
-              }
               return (
-                <SelectItem key={filter.value} value={filter.value}>
+                <SelectItem key={filter.value} value={String(filter.value)}>
                   {filter.name}
                 </SelectItem>
               );
