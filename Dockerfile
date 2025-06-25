@@ -1,21 +1,24 @@
-FROM node:22-alpine AS builder
+# 심플한 Next.js 프로덕션 Dockerfile
+FROM node:22-alpine
 WORKDIR /src
 
+# 패키지 파일들 복사
 COPY package*.json ./
 COPY prisma ./prisma/
+
+# 의존성 설치
 RUN npm install
+
+# 프로젝트 파일들 복사
 COPY . .
+
+# 프로덕션 빌드
 RUN npm run build
 
-# 프로덕션 이미지
-FROM node:22-alpine AS runner
-WORKDIR /src
-
-# 빌드 환경에서 생성된 결과물만 복사
-COPY --from=builder /src/public ./public
-COPY --from=builder /src/.next ./.next
-COPY --from=builder /src/node_modules ./node_modules
-COPY --from=builder /src/package.json ./package.json
+# 환경 설정
+ENV NODE_ENV=production
 
 EXPOSE 3000
-CMD ["node", "server.js"]
+
+# 프로덕션 서버 실행
+CMD ["npm", "start"]
