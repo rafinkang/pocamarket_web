@@ -115,7 +115,7 @@ export default function TradeElement({
                 {getTradeStatusName(status)}
               </span>
             </p>
-            {isMyList && (
+            {isMyList && (DELETED < status && status < PROCESS) && (
               <Button variant="outline" onClick={handleRefresh}>
                 끌어올리기
               </Button>
