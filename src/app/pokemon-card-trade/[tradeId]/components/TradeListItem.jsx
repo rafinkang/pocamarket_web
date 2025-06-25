@@ -1,10 +1,11 @@
 "use client"
 
-import { motion } from "motion/react";
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { motion } from "motion/react";
 
 import PokemonCard from "@/components/list/PokemonCard";
+import { getTradeRequestStatusName } from "@/constants/tradeRequestStatus";
 
 export default function TradeItem ({id, card, isActiveCard, disabled, handleClick}) {
   const activeClass = "bg-blue-500 text-white dark:bg-blue-600"
@@ -32,13 +33,13 @@ export default function TradeItem ({id, card, isActiveCard, disabled, handleClic
             style={{ zIndex: 1 }}
             className="font-medium text-neutral-800 dark:text-neutral-200 text-center md:text-left">
             {/* {card.title} */}
-            <Badge variant="secondary" className={cn(isActiveCard && activeClass)}>{card.status.text}</Badge>
+            <Badge variant="secondary" className={cn(isActiveCard && activeClass)}>{getTradeRequestStatusName(card.status)}</Badge>
           </motion.h3>
           <motion.p
             layoutId={`description-${card.description}-${card.id}-${id}`}
             style={{ zIndex: 1 }}
             className="text-neutral-600 dark:text-neutral-400 text-center md:text-left">
-            {card.description}
+              {card.description}
           </motion.p>
         </div>
       </div>

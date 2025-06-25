@@ -2,16 +2,27 @@
 
 import { useEffect, useState } from "react";
 
-import { getTradeRequestMapping, REQUEST } from "@/constants/tradeStatus";
+import AlertDialog from "@/components/dialog/AlertDialog";
+import { REQUEST } from "@/constants/tradeStatus";
 import TradeListItem from "./TradeListItem";
 import TradeListItemDialog from "./TradeListItemDialog";
-import AlertDialog from "@/components/dialog/AlertDialog";
 
 export default function TradeList({isMy, isLogin, requestList, onRequestAccept, onRequestCancel}) {
   const [cards, setCards] = useState([]);
   const [dialogData, setDialogData] = useState(null);
   const [activeCard, setActiveCard] = useState(null);
   const [openOk, onOpenOkChange] = useState(false)
+
+  const statusDescription = (nickname, cardName, status) => {
+    const statusDescriptionMap = {
+      0: `${nickname}님이 ${cardName}을(를) 교환 취소 하였습니다.`,
+      1: `${nickname}님이 ${cardName}을(를) 교환 신청 하였습니다.`,
+      2: `${nickname}님의 ${cardName}이(가) 교환 중 입니다.`,
+      3: `${nickname}님의 ${cardName}이(가) 교환 완료 되었습니다.`,
+    };
+
+    return statusDescriptionMap[status] || "";
+  }
 
   useEffect(() => {
     console.log('requestList ::: ', requestList)
@@ -24,8 +35,8 @@ export default function TradeList({isMy, isLogin, requestList, onRequestAccept, 
         code: request.requestCardCode,
         tcgCode: request.tcgCode,
         isMy: request.isMy,
-        description: `${request.nickname}님이 [${request.cardNameKo}](으)로 교환 신청 하였습니다.`,
-        status: getTradeRequestMapping(request.status),
+        description: statusDescription(request.nickname, request.cardNameKo, request.status),
+        status: request.status,
         content: () => {
           return (
             <>
@@ -47,7 +58,7 @@ export default function TradeList({isMy, isLogin, requestList, onRequestAccept, 
   }, [dialogData]);
 
   useEffect(() => {
-    setActiveCard(cards.find(card => card.status.code === REQUEST))
+    setActiveCard(cards.find(card => card.status === REQUEST))
   }, [])
 
   return (

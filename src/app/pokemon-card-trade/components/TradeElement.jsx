@@ -5,38 +5,38 @@ import PokemonCardImage from "@/components/list/PokemonCardImage";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { POKEMON_CARD_TRADE } from "@/constants/path";
-import { convertStatus } from "@/constants/tradeFilter";
 import { getPackSetNameByText } from "@/utils/convertUtils";
 import { getTimeDifference } from "@/utils/dateUtils";
 import Link from "next/link";
 
-/*
-testMode
-    ? "/images/cardback.webp"
-    : `${S3_IMAGES_BASE_URL}/${
-        data?.code ? data.code : "a1-001"
-    }.webp`
-*/
+import { getTradeStatusName, DELETED, REQUEST, SELECT, PROCESS, COMPLETE } from "@/constants/tradeStatus";
+import { cn } from "@/lib/utils";
+import styles from "@/styles/tradeStatus.module.scss";
 
-export default function TradeElement({
-  tradeCode = "0",
-  tradeUserNickname = "교환자 닉네임",
+const statusClassMap = {
+  [DELETED]: styles['badge-deleted'],
+  [SELECT]: styles['badge-select'],
+  [REQUEST]: styles['badge-request'],
+  [PROCESS]: styles['badge-process'],
+  [COMPLETE]: styles['badge-complete'],
+};
+
+/*
   myCard = {
     cardCode: "a1-001",
     cardName: "테스트 마이 카드",
     cardPackSet: "최강의 유전자",
-  },
-  wantedCards = [
-    {
-      cardCode: "a1-002",
-      cardName: "테스트 원하는 카드",
-      cardPackSet: "최강의 유전자",
-    },
-  ], // 원하는 카드들의 배열
+  }
+*/
+
+export default function TradeElement({
+  tradeCode = "0",
+  tradeUserNickname = "",
+  myCard = null,
+  wantedCards = [], // 원하는 카드들의 배열
   updatedAt = "오래 전",
   status = 1,
   isMyList = false,
-  requestCount = "0(보류)",
   testMode = false,
 }) {
 
@@ -67,21 +67,21 @@ export default function TradeElement({
         </div>
         <div className="w-full grid grid-cols-1 grid-rows-[1fr_auto_auto_auto] justify-center items-start gap-4 lg:grid-cols-[2fr_auto_6fr_1fr] lg:grid-rows-1 lg:justify-start lg:items-center">
           {/* 내 카드 섹션 */}
-          <div className="flex items-center justify-center lg:justify-end">
-            <div className="bg-[#f8f9fa] shadow-lg">
-              <Card className="flex flex-col items-center rounded-[12px] p-4 w-[200px] gap-2">
-                <div className="relative w-[120px] aspect-[366/512]">
-                  <PokemonCardImage data={{code: myCard.cardCode}} testMode={testMode} />
-                </div>
-                <div className="flex flex-col min-w-0 justify-center items-center">
-                  <h3 className="text-lg font-semibold truncate">
-                    {myCard.cardName}
-                  </h3>
-                  <p>{getPackSetNameByText(myCard.cardPackSet)}</p>
-                </div>
-              </Card>
+            <div className="flex items-center justify-center lg:justify-end">
+              <div className="bg-[#f8f9fa] shadow-lg">
+                <Card className="flex flex-col items-center rounded-[12px] p-4 w-[200px] gap-2">
+                  <div className="relative w-[120px] aspect-[366/512]">
+                    <PokemonCardImage data={{code: myCard?.cardCode}} testMode={testMode} />
+                  </div>
+                  <div className="flex flex-col min-w-0 justify-center items-center">
+                    <h3 className="text-lg font-semibold truncate">
+                      {myCard?.cardName ?? "카드 없음"}
+                    </h3>
+                    <p>{getPackSetNameByText(myCard?.cardPackSet ?? "카드 없음")}</p>
+                  </div>
+                </Card>
+              </div>
             </div>
-          </div>
 
           {/* 교환 화살표 */}
           <div className="flex items-center px-2">
@@ -108,9 +108,13 @@ export default function TradeElement({
           </div>
 
           {/* 교환 정보 */}
-          <div className="flex flex-col items-center pl-2 self-center w-full min-w-[100px] gap-2">
+          <div className="flex flex-col items-center pl-2 self-center w-full min-w-[100px] gap-4">
             <p>{getTimeDifference(updatedAt)}</p>
-            <p>{convertStatus(status)}</p>
+            <p>
+              <span className={cn(statusClassMap[status], "px-2 py-1 rounded-full text-[11px] whitespace-nowrap")}>
+                {getTradeStatusName(status)}
+              </span>
+            </p>
             {isMyList && (
               <Button variant="outline" onClick={handleRefresh}>
                 끌어올리기

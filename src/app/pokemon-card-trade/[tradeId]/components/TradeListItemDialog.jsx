@@ -1,13 +1,13 @@
 "use client"
 
-import { Badge } from "@/components/ui/badge";
-import { AnimatePresence, motion } from "motion/react";
-import { Button } from "@/components/ui/button";
-import TradeReportDialog from "./TradeReportDialog";
 import PokemonCard from "@/components/list/PokemonCard";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { AnimatePresence, motion } from "motion/react";
+import TradeReportDialog from "./TradeReportDialog";
 
+import { REQUEST_DELETED, REQUEST_SUBMITTED, REQUEST_PROCESS, REQUEST_COMPLETE, getTradeRequestStatusName } from "@/constants/tradeRequestStatus";
 import { useState } from "react";
-import { COMPLETE, DELETED, PROCESS, REQUEST } from "@/constants/tradeStatus";
 
 import { postUserReport } from "@/api/usersReport";
 
@@ -18,7 +18,7 @@ export default function TradeListItemDialog({handleClick, dialogData, id, isMy, 
       const requestData = {
         refId: dialogData.id,
         refType: "TRADE_REQUEST",
-        refStatus: dialogData.status.num,
+        refStatus: dialogData.status,
         link: window.location.href,
         content: `${reportReason}:${reportDetail}`,
       };
@@ -93,13 +93,13 @@ export default function TradeListItemDialog({handleClick, dialogData, id, isMy, 
                       layoutId={`code-${dialogData.id}-${id}`}
                       style={{ zIndex: 104 }}
                     >
-                      <Badge variant="secondary">{dialogData.status.text}</Badge>
+                      <Badge variant="secondary">{getTradeRequestStatusName(dialogData.status)}</Badge>
                     </motion.span>
                     <motion.p
                       layoutId={`description-${dialogData.description}-${dialogData.id}-${id}`}
                       style={{ zIndex: 104 }}
                       className="text-neutral-600 dark:text-neutral-400">
-                      {dialogData.description}
+                        {dialogData.description}
                     </motion.p>
                   </div>
 
@@ -128,24 +128,30 @@ export default function TradeListItemDialog({handleClick, dialogData, id, isMy, 
               </div>
               {/* TODO 교환 취소인 경우 버튼 숨기기 */}
               {isLogin && (
-                <div className="relative z-[104]">
+                <div className="relative z-[104] flex justify-end items-center gap-2">
+                  {!isMy && dialogData.isMy && (dialogData.status !== REQUEST_COMPLETE || dialogData.status !== REQUEST_DELETED) && (
+                    <Button variant="outline" className="mr-auto" onClick={() => { 
+                      onRequestCancel(dialogData.id);
+                      handleClick(null);
+                    }}>
+                      교환 취소
+                    </Button>
+                  )}
                   {/* {isMy &&  */}
                     <div className="flex justify-end gap-1">
                       <Button variant="ghost" onClick={() => setIsReportOpen(true)}>
                         신고하기
                       </Button>
-                      {(dialogData.status.code === REQUEST || dialogData.status.code === PROCESS) && (
-                        <Button onClick={() => onRequestAccept(dialogData.id, dialogData.status.num)}>
-                          {dialogData.status.code === REQUEST ? "교환 수락" : "교환 완료"}
+                      {(dialogData.status === REQUEST_SUBMITTED || dialogData.status === REQUEST_PROCESS) && (
+                        <Button onClick={() => {
+                          onRequestAccept(dialogData.id, dialogData.status);
+                          handleClick(null);
+                        }}>
+                          {dialogData.status === REQUEST_SUBMITTED ? "교환 수락" : "교환 완료"}
                         </Button>
                       )}
                     </div>
                   {/* } */}
-                  {!isMy && dialogData.isMy && (dialogData.status.code !== COMPLETE || dialogData.status.code !== DELETED) && (
-                      <Button variant="outline" onClick={() => onRequestCancel(dialogData.id)}>
-                        교환 취소(요청한 사람)
-                      </Button>
-                    )}
                 </div>
               )}
             </motion.div>

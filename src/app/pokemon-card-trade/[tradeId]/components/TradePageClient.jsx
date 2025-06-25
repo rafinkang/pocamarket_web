@@ -58,7 +58,7 @@ export default function TradePageClient() {
       return true;
     } else {
       setAlertTitle(errorTitle);
-      setAlertMsg(`error code : ${response.errorCode}, message : ${response.message}`);
+      setAlertMsg(`message : ${response.message}`);
       setShowAlert(true);
       return false;
     }

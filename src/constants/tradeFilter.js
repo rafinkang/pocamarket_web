@@ -20,23 +20,8 @@ export const defaultFilterOptionList = Object.freeze([
   { value: "my-complete", name: "내 완료된 교환", type: "my" },
 ]);
 
-const statusList = Object.freeze([
-  { value: "0", name: "삭제된 글입니다." },
-  { value: "1", name: "교환 대기" },
-  { value: "2", name: "교환 선택 중" },
-  { value: "3", name: "교환 진행 중" },
-  { value: "4", name: "교환 완료" },
-]);
-
 export const defaultSort = "sortedAt,desc";
 export const defaultSortList = Object.freeze([
   { value: "sortedAt,desc", name: "최신순" },
   { value: "sortedAt,asc", name: "오래된순" },
 ]);
-
-/**
- * 유틸 메서드
- */
-export const convertStatus = (status) => {
-  return statusList.find((option) => option.value == status)?.name ?? "잘못된 상태 값입니다.";
-};
