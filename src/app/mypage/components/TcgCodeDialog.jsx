@@ -56,7 +56,7 @@ export default function TcgCodeDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="outline">친구코드 추가</Button>
+          <Button className="ml-auto" variant="outline">친구코드 추가</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit} className="space-y-4">
