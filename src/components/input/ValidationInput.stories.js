@@ -77,7 +77,7 @@ export const Default = {
 };
 
 // 2. 이메일 유효성 검사 스토리
-export const loginIdValidation = {
+export const LoginIdValidation = {
   args: {
     name: 'loginId',
     placeholder: '아이디을 입력하세요',
@@ -131,8 +131,8 @@ export const ControlledByParent = {
         />
         <div className="p-2 bg-slate-100 rounded">
           <p className="text-sm font-semibold">부모 컴포넌트의 상태:</p>
-          <p className="text-xs">Value: "{value}"</p>
-          <p className="text-xs">Error: "{error}"</p>
+          <p className="text-xs">Value: &quot;{value}&quot;</p>
+          <p className="text-xs">Error: &quot;{error}&quot;</p>
         </div>
       </div>
     );

@@ -10,7 +10,7 @@ import ButtonGroup from "./ButtonGroup";
 import TradeBox from "./TradeBox";
 import TradeList from "./TradeList";
 
-import { getTcgCodeList } from "@/api/tcgCode";
+import { getTcgCodeList, getTradeRequestTcgCode } from "@/api/tcgCode";
 import { getTcgTradeDetail } from "@/api/tcgTrade";
 import { postTcgTradeRequest, getTcgTradeRequestList, updateTcgTradeRequestStatus, deleteTcgTradeRequest } from "@/api/tcgTradeRequest";
 import { LOGIN } from "@/constants/path";
@@ -99,7 +99,7 @@ export default function TradePageClient() {
 
       await handleSuccessResponse(response, "카드 교환 요청이 완료되었습니다.", "카드 교환 신청 에러");
     } catch (error) {
-      showErrorAlert("카드 교환 신청 에러", error);
+      console.error(error);
     }
   }
 
@@ -112,7 +112,7 @@ export default function TradePageClient() {
 
       await handleSuccessResponse(response, "카드 교환 요청이 수락되었습니다.", "카드 교환 에러");
     } catch (error) {
-      showErrorAlert("카드 교환 에러", error);
+      console.error(error);
     }
   }
 
@@ -124,7 +124,27 @@ export default function TradePageClient() {
 
       await handleSuccessResponse(response, "카드 교환 요청이 취소되었습니다.", "카드 교환 취소 에러");
     } catch (error) {
-      showErrorAlert("카드 교환 취소 에러", error);
+      console.error(error);
+    }
+  }
+
+  const handleOpenTcgCode = async (tradeRequestId) => {
+    try {
+      const response = await getTradeRequestTcgCode(tradeId, tradeRequestId);
+      
+      if (response.success === true) {
+        setRequestList(prevList => {
+          return prevList.map(request => 
+            request.tradeRequestId === tradeRequestId 
+              ? { ...request, tcgCode: response.data }
+              : request
+          );
+        });
+      }
+
+    } catch (error) {
+      console.error(error);
+      alert("친구코드 가져오기에 실패했습니다.");
     }
   }
 
@@ -172,7 +192,6 @@ export default function TradePageClient() {
     return null;
   }
 
-
   return (
     <>
       <AlertDialog
@@ -192,6 +211,7 @@ export default function TradePageClient() {
         <TradeList isMy={isMy} isLogin={isLogin} requestList={Array.isArray(requestList) ? requestList : requestList.content}
           onRequestAccept={handleRequestAccept}
           onRequestCancel={handleRequestCancel}
+          onOpenTcgCode={handleOpenTcgCode}
         />
       </div>
     </>

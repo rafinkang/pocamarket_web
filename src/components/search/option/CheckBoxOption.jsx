@@ -10,6 +10,44 @@ import {
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import Image from "next/image";
+
+const renderItemImages = (item) => {
+  // rarity 타입 (이미지와 count 속성이 있는 경우) - 먼저 확인
+  if (item.image && item.count) {
+    const imagePath = `/images/rarity/${item.image}.webp`;
+    return (
+      <div className="flex gap-1">
+        {Array.from({ length: item.count }, (_, index) => (
+          <Image
+            key={index}
+            src={imagePath}
+            alt={item.name}
+            width={16}
+            height={16}
+            className="w-4 h-4"
+          />
+        ))}
+      </div>
+    );
+  }
+  
+  // element 타입 (이미지 속성만 있는 경우)
+  if (item.image && !item.count) {
+    const imagePath = `/images/element/${item.image}.webp`;
+    return (
+      <Image
+        src={imagePath}
+        alt={item.name}
+        width={20}
+        height={20}
+        className="w-5 h-5"
+      />
+    );
+  }
+  
+  return null;
+};
 
 export default function SearchCheckBoxOption({
   control,
@@ -43,7 +81,9 @@ export default function SearchCheckBoxOption({
                         }
                       }}
                     />
-                    <Label htmlFor={id}>{item.name}</Label>
+                    <Label htmlFor={id} className="flex items-center gap-2 cursor-pointer">
+                      {renderItemImages(item)}
+                    </Label>
                   </div>
                 );
               })}

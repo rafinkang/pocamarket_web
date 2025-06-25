@@ -7,7 +7,7 @@ import { REQUEST } from "@/constants/tradeStatus";
 import TradeListItem from "./TradeListItem";
 import TradeListItemDialog from "./TradeListItemDialog";
 
-export default function TradeList({isMy, isLogin, requestList, onRequestAccept, onRequestCancel}) {
+export default function TradeList({isMy, isLogin, requestList, onRequestAccept, onRequestCancel, onOpenTcgCode}) {
   const [cards, setCards] = useState([]);
   const [dialogData, setDialogData] = useState(null);
   const [activeCard, setActiveCard] = useState(null);
@@ -25,10 +25,8 @@ export default function TradeList({isMy, isLogin, requestList, onRequestAccept, 
   }
 
   useEffect(() => {
-    console.log('requestList ::: ', requestList)
     if (!requestList || requestList.length === 0) return;
 
-    
     setCards(requestList.map(request => {
       return {
         id: request.tradeRequestId,
@@ -61,9 +59,25 @@ export default function TradeList({isMy, isLogin, requestList, onRequestAccept, 
     setActiveCard(cards.find(card => card.status === REQUEST))
   }, [])
 
+  // requestList가 업데이트될 때 현재 열려있는 dialogData도 동기화
+  useEffect(() => {
+    if (dialogData && cards.length > 0) {
+      const updatedCard = cards.find(card => card.id === dialogData.id);
+      if (updatedCard) {
+        setDialogData(updatedCard);
+      }
+    }
+  }, [cards, dialogData])
+
   return (
     <>
-      <TradeListItemDialog handleClick={setDialogData} isMy={isMy} isLogin={isLogin} dialogData={dialogData} onRequestAccept={onRequestAccept} onRequestCancel={onRequestCancel} onOpenOkChange={onOpenOkChange} />
+      <TradeListItemDialog handleClick={setDialogData} isMy={isMy} isLogin={isLogin} 
+        dialogData={dialogData} 
+        onRequestAccept={onRequestAccept} 
+        onRequestCancel={onRequestCancel} 
+        onOpenOkChange={onOpenOkChange} 
+        onOpenTcgCode={onOpenTcgCode} 
+      />
       <ul className="max-w-2xl mx-auto w-full gap-4">
         {cards.map(card => 
           <TradeListItem

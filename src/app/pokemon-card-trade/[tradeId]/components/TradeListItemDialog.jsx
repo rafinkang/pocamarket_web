@@ -11,7 +11,8 @@ import { useState } from "react";
 
 import { postUserReport } from "@/api/usersReport";
 
-export default function TradeListItemDialog({handleClick, dialogData, id, isMy, isLogin, onRequestAccept, onRequestCancel, onOpenOkChange}) {
+// isMy = 교환글 작성자, dialogData.isMy = 요청자
+export default function TradeListItemDialog({handleClick, dialogData, id, isMy, isLogin, onRequestAccept, onRequestCancel, onOpenOkChange, onOpenTcgCode}) {
   const [isReportOpen, setIsReportOpen] = useState(false);
   
   const handleReport = async ({reportReason, reportDetail}) => {
@@ -119,10 +120,25 @@ export default function TradeListItemDialog({handleClick, dialogData, id, isMy, 
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="text-neutral-600 text-xs md:text-sm lg:text-base h-40 md:h-fit pb-10 flex flex-col items-start gap-4 overflow-auto dark:text-neutral-400 [mask:linear-gradient(to_bottom,white,white,transparent)] [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]">
+                    className="text-neutral-600 text-xs md:text-sm lg:text-base h-40 md:h-fit pb-10 flex flex-col items-start gap-4 overflow-auto dark:text-neutral-400 [mask:linear-gradient(to_bottom,white_90%,transparent)] [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]">
                     {typeof dialogData.content === "function"
                       ? dialogData.content()
                       : dialogData.content}
+                    
+                    {isLogin && (dialogData.status === REQUEST_PROCESS || dialogData.status === REQUEST_COMPLETE) &&
+                      (isMy || dialogData.isMy) && (
+                      <div className="mt-4 pt-4 border-t">
+                        {(!dialogData.tcgCode || dialogData.tcgCode === '') ? (
+                          <Button onClick={() => {
+                            onOpenTcgCode(dialogData.id);
+                          }}>
+                            친구코드 보기
+                          </Button>
+                        ) : (
+                          <p className="font-semibold text-blue-600">친구코드 : {dialogData.tcgCode}</p>
+                        )}
+                      </div>
+                    )}
                   </motion.div>
                 </div>
               </div>
@@ -142,7 +158,7 @@ export default function TradeListItemDialog({handleClick, dialogData, id, isMy, 
                       <Button variant="ghost" onClick={() => setIsReportOpen(true)}>
                         신고하기
                       </Button>
-                      {(dialogData.status === REQUEST_SUBMITTED || dialogData.status === REQUEST_PROCESS) && (
+                      {isMy && (dialogData.status === REQUEST_SUBMITTED || dialogData.status === REQUEST_PROCESS)  && (
                         <Button onClick={() => {
                           onRequestAccept(dialogData.id, dialogData.status);
                           handleClick(null);
