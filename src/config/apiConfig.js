@@ -12,12 +12,12 @@ const API_CONFIG = {
   INTERNAL_API_URL: process.env.NEXT_PUBLIC_INTERNAL_API_URL || 'http://pocamarket-api:8080',
 
   // 프로덕션에서의 API prefix (nginx 프록시 경로)
-  PRODUCTION_API_PREFIX: process.env.NEXT_PUBLIC_API_URL + '/api-server',
+  PRODUCTION_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080',
 
   // 환경에 따른 API Base URL 자동 설정
   get BASE_URL() {
     if (this.IS_PRODUCTION) {
-      return this.PRODUCTION_API_PREFIX; // 프로덕션: /api-server
+      return this.PRODUCTION_API_URL; // 프로덕션: /api-server
     }
 
     // 개발 환경에서 서버사이드 vs 클라이언트사이드 구분
