@@ -12,13 +12,37 @@ const ListContext = createContext();
  * - pageSize: 페이지당 아이템 수
  * - disableHistory: 히스토리 조작 비활성화 (다이얼로그 등에서 사용)
  */
-export function ListProvider({ children, fetchList, parseData, pageSize = 10, disableHistory = false }) {
+export function ListProvider({
+  children,
+  fetchList,
+  parseData,
+  pageSize = 10,
+  disableHistory = false,
+}) {
   const [items, setItems] = useState([]);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(() => {
+    // Initializing page from URL on mount
+    if (typeof window !== "undefined" && !disableHistory) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("page") ? Number(params.get("page")) : 0;
+    }
+    return 0;
+  });
   const [totalPage, setTotalPage] = useState(1);
   const [sortInfo, setSortInfo] = useState("");
   const [totalCount, setTotalCount] = useState(0);
-  const [filterQuery, setFilterQuery] = useState({});
+  const [filterQuery, setFilterQuery] = useState(() => {
+    // Initializing filterQuery from URL on mount
+    if (typeof window !== "undefined" && !disableHistory) {
+      const params = new URLSearchParams(window.location.search);
+      params.delete("page"); // Remove page and size from filterQuery
+      params.delete("size");
+      const filter = {};
+      params.forEach((v, k) => (filter[k] = v));
+      return filter;
+    }
+    return {};
+  });
   const isPopState = useRef(false);
 
   const createParams = () => {
@@ -41,21 +65,21 @@ export function ListProvider({ children, fetchList, parseData, pageSize = 10, di
   };
 
   useEffect(() => {
+    // This useEffect is now solely for setting up the popstate listener
     if (!disableHistory) {
-      const handlePopOrInit = () => {
+      const handlePopState = () => { // Renamed for clarity
         isPopState.current = true;
         const params = new URLSearchParams(window.location.search);
         const page = params.get("page") ? Number(params.get("page")) : 0;
         params.delete("page");
         params.delete("size");
         const filter = {};
-        params.forEach((v, k) => (filter[k] = v));
+        params.forEach((v, k) => (filter[k] = v)); // These state updates will trigger the fetchData useEffect
         setFilterQuery(filter);
         setPage(page);
       };
-      handlePopOrInit();
-      window.addEventListener("popstate", handlePopOrInit);
-      return () => window.removeEventListener("popstate", handlePopOrInit);
+      window.addEventListener("popstate", handlePopState);
+      return () => window.removeEventListener("popstate", handlePopState); // Cleanup
     }
   }, [disableHistory]);
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 // 거래 필터
 import {
@@ -59,6 +59,7 @@ export default function TradeListContainer() {
   // 페이지네이션 상태
   const [totalPage, setTotalPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
+  const totalPageRef = useRef(totalPage); // Ref to hold totalPage to avoid it in useEffect dependencies
   const pageSize = 3;
 
   // URL에서 확정된 검색 조건 파싱 (API 호출용)
@@ -108,7 +109,7 @@ export default function TradeListContainer() {
 
   // API 요청 파라미터 생성 (확정된 검색 조건 기반)
   const apiParams = useMemo(() => {
-    const adjustedPage = Math.min(confirmedParams.page, Math.max(0, totalPage - 1));
+    // page 조정 로직은 fetchData 내부로 이동하여 totalPage에 대한 의존성 제거
     
     let myCardCode = null;
     let wantCardCode = [];
@@ -121,11 +122,11 @@ export default function TradeListContainer() {
       myCardCode,
       wantCardCode: wantCardCode.length > 0 ? wantCardCode.join(",") : null,
       status: confirmedParams.status,
-      page: adjustedPage,
+      page: confirmedParams.page, // confirmedParams.page를 그대로 사용
       size: pageSize,
       sort: confirmedParams.sort,
     };
-  }, [confirmedParams, totalPage]);
+  }, [confirmedParams, pageSize]); // totalPage 제거
 
   // URL 업데이트 함수
   const updateURL = useCallback((newParams, options = {}) => {
@@ -150,17 +151,16 @@ export default function TradeListContainer() {
     }
   }, [router, pathname]);
 
+  // totalPage 상태가 변경될 때마다 ref 업데이트
+  useEffect(() => {
+    totalPageRef.current = totalPage;
+  }, [totalPage]);
+
   // 데이터 로딩
   useEffect(() => {
     let isCancelled = false;
 
     async function fetchData() {
-      if (!searchParams.toString() && confirmedParams.status != 99) {
-        // 초기 로드 시 기본 파라미터로 URL 설정
-        updateURL(apiParams, { replace: true });
-        return;
-      }
-
       setIsLoading(true);
 
       try {
@@ -170,7 +170,19 @@ export default function TradeListContainer() {
           throw new Error("로그인이 필요한 서비스입니다.");
         }
 
-        const res = await callApi(apiParams);
+        // 현재 totalPage 값을 사용하여 실제 요청할 페이지 계산
+        // totalPageRef.current를 사용하여 useEffect의 의존성에서 totalPage를 제거
+        const actualPageToFetch = Math.min(
+          apiParams.page,
+          Math.max(0, totalPageRef.current - 1)
+        );
+
+        // URL의 페이지가 유효하지 않은 경우, URL을 수정하고 재요청 유도
+        if (apiParams.page !== actualPageToFetch) {
+          updateURL({ ...confirmedParams, page: actualPageToFetch }, { replace: true });
+          return; // URL 변경으로 인해 useEffect가 다시 실행될 것이므로 현재 fetch 중단
+        }
+        const res = await callApi({ ...apiParams, page: actualPageToFetch });
 
         if (isCancelled) return;
 
@@ -200,7 +212,7 @@ export default function TradeListContainer() {
     return () => {
       isCancelled = true;
     };
-  }, [apiParams, confirmedParams.isMy, isLogin, updateURL, searchParams]);
+  }, [apiParams, confirmedParams, isLogin, updateURL]); // totalPage, searchParams 제거
 
   // 페이지 변경 핸들러 (즉시 URL 업데이트)
   const handlePageChange = useCallback((newPage) => {

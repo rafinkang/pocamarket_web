@@ -1,4 +1,3 @@
-// import TempContainer from "./components/TempContainer"
 import { Suspense } from 'react';
 import TradeListContainer from "./components/TradeListContainer"
 import { siteConfig } from "@/config/siteConfig";
