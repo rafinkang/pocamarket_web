@@ -79,7 +79,7 @@ export const PokemonThreeDMarquee = ({
                             ease: "easeInOut",
                           }}
                           key={imageIndex + image}
-                          src={`/Excards/${image}.webp`}
+                          src={`/EXcards/${image}.webp`}
                           alt={`Image ${imageIndex + 1}`}
                           className="aspect-[366/512] rounded-lg object-cover ring ring-gray-950/5 hover:shadow-2xl"
                           width={366}
