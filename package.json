@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev -H 0.0.0.0 --port 3000",
     "build": "next build",
-    "start": "next start",
+    "start": "node .next/standalone/server.js",
+    "start2": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
     "db:pull": "npx prisma db pull",
