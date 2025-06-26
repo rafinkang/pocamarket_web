@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { SUCCESS, UN_AUTHORIZED } from "@/constants/httpStatusCode";
+import { API_CONFIG } from "@/config/apiConfig";
 
 // 동적으로 동작함을 명시적으로 선언.
 export const dynamic = 'force-dynamic';
@@ -12,7 +13,7 @@ let refreshPromise = null;
 // api 요청 함수
 async function apiRequest(slug, search, request, token) {
   // 최종 요청 URL에 쿼리 스트링(search)을 포함.
-  const url = `${process.env.NEXT_PUBLIC_LOCAL_API_URL}/api/${slug}${search}`;
+  const url = API_CONFIG.getApiUrl(`/api/${slug}${search}`);
   console.log(`Forwarding request to: ${url}`); // 디버깅을 위한 로그
 
   const headers = new Headers(request.headers); // 기존 헤더
@@ -36,7 +37,7 @@ async function refreshTokenAndCookies() {
   if (!refreshToken) throw new Error("No refresh token available for reissue.");
 
   // Spring Boot에 토큰 재발급 요청
-  const refreshRes = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_API_URL}/api/reissue`, {
+  const refreshRes = await fetch(API_CONFIG.getApiUrl('/api/reissue'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ refreshToken }),

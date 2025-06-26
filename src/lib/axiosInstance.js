@@ -6,7 +6,7 @@ const getBaseURL = () => {
   if (typeof window === 'undefined') {
     // 서버사이드에서는 완전한 URL 필요
     const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
-    const host = process.env.VERCEL_URL || process.env.NEXT_PUBLIC_VERCEL_URL || 'localhost:3000';
+    const host = process.env.NEXT_PUBLIC_SERVER_URL || 'localhost:3000';
     return `${protocol}://${host}/api/proxy`;
   }
   // 클라이언트사이드에서는 상대 경로 사용
