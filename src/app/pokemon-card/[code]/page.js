@@ -1,5 +1,7 @@
 import { getPokemonCardDetail } from "@/api/pokemon-card";
-import CardDetailContainer from "./CardDetailContainer";
+import { getTcgTradeList } from "@/api/tcgTrade";
+
+import CardDetailContainer from "./components/CardDetailContainer";
 import { notFound } from "next/navigation";
 import { S3_IMAGES_BASE_URL } from "@/constants/config";
 import { cache } from "react";
@@ -12,6 +14,11 @@ import { siteConfig } from "@/config/siteConfig";
 const getCachedPokemonCardDetail = cache(async (code) => {
   console.log(`API 호출: getPokemonCardDetail(${code})`); // 실제 API 호출 시에만 로그 출력
   return await getPokemonCardDetail(code);
+});
+
+const getCachedTcgTrade = cache(async (params) => {
+  console.log(`API 호출: getCachedTcgTrade >>> `, params); // 실제 API 호출 시에만 로그 출력
+  return await getTcgTradeList(params);
 });
 
 /**
@@ -88,8 +95,19 @@ export default async function PokemonCardDetailPage({ params }) {
     console.log("PokemonCardDetailPage 실행 - code:", code);
     
     const res = await getCachedPokemonCardDetail(code);
-    console.log("data ::: ", res.data)
+    console.log("상세 정보 data ::: ", res.data)
     console.log("PokemonCardDetailPage - 데이터 받음:", !!res?.data, "(캐시에서 가져옴)");
+
+    const tradeRes = await getCachedTcgTrade({
+      myCardCode: code,
+      status: 99,
+      page: 0,
+      size: 3,
+      sort: "sortedAt,desc"
+    });
+    console.log("관련 교환 data ::: ", tradeRes.data)
+    console.log("PokemonCardDetailPage - 데이터 받음:", !!tradeRes?.data, "(캐시에서 가져옴)");
+
 
     if (!res?.data) {
       console.log("카드 데이터를 찾을 수 없음 - notFound 호출");
@@ -98,7 +116,7 @@ export default async function PokemonCardDetailPage({ params }) {
 
     return (
       <>
-        <CardDetailContainer data={res.data} />
+        <CardDetailContainer data={res.data} tradeList={tradeRes.data.content} />
       </>
     );
   } catch (error) {

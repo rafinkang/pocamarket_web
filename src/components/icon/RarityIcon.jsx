@@ -8,7 +8,7 @@ export default function RarityIcon({ rarity, size = 30 }) {
   if (!config) return null;
 
   return (
-    <div className="inline-flex items-center gap-1">
+    <div className="inline-flex items-center">
       {Array.from({ length: config.count }, (_, index) => (
         <img 
           key={`rarity-icon-${rarity}-${index}`}
