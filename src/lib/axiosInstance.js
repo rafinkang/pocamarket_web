@@ -6,7 +6,7 @@ const getBaseURL = () => {
   if (typeof window === 'undefined') {
     // 서버사이드에서는 완전한 URL 필요
     // const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
-    const url = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000';
+    const url = process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_SERVER_URL : 'http://localhost:3000';
     // return `${protocol}://${host}/api/proxy`;
     return `${url}/api/proxy`;
   }
