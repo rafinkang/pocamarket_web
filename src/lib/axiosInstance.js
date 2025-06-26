@@ -5,9 +5,10 @@ const getBaseURL = () => {
   // 서버사이드에서 실행될 때
   if (typeof window === 'undefined') {
     // 서버사이드에서는 완전한 URL 필요
-    const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
-    const host = process.env.NEXT_PUBLIC_SERVER_URL || 'localhost:3000';
-    return `${protocol}://${host}/api/proxy`;
+    // const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+    const url = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000';
+    // return `${protocol}://${host}/api/proxy`;
+    return `${url}/api/proxy`;
   }
   // 클라이언트사이드에서는 상대 경로 사용
   return '/api/proxy';
