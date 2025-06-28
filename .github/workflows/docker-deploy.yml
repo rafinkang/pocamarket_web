@@ -56,7 +56,7 @@ jobs:
 
       # 5. Docker Hub의 오래된 이미지 정리
       - name: Clean up old images on Docker Hub
-        uses: burnett01/delete-older-docker-images@1.0.0
+        uses: burnett01/delete-older-docker-images@master
         with:
           repo: ${{ env.DOCKER_IMAGE }} # env 변수에 정의된 이미지 리포지토리
           keep_latest: 2 # 최신 5개의 이미지만 남김
