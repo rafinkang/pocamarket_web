@@ -1,14 +1,15 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 // 거래 필터
 import {
-  defaultFilterCardList,
   defaultFilterOptionList,
   defaultSort,
   defaultSortList,
+  getMyCardDefault,
+  getWantCardDefault
 } from "@/constants/tradeFilter";
 
 // 거래 검색 필터
@@ -41,6 +42,10 @@ import { getMyTcgTradeList, getTcgTradeList } from "@/api/tcgTrade";
 import useAuthStore from "@/store/authStore";
 import MyCheck from "./Search/MyCheck";
 
+
+// testMode 체크
+const testMode = process.env.NODE_ENV === "development";
+
 export default function TradeListContainer() {
   // Next.js 라우팅 훅들
   const router = useRouter();
@@ -59,82 +64,105 @@ export default function TradeListContainer() {
   // 페이지네이션 상태
   const [totalPage, setTotalPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
-  const totalPageRef = useRef(totalPage); // Ref to hold totalPage to avoid it in useEffect dependencies
   const pageSize = 3;
-
-  // URL에서 확정된 검색 조건 파싱 (API 호출용)
-  const confirmedParams = useMemo(() => {
+  
+  const fetchDataRef = useRef(null);
+  const [lastApiParams, setLastApiParams] = useState(null);
+  const [filterParams, setFilterParams] = useState(() => {
     const params = Object.fromEntries(searchParams.entries());
+
+    const wantCard = getWantCardDefault();
+    const wantCardCode = params.wantCardCode?.split(",").filter(code => code?.trim());
+
+    wantCardCode?.forEach((code, index) => {
+      if(index < wantCard.length) {
+        wantCard[index].code = code;
+      }
+    });
+    
     return {
-      myCardCode: params.myCardCode || null,
-      wantCardCode: params.wantCardCode?.split(",").filter(code => code?.trim()) || [],
+      myCard: params.myCardCode ? { ...getMyCardDefault(), code: params.myCardCode } : getMyCardDefault(),
+      wantCard,
       status: Number(params.status) || 99,
-      page: Math.max(0, Number(params.page) || 0),
+      page: Math.min(Math.max(0, Number(params.page) || 0), totalPage),
       sort: params.sort || defaultSort,
       isMy: params.isMy === 'true' && isLogin ? true : false,
     };
   }, [searchParams, isLogin]);
-
-  // 로컬 필터 상태 (임시 검색 조건, UI 표시용)
-  const [localFilterState, setLocalFilterState] = useState(() => ({
-    filterCardList: [...defaultFilterCardList],
-    status: confirmedParams.status,
-    sort: confirmedParams.sort,
-    isMy: confirmedParams.isMy,
-  }));
-
-  // 초기 로드 시 URL 기반으로 로컬 필터 상태 동기화
-  useEffect(() => {
-    let wantCardIndex = 0;
-    const syncedFilterCardList = defaultFilterCardList.map((card) => {
-      if (card.filterCardType === "my") {
-        return { ...card, code: confirmedParams.myCardCode };
-      } else {
-        const currentWantCode = confirmedParams.wantCardCode[wantCardIndex] || null;
-        wantCardIndex++;
-        return {
-          ...card,
-          code: currentWantCode && currentWantCode.length > 0 ? currentWantCode : null,
-        };
-      }
-    });
-
-    setLocalFilterState({
-      filterCardList: syncedFilterCardList,
-      status: confirmedParams.status,
-      sort: confirmedParams.sort,
-      isMy: confirmedParams.isMy,
-    });
-  }, [confirmedParams.myCardCode, confirmedParams.wantCardCode, confirmedParams.status, confirmedParams.sort, confirmedParams.isMy]);
-
-  // API 요청 파라미터 생성 (확정된 검색 조건 기반)
-  const apiParams = useMemo(() => {
-    // page 조정 로직은 fetchData 내부로 이동하여 totalPage에 대한 의존성 제거
-    
-    let myCardCode = null;
-    let wantCardCode = [];
-    
-    // 확정된 파라미터에서 직접 추출
-    myCardCode = confirmedParams.myCardCode;
-    wantCardCode = confirmedParams.wantCardCode;
+  
+  // API 요청 파라미터 생성
+  const createApiParams = (filterParams) => {
+    const wantCardCode = filterParams.wantCard.filter(wantCard => wantCard?.code?.trim()).map(wantCard => wantCard.code).join(",");
 
     return {
-      myCardCode,
-      wantCardCode: wantCardCode.length > 0 ? wantCardCode.join(",") : null,
-      status: confirmedParams.status,
-      page: confirmedParams.page, // confirmedParams.page를 그대로 사용
+      myCardCode: filterParams.myCard?.code || null,
+      wantCardCode: wantCardCode.length > 0 ? wantCardCode : null,
+      status: filterParams.status == 99 ? null : filterParams.status,
+      page: Math.min(Math.max(0, Number(filterParams.page) || 0), totalPage),
       size: pageSize,
-      sort: confirmedParams.sort,
+      sort: filterParams.sort,
+      isMy: filterParams.isMy,
     };
-  }, [confirmedParams, pageSize]); // totalPage 제거
+  };
+  
+  // 데이터 있는 것만 골라서 객체 만들어줌
+  const getActiveFilterParams = (filterParams) => {
+    const tempFilter = {};
+
+    if(filterParams?.myCardCode) {
+      tempFilter.myCardCode = filterParams.myCardCode;
+    }
+
+    if(typeof filterParams?.wantCardCode === "string" && filterParams?.wantCardCode?.length > 0) {
+      tempFilter.wantCardCode = filterParams.wantCardCode;
+    }
+
+    if(filterParams?.status != 99 && filterParams?.status != null) {
+      tempFilter.status = filterParams.status;
+    }
+
+    if(filterParams?.page) {
+      tempFilter.page = filterParams.page;
+    }
+
+    if(filterParams?.sort) {
+      tempFilter.sort = filterParams.sort;
+    }
+
+    if(filterParams?.isMy) {
+      tempFilter.isMy = filterParams.isMy;
+    }
+
+    if(pageSize > 0) {
+      tempFilter.size = pageSize;
+    } else {
+      tempFilter.size = 3;
+    }
+
+    return tempFilter;
+  }
+
+  // 파라미터 비교 함수 (중복 API 호출 방지)
+  const areParamsEqual = (params1, params2) => {
+    if (!params1 || !params2) return false;
+    return JSON.stringify(params1) === JSON.stringify(params2);
+  };
 
   // URL 업데이트 함수
-  const updateURL = useCallback((newParams, options = {}) => {
+  const updateURL = useCallback((options = {}) => {
     const params = new URLSearchParams();
     
-    Object.entries(newParams).forEach(([key, value]) => {
-      if (value !== null && value !== undefined && value !== "") {
-        // isMy는 boolean 값이므로 false도 포함해야 함
+    const urlParams = {
+      myCardCode: lastApiParams?.myCardCode,
+      wantCardCode: Array.isArray(lastApiParams?.wantCardCode) && lastApiParams.wantCardCode.length > 0 ? lastApiParams.wantCardCode.filter(card => card?.code?.trim()).join(",") : null,
+      status: lastApiParams?.status || 99,
+      sort: lastApiParams?.sort || defaultSort,
+      isMy: lastApiParams?.isMy || false,
+      page: lastApiParams?.page || 0
+    };
+    
+    Object.entries(urlParams).forEach(([key, value]) => {
+      if (value !== null && value !== undefined && value !== "" && value !== 99) {
         if (key === 'isMy' || value !== false) {
           params.set(key, String(value));
         }
@@ -147,147 +175,121 @@ export default function TradeListContainer() {
     if (options.replace) {
       router.replace(newUrl, { scroll: false });
     } else {
-      router.push(newUrl, { scroll: false });
+      router.push(newUrl, { scroll: true });
     }
-  }, [router, pathname]);
+  }, [router, pathname, lastApiParams]);
 
-  // totalPage 상태가 변경될 때마다 ref 업데이트
+  // 컴포넌트 마운트 시 초기 데이터 로드
+  const hasInitializedRef = useRef(false);
   useEffect(() => {
-    totalPageRef.current = totalPage;
-  }, [totalPage]);
+    // React.StrictMode 중복 실행 방지
+    if (hasInitializedRef.current) return;
+    hasInitializedRef.current = true;
+    
+    fetchData();
+  }, []); // 빈 의존성 배열로 마운트 시에만 실행
 
   // 데이터 로딩
-  useEffect(() => {
-    let isCancelled = false;
+  const fetchData = useCallback(async (customFilterParams = null) => {
+    const targetParams = customFilterParams || filterParams;
+    const apiParams = getActiveFilterParams(createApiParams(targetParams));
 
-    async function fetchData() {
-      setIsLoading(true);
-
-      try {
-        const callApi = confirmedParams.isMy ? getMyTcgTradeList : getTcgTradeList;
-
-        if (confirmedParams.isMy && !isLogin) {
-          throw new Error("로그인이 필요한 서비스입니다.");
-        }
-
-        // 현재 totalPage 값을 사용하여 실제 요청할 페이지 계산
-        // totalPageRef.current를 사용하여 useEffect의 의존성에서 totalPage를 제거
-        const actualPageToFetch = Math.min(
-          apiParams.page,
-          Math.max(0, totalPageRef.current - 1)
-        );
-
-        // URL의 페이지가 유효하지 않은 경우, URL을 수정하고 재요청 유도
-        if (apiParams.page !== actualPageToFetch) {
-          updateURL({ ...confirmedParams, page: actualPageToFetch }, { replace: true });
-          return; // URL 변경으로 인해 useEffect가 다시 실행될 것이므로 현재 fetch 중단
-        }
-        const res = await callApi({ ...apiParams, page: actualPageToFetch });
-
-        if (isCancelled) return;
-
-        if (res?.data) {
-          const data = res.data;
-          setTotalPage(data.totalPages ?? 1);
-          setTotalCount(data.totalElements ?? 0);
-          setContentList(data.content ?? []);
-        } else {
-          throw new Error("데이터를 불러올 수 없습니다.");
-        }
-      } catch (error) {
-        if (isCancelled) return;
-        
-        console.error("데이터 로딩 에러:", error);
-        alert(`${error.response?.data?.message || error.message} errorCode : ${error.response?.data?.errorCode || "UNKNOWN"}`);
-        handleReset();
-      } finally {
-        if (!isCancelled) {
-          setIsLoading(false);
-        }
-      }
+    // 이전 API 호출과 동일한 파라미터인지 확인
+    if (areParamsEqual(apiParams, lastApiParams)) {
+      return;
     }
+    
+    setIsLoading(true);
 
-    fetchData();
+    try {
+      const callApi = apiParams.isMy ? getMyTcgTradeList : getTcgTradeList;
 
-    return () => {
-      isCancelled = true;
-    };
-  }, [apiParams, confirmedParams, isLogin, updateURL]); // totalPage, searchParams 제거
+      if (apiParams.isMy && !isLogin) {
+        throw new Error("로그인이 필요한 서비스입니다.");
+      }
 
-  // 페이지 변경 핸들러 (즉시 URL 업데이트)
+      const res = await callApi({ ...apiParams });
+
+      if (res?.data) {
+        const data = res.data;
+        setTotalPage(data.totalPages ?? 1);
+        setTotalCount(data.totalElements ?? 0);
+        setContentList(data.content ?? []);
+        setLastApiParams(apiParams); // 성공한 API 파라미터 저장
+        updateURL();
+      } else {
+        throw new Error("데이터를 불러올 수 없습니다.");
+      }
+    } catch (error) {
+      console.error("데이터 로딩 에러:", error);
+      alert(`${error.response?.data?.message || error.message}`);
+      handleReset();
+    } finally {
+      setIsLoading(false);
+    }
+  }, [lastApiParams, isLogin]);
+
+  // fetchData ref 업데이트
+  fetchDataRef.current = fetchData;
+
+  // 페이지 변경 핸들러
   const handlePageChange = useCallback((newPage) => {
-    updateURL({ ...confirmedParams, page: newPage });
-  }, [confirmedParams, updateURL]);
+    const newFilterParams = {
+      ...filterParams,
+      page: Math.min(Math.max(0, newPage), totalPage)
+    };
+    
+    setFilterParams(newFilterParams);
+    fetchDataRef.current?.(newFilterParams); // 새로운 파라미터 직접 전달
+  }, [filterParams, totalPage]);
 
-  // 필터 옵션 변경 핸들러 (로컬 상태만 변경)
+
+  // 필터 적용 핸들러 (Submit 버튼)
+  const handleSubmit = useCallback(() => {
+    const newFilterParams = {
+      ...filterParams,
+      page: 0
+    };
+    
+    setFilterParams(newFilterParams);
+    fetchDataRef.current?.(newFilterParams); // 새로운 파라미터 직접 전달
+  }, [filterParams]);
+
+  // 리셋 핸들러
+  const handleReset = useCallback(() => {
+    const resetFilterParams = {
+      myCard: getMyCardDefault(),
+      wantCard: getWantCardDefault(),
+      status: 99,
+      page: 0,
+      sort: defaultSort,
+      isMy: false,
+    };
+    
+    setFilterParams(resetFilterParams);
+    fetchDataRef.current?.(resetFilterParams); // 새로운 파라미터 직접 전달
+  }, []);
+
   const handleFilterOptionChange = useCallback((value) => {
-    setLocalFilterState(prev => ({
+    setFilterParams(prev => ({
       ...prev,
-      status: value
+      status: defaultFilterOptionList.find(option => option.value === value)?.value || 99
     }));
   }, []);
 
   const handleMyCheckChange = useCallback((value) => {
-    console.log('value ::: ', value)
-    setLocalFilterState(prev => ({
+    setFilterParams(prev => ({
       ...prev,
-      isMy: value
+      isMy: value && isLogin ? true : false
     }));
   }, []);
 
-  // 정렬 변경 핸들러 (로컬 상태만 변경)
   const handleSortChange = useCallback((value) => {
-    setLocalFilterState(prev => ({
+    setFilterParams(prev => ({
       ...prev,
-      sort: value
+      sort: defaultSortList.find(sort => sort.value === value)?.value || defaultSort
     }));
   }, []);
-
-  // 필터 적용 핸들러 (로컬 상태를 URL에 반영)
-  const handleSubmit = useCallback(() => {
-    // 로컬 필터 카드 리스트에서 파라미터 추출
-    let myCardCode = null;
-    const wantCardCode = [];
-    
-    localFilterState.filterCardList.forEach((card) => {
-      if (card.filterCardType === "my") {
-        myCardCode = card.code;
-      } else if (card.code && card.code.length > 0) {
-        wantCardCode.push(card.code);
-      }
-    });
-
-    // 로컬 상태를 URL에 반영
-    const newParams = {
-      myCardCode,
-      wantCardCode: wantCardCode.join(","),
-      status: localFilterState.status,
-      sort: localFilterState.sort,
-      isMy: localFilterState.isMy,
-      page: 0 // 필터 변경 시 첫 페이지로
-    };
-
-    updateURL(newParams);
-  }, [localFilterState, updateURL]);
-
-  // 리셋 핸들러 (로컬 상태와 URL 모두 초기화)
-  const handleReset = useCallback(() => {
-    // 로컬 상태 초기화
-    setLocalFilterState({
-      filterCardList: [...defaultFilterCardList],
-      status: 99,
-      sort: defaultSort,
-      isMy: false,
-    });
-
-    // URL 초기화
-    updateURL({
-      status: 99,
-      sort: defaultSort,
-      isMy: false,
-      page: 0
-    });
-  }, [updateURL]);
 
   // 카드 선택 핸들러들
   const onFilterCardButton = useCallback((cardData) => {
@@ -297,35 +299,57 @@ export default function TradeListContainer() {
   }, [currentFilterCardType]);
 
   const onFilterCardCancel = useCallback((cardData) => {
-    // 로컬 필터 카드 리스트에서 해당 카드 초기화
-    setLocalFilterState(prev => ({
-      ...prev,
-      filterCardList: prev.filterCardList.map((findCard) =>
-        findCard.filterCardType === cardData.filterCardType
-          ? { ...findCard, code: null } // 카드 코드 초기화
-          : findCard
-      )
-    }));
+    if (cardData.filterCardType === "my") {
+      setFilterParams(prev => ({
+        ...prev,
+        myCard: { ...getMyCardDefault()}
+      }));
+    } else {
+      // want 카드의 경우 해당 인덱스를 찾아서 제거
+      const wantIndex = filterParams.wantCard.findIndex(card => 
+        card.filterCardType === cardData.filterCardType
+      );
+      
+      if (wantIndex !== -1) {
+        setFilterParams(prev => ({
+          ...prev,
+          wantCard: prev.wantCard.map((card, index) => 
+            index === wantIndex ? { ...card, code: null } : card
+          )
+        }));
+      }
+    }
     
     setCurrentFilterCardType(null);
-  }, []);
+  }, [currentFilterCardType, filterParams.myCard, filterParams.wantCard]);
 
   const onCardClick = useCallback((cardData) => {
     if (!currentFilterCardType || !cardData) return;
 
-    // 로컬 필터 카드 리스트 업데이트
-    setLocalFilterState(prev => ({
-      ...prev,
-      filterCardList: prev.filterCardList.map((findCard) =>
-        findCard.filterCardType === currentFilterCardType
-          ? { ...findCard, ...cardData } // 선택한 카드로 업데이트
-          : findCard
-      )
-    }));
+    if (currentFilterCardType === "my") {
+      setFilterParams(prev => ({
+        ...prev,
+        myCard: { ...prev.myCard, ...cardData }
+      }));
+    } else {
+      // want 카드의 경우 해당 인덱스를 찾아서 업데이트
+      const wantIndex = filterParams.wantCard.findIndex(card => 
+        card.filterCardType === currentFilterCardType
+      );
+      
+      if (wantIndex !== -1) {
+        setFilterParams(prev => ({
+          ...prev,
+          wantCard: prev.wantCard.map((card, index) => 
+            index === wantIndex ? { ...card, ...cardData } : card
+          )
+        }));
+      }
+    }
     
     setIsCardSearch(false);
     setCurrentFilterCardType(null);
-  }, [currentFilterCardType]);
+  }, [currentFilterCardType, filterParams.myCard, filterParams.wantCard]);
 
   return (
     <>
@@ -347,17 +371,15 @@ export default function TradeListContainer() {
           <FilterCardBox {...props}>
             {/* 내 카드 (my) 섹션 */}
             <div className="flex items-center justify-center w-full">
-              {localFilterState.filterCardList
-                .filter((card) => card.filterCardType === "my")
-                .map((card) => (
+              {filterParams.myCard && (
                   <FilterCard
-                    key={card.filterCardType}
-                    data={card}
-                    type={card.filterCardType}
+                    key={filterParams.myCard.code}
+                    data={filterParams.myCard}
+                    type={filterParams.myCard.filterCardType}
                     onCardClick={onFilterCardButton}
                     onCancelClick={onFilterCardCancel}
                   />
-                ))}
+                )}
             </div>
 
             {/* 교환 화살표 */}
@@ -374,11 +396,9 @@ export default function TradeListContainer() {
               grid-rows-3 grid-cols-1 gap-4
               md:grid-rows-1 md:grid-cols-[1fr_1fr_1fr] md:gap-4"
             >
-              {localFilterState.filterCardList
-                .filter((card) => card.filterCardType !== "my")
-                .map((card) => (
-                  <FilterCard
-                    key={card.filterCardType}
+              {filterParams.wantCard.map((card, index) => (
+                <FilterCard
+                  key={index}
                     data={card}
                     type={card.filterCardType}
                     onCardClick={onFilterCardButton}
@@ -392,7 +412,7 @@ export default function TradeListContainer() {
           <SortFilter
             {...props}
             sortList={defaultSortList}
-            value={localFilterState.sort}
+            value={filterParams.sort}
             onChange={handleSortChange}
           />
         )}
@@ -400,7 +420,7 @@ export default function TradeListContainer() {
           <TradeStatusFilter
             {...props}
             filterList={defaultFilterOptionList}
-            value={localFilterState.status}
+            value={filterParams.status}
             onChange={handleFilterOptionChange}
           />
         )}
@@ -409,7 +429,7 @@ export default function TradeListContainer() {
           return (
           <MyCheck 
             {...props} 
-            isMy={localFilterState.isMy}
+            isMy={filterParams.isMy}
             onChange={handleMyCheckChange}
           />
         )}}
@@ -423,11 +443,11 @@ export default function TradeListContainer() {
           <div className="text-gray-500">로딩 중...</div>
         </div>
       ) : (
-        <TradeList tradeList={contentList} />
+        <TradeList tradeList={contentList} testMode={testMode} />
       )}
 
       <CommonPagination
-        page={confirmedParams.page}
+        page={filterParams.page}
         totalPage={totalPage}
         onPageChange={handlePageChange}
       />

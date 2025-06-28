@@ -1,5 +1,7 @@
 "use client";
 
+const testMode = process.env.NODE_ENV === "development";
+
 /**
  * 공통 리스트 컴포넌트
  * - items: 렌더링할 데이터 배열
@@ -27,7 +29,7 @@ export default function CardList({ items, ItemComponent, onItemClick }) {
                 onClick={(e) => handleClick(e, item)}
               >
                 {ItemComponent && (
-                  <ItemComponent data={item} priority={index < 15} />
+                  <ItemComponent data={item} priority={index < 15} testMode={testMode} />
                 )}
               </li>
             ))}

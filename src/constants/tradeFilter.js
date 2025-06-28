@@ -1,10 +1,16 @@
-const defaultCardInfo = Object.freeze({ code: null, name: null, type: null });
-export const defaultFilterCardList = Object.freeze([
-  { ...defaultCardInfo, filterCardType: "my" },
-  { ...defaultCardInfo, filterCardType: "want-0" },
-  { ...defaultCardInfo, filterCardType: "want-1" },
-  { ...defaultCardInfo, filterCardType: "want-2" },
-]);
+export const defaultCard = Object.freeze({ code: null, name: null, type: null });
+
+export const getMyCardDefault = () => {
+  return { ...defaultCard, filterCardType: "my" };
+}
+
+export const getWantCardDefault = () => {
+  return [
+    { ...defaultCard, filterCardType: "want-0" },
+    { ...defaultCard, filterCardType: "want-1" },
+    { ...defaultCard, filterCardType: "want-2" },
+  ]
+}
 
 export const defaultFilterOptionList = Object.freeze([
   // { value: 0, name: "요청 삭제" },
