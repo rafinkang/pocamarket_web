@@ -79,14 +79,14 @@ export default function TradeListContainer() {
         wantCard[index].code = code;
       }
     });
-    
+
     return {
       myCard: params.myCardCode ? { ...getMyCardDefault(), code: params.myCardCode } : getMyCardDefault(),
       wantCard,
       status: Number(params.status) || 99,
-      page: Math.min(Math.max(0, Number(params.page) || 0), totalPage),
+      page: Math.max(0, Number(params.page) || 0),
       sort: params.sort || defaultSort,
-      isMy: params.isMy === 'true' && isLogin ? true : false,
+      isMy: params.isMy === 'true' ? true : false,
     };
   }, [searchParams, isLogin]);
   
@@ -98,7 +98,7 @@ export default function TradeListContainer() {
       myCardCode: filterParams.myCard?.code || null,
       wantCardCode: wantCardCode.length > 0 ? wantCardCode : null,
       status: filterParams.status == 99 ? null : filterParams.status,
-      page: Math.min(Math.max(0, Number(filterParams.page) || 0), totalPage),
+      page: Math.min(Math.max(0, Number(filterParams.page) || 0)),
       size: pageSize,
       sort: filterParams.sort,
       isMy: filterParams.isMy,
@@ -149,19 +149,10 @@ export default function TradeListContainer() {
   };
 
   // URL 업데이트 함수
-  const updateURL = useCallback((options = {}) => {
+  const updateURL = useCallback((apiParams, options = {}) => {
     const params = new URLSearchParams();
     
-    const urlParams = {
-      myCardCode: lastApiParams?.myCardCode,
-      wantCardCode: Array.isArray(lastApiParams?.wantCardCode) && lastApiParams.wantCardCode.length > 0 ? lastApiParams.wantCardCode.filter(card => card?.code?.trim()).join(",") : null,
-      status: lastApiParams?.status || 99,
-      sort: lastApiParams?.sort || defaultSort,
-      isMy: lastApiParams?.isMy || false,
-      page: lastApiParams?.page || 0
-    };
-    
-    Object.entries(urlParams).forEach(([key, value]) => {
+    Object.entries(apiParams).forEach(([key, value]) => {
       if (value !== null && value !== undefined && value !== "" && value !== 99) {
         if (key === 'isMy' || value !== false) {
           params.set(key, String(value));
@@ -171,7 +162,7 @@ export default function TradeListContainer() {
 
     const queryString = params.toString();
     const newUrl = queryString ? `${pathname}?${queryString}` : pathname;
-    
+
     if (options.replace) {
       router.replace(newUrl, { scroll: false });
     } else {
@@ -185,9 +176,8 @@ export default function TradeListContainer() {
     // React.StrictMode 중복 실행 방지
     if (hasInitializedRef.current) return;
     hasInitializedRef.current = true;
-    
-    fetchData();
-  }, []); // 빈 의존성 배열로 마운트 시에만 실행
+    fetchData(filterParams);
+  }, [filterParams]); // 빈 의존성 배열로 마운트 시에만 실행
 
   // 데이터 로딩
   const fetchData = useCallback(async (customFilterParams = null) => {
@@ -216,7 +206,7 @@ export default function TradeListContainer() {
         setTotalCount(data.totalElements ?? 0);
         setContentList(data.content ?? []);
         setLastApiParams(apiParams); // 성공한 API 파라미터 저장
-        updateURL();
+        updateURL(apiParams);
       } else {
         throw new Error("데이터를 불러올 수 없습니다.");
       }
