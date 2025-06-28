@@ -59,7 +59,7 @@ jobs:
         uses: burnett01/delete-older-docker-images@1.0.0
         with:
           repo: ${{ env.DOCKER_IMAGE }} # env 변수에 정의된 이미지 리포지토리
-          keep_latest: 5 # 최신 5개의 이미지만 남김
+          keep_latest: 2 # 최신 5개의 이미지만 남김
           user: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
