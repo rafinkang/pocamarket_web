@@ -45,42 +45,29 @@ async function refreshTokenAndCookies() {
 
   console.log("refreshRes >>>>>>>>>>>>>>>>>>>> ", refreshRes)
 
-  // AccessToken 재발급 실패시 로그아웃 처리
-  if (refreshRes.status !== SUCCESS) throw new Error("Token refresh request failed.");
-
-  // Set-Cookie 헤더에서 새로운 쿠키들을 가져옴
-  const newCookies = refreshRes.headers.getSetCookie();
-
-  // Set-Cookie 헤더에서 accessToken 추출
-  let newAccessToken = null;
-  for (const cookie of newCookies) {
-    if (cookie.startsWith('accessToken=')) {
-      // accessToken=value; 형태에서 value 부분만 추출
-      const match = cookie.match(/accessToken=([^;]+)/);
-      if (match) {
-        newAccessToken = match[1];
-        break;
-      }
-    }
+  // 재발급 실패 시 에러를 던지도록 수정
+  if (refreshRes.status !== SUCCESS) {
+    const errorBody = await refreshRes.json().catch(() => ({ message: "Unknown refresh error" }));
+    throw new Error(errorBody.message || "Token refresh request failed.");
   }
 
+  const refreshData = await refreshRes.json();
+  const newAccessToken = refreshData.accessToken;
+  const newCookies = refreshRes.headers.getSetCookie();
+  
   if (!newAccessToken) {
-    throw new Error("No access token found in Set-Cookie headers.");
+    throw new Error("New access token was not found in the refresh response body.");
   }
 
   return { newAccessToken, newCookies };
-}
-
-async function retry () {
-
 }
 
 // 모든 http 메소드 처리
 async function handler(request, { params }) {
   console.log('route http 메소드 처리 시작')
   // 클라이언트가 요청한 경로 조합 (ex: /api/proxy/tcg-trade/1 -> /api/tcg-trade/1)
-  const resolvedParams = await params;
-  const slug = resolvedParams.slug.join("/");
+  const tempParams = await params;
+  const slug = await tempParams.slug.join("/");
   const cookieStore = await cookies(); // HttpOnly 쿠키 읽어옴
   const accessToken = cookieStore.get("accessToken")?.value;
   const refreshToken = cookieStore.get("refreshToken")?.value;
