@@ -56,12 +56,16 @@ jobs:
 
       # 5. Docker Hub의 오래된 이미지 정리
       - name: Clean up old images on Docker Hub
-        uses: burnett01/delete-older-docker-images@master
+        uses: vlaurin/action-ghcr-prune@v0.5.0
         with:
-          repo: ${{ env.DOCKER_IMAGE }} # env 변수에 정의된 이미지 리포지토리
-          keep_latest: 2 # 최신 5개의 이미지만 남김
+          token: ${{ secrets.DOCKERHUB_TOKEN }}
           user: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          container: pocamarket-web
+          # keep-younger-than: 7 # 7일 이내 이미지는 유지
+          keep-last: 2 # 최근 2개 이미지 유지
+          prune-untagged: true
+          prune-tags-regexes: |
+            ^[0-9a-f]{40}$ # SHA 태그 정리
 
       # 5. EC2에 SSH로 접속하여 배포 스크립트 실행
       - name: Deploy WEB to EC2
