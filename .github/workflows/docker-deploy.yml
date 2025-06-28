@@ -54,6 +54,15 @@ jobs:
             DATABASE_URL=${{ secrets.DATABASE_URL }}
             CHOKIDAR_USEPOLLING=${{ secrets.CHOKIDAR_USEPOLLING }}
 
+      # 5. Docker Hub의 오래된 이미지 정리
+      - name: Clean up old images on Docker Hub
+        uses: burnett01/delete-older-docker-images@1.0.0
+        with:
+          repo: ${{ env.DOCKER_IMAGE }} # env 변수에 정의된 이미지 리포지토리
+          keep_latest: 5 # 최신 5개의 이미지만 남김
+          user: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       # 5. EC2에 SSH로 접속하여 배포 스크립트 실행
       - name: Deploy WEB to EC2
         uses: appleboy/ssh-action@master
