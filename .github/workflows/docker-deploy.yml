@@ -54,19 +54,6 @@ jobs:
             DATABASE_URL=${{ secrets.DATABASE_URL }}
             CHOKIDAR_USEPOLLING=${{ secrets.CHOKIDAR_USEPOLLING }}
 
-      # 5. Docker Hub의 오래된 이미지 정리
-      - name: Clean up old images on Docker Hub
-        uses: vlaurin/action-ghcr-prune@v0.5.0
-        with:
-          token: ${{ secrets.DOCKERHUB_TOKEN }}
-          user: ${{ secrets.DOCKERHUB_USERNAME }}
-          container: pocamarket-web
-          # keep-younger-than: 7 # 7일 이내 이미지는 유지
-          keep-last: 2 # 최근 2개 이미지 유지
-          prune-untagged: true
-          prune-tags-regexes: |
-            ^[0-9a-f]{40}$ # SHA 태그 정리
-
       # 5. EC2에 SSH로 접속하여 배포 스크립트 실행
       - name: Deploy WEB to EC2
         uses: appleboy/ssh-action@master
@@ -87,3 +74,79 @@ jobs:
             
             # 사용하지 않는 이전 Docker 이미지 정리 (EC2 서버 용량 확보)
             docker image prune -af
+
+      # 6. Docker Hub 오래된 이미지 정리 (Docker Hub API 사용)
+      - name: Clean up old Docker Hub images
+        run: |
+          set -e  # 에러 발생시 스크립트 중단
+          
+          # 환경 변수 설정
+          REPO_NAME="${{ env.IMAGE_NAME }}"
+          USERNAME="${{ secrets.DOCKERHUB_USERNAME }}"
+          PASSWORD="${{ secrets.DOCKERHUB_TOKEN }}"
+          KEEP_COUNT=5  # 유지할 이미지 개수
+          
+          echo "Docker Hub 이미지 정리 시작: ${USERNAME}/${REPO_NAME}"
+          
+          # Docker Hub API 인증을 위한 토큰 획득
+          echo "Docker Hub 인증 중..."
+          TOKEN=$(curl -s -H "Content-Type: application/json" -X POST \
+            -d '{"username": "'${USERNAME}'", "password": "'${PASSWORD}'"}' \
+            https://hub.docker.com/v2/users/login/ | jq -r .token)
+          
+          if [ "$TOKEN" = "null" ] || [ -z "$TOKEN" ]; then
+            echo "❌ Docker Hub 인증 실패"
+            exit 1
+          fi
+          
+          echo "Docker Hub 인증 성공"
+          
+          # 모든 태그 조회 (날짜순으로 정렬, latest 제외)
+          echo "태그 목록 조회 중..."
+          TAGS_JSON=$(curl -s -H "Authorization: JWT ${TOKEN}" \
+            "https://hub.docker.com/v2/repositories/${USERNAME}/${REPO_NAME}/tags/?page_size=100")
+          
+          # 삭제할 태그 결정 (latest 제외하고 날짜순으로 정렬하여 오래된 것들만 선택)
+          ALL_TAGS_COUNT=$(echo "$TAGS_JSON" | jq -r ".results[] | select(.name != \"latest\") | .name" | wc -l)
+          
+          if [ "$ALL_TAGS_COUNT" -le "$KEEP_COUNT" ]; then
+            echo "현재 태그 수($ALL_TAGS_COUNT)가 유지할 개수($KEEP_COUNT) 이하입니다."
+            TAGS_TO_DELETE=""
+          else
+            DELETE_COUNT=$((ALL_TAGS_COUNT - KEEP_COUNT))
+            echo "전체 태그 수: $ALL_TAGS_COUNT, 삭제할 태그 수: $DELETE_COUNT"
+            
+            # 오래된 순으로 정렬하여 삭제할 태그들 선택
+            TAGS_TO_DELETE=$(echo "$TAGS_JSON" | \
+              jq -r ".results[] | select(.name != \"latest\") | [.last_updated, .name] | @csv" | \
+              sort | head -n "$DELETE_COUNT" | cut -d',' -f2 | tr -d '"')
+          fi
+          
+          if [ -z "$TAGS_TO_DELETE" ]; then
+            echo "삭제할 태그가 없습니다."
+          else
+            echo "  삭제할 태그 목록:"
+            echo "$TAGS_TO_DELETE"
+            
+            # 태그들 삭제
+            echo "$TAGS_TO_DELETE" | while read -r tag; do
+              if [ ! -z "$tag" ] && [ "$tag" != "latest" ]; then
+                echo "삭제 중: $tag"
+                
+                DELETE_RESPONSE=$(curl -s -w "%{http_code}" -o /dev/null \
+                  -X DELETE -H "Authorization: JWT ${TOKEN}" \
+                  "https://hub.docker.com/v2/repositories/${USERNAME}/${REPO_NAME}/tags/${tag}/")
+                
+                if [ "$DELETE_RESPONSE" = "204" ]; then
+                  echo "   $tag 삭제 성공"
+                else
+                  echo "   $tag 삭제 실패 (HTTP: $DELETE_RESPONSE)"
+                fi
+                
+                # API 호출 제한을 위한 대기
+                sleep 2
+              fi
+            done
+          fi
+          
+          echo "Docker Hub 이미지 정리 완료"
