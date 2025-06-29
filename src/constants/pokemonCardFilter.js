@@ -62,22 +62,23 @@ export const rarity = Object.freeze([
     Object.freeze({ name: "♕", value: "GOLD CROWN", image: "crown", count: 1 }),
 ]);
 
+export const defaultSort = Object.freeze([
+    Object.freeze({ name: "코드순", value: "code,asc" }),
+    Object.freeze({ name: "코드역순", value: "code,desc" }),
+    Object.freeze({ name: "이름순", value: "nameKo,asc" }),
+    Object.freeze({ name: "이름역순", value: "nameKo,desc" }),
+]);
+
 export const defaultFilter = Object.freeze({
     nameKo: "",
     type: excludedValue,
     subtype: excludedValue,
     packSet: excludedValue,
     pack: excludedValue,
-    element: Object.freeze([]),
-    rarity: Object.freeze([]),
+    element: [],
+    rarity: [],
+    sort: "code,asc",
 });
-
-export const defaultSort = Object.freeze([
-    Object.freeze({ name: "코드순", value: "code" }),
-    Object.freeze({ name: "코드역순", value: "code,desc" }),
-    Object.freeze({ name: "이름순", value: "nameKo" }),
-    Object.freeze({ name: "이름역순", value: "nameKo,desc" }),
-]);
 
 export const formSchema = z.object({
     nameKo: z.string().nullable()
@@ -113,5 +114,8 @@ export const formSchema = z.object({
     rarity: z.array(z.string()).refine(arr =>
         arr.every((v) => rarity.some((item) => item.value === v || v === null)), {
         message: "유효하지 않은 레어도가 포함되어 있습니다."
+    }),
+    sort: z.string().nullable().refine(v => defaultSort.some((item) => item.value === v || v === null), {
+        message: "유효하지 않은 정렬 기준입니다."
     })
 });

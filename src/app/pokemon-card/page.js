@@ -1,4 +1,5 @@
-import CardListPage from "./components/CardListPage"
+// import CardListPage from "./components/CardListPage"
+import CardListContainer from "./components/CardListContainer"
 import { siteConfig } from "@/config/siteConfig";
 
 export const metadata = {
@@ -11,7 +12,8 @@ export default function PokemonCardPage() {
   return (
     <>
       <div id="pokemonCardList" className="w-[100%] flex flex-col gap-6">
-        <CardListPage />
+        <CardListContainer />
+        {/* <CardListPage /> */}
       </div>
     </>
   );
