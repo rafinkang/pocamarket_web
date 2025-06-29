@@ -45,6 +45,7 @@ import MyCheck from "./Search/MyCheck";
 
 // testMode 체크
 const testMode = process.env.NODE_ENV === "development";
+const debounceTime = 500;
 
 export default function TradeListContainer() {
   // Next.js 라우팅 훅들
@@ -66,7 +67,17 @@ export default function TradeListContainer() {
   const [totalCount, setTotalCount] = useState(0);
   const pageSize = 3;
   
-  const fetchDataRef = useRef(null);
+  // debounce를 위한 단일 ref
+  const debounceRef = useRef(null);
+  
+  // 공통 debounce 함수
+  const debounce = (callback, delay = debounceTime) => {
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+    debounceRef.current = setTimeout(callback, delay);
+  };
+  
   const [lastApiParams, setLastApiParams] = useState(null);
   const [filterParams, setFilterParams] = useState(() => {
     const params = Object.fromEntries(searchParams.entries());
@@ -170,21 +181,25 @@ export default function TradeListContainer() {
     }
   }, [router, pathname, lastApiParams]);
 
-  // 컴포넌트 마운트 시 초기 데이터 로드
-  const hasInitializedRef = useRef(false);
+  // 초기 데이터 로딩 (debounce 적용)
   useEffect(() => {
-    // React.StrictMode 중복 실행 방지
-    if (hasInitializedRef.current) return;
-    hasInitializedRef.current = true;
-    fetchData(filterParams);
-  }, [filterParams]); // 빈 의존성 배열로 마운트 시에만 실행
+    debounce(() => {
+      fetchData(filterParams);
+    });
+    
+    return () => {
+      // debounce timeout 정리
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+    };
+  }, []);
 
   // 데이터 로딩
-  const fetchData = useCallback(async (customFilterParams = null) => {
+  const fetchData = async (customFilterParams = null) => {
     const targetParams = customFilterParams || filterParams;
     const apiParams = getActiveFilterParams(createApiParams(targetParams));
 
-    // 이전 API 호출과 동일한 파라미터인지 확인
     if (areParamsEqual(apiParams, lastApiParams)) {
       return;
     }
@@ -213,73 +228,77 @@ export default function TradeListContainer() {
     } catch (error) {
       console.error("데이터 로딩 에러:", error);
       alert(`${error.response?.data?.message || error.message}`);
-      handleReset();
+      setContentList([]);
+      setTotalPage(1);
+      setTotalCount(0);
     } finally {
       setIsLoading(false);
     }
-  }, [lastApiParams, isLogin]);
+  };
 
-  // fetchData ref 업데이트
-  fetchDataRef.current = fetchData;
-
-  // 페이지 변경 핸들러
+  // 페이지 변경 핸들러 
   const handlePageChange = useCallback((newPage) => {
-    const newFilterParams = {
-      ...filterParams,
-      page: Math.min(Math.max(0, newPage), totalPage)
-    };
-    
-    setFilterParams(newFilterParams);
-    fetchDataRef.current?.(newFilterParams); // 새로운 파라미터 직접 전달
+    debounce(() => {
+      const newFilterParams = {
+        ...filterParams,
+        page: Math.min(Math.max(0, newPage), totalPage)
+      };
+      
+      setFilterParams(newFilterParams);
+      fetchData(newFilterParams);
+    });
   }, [filterParams, totalPage]);
 
+  // 필터 적용 핸들러 (debounce 적용)
+  const handleSubmit = () => {
+    debounce(() => {
+      const newFilterParams = {
+        ...filterParams,
+        page: 0
+      };
+      
+      setFilterParams(newFilterParams);
+      fetchData(newFilterParams);
+    });
+  };
 
-  // 필터 적용 핸들러 (Submit 버튼)
-  const handleSubmit = useCallback(() => {
-    const newFilterParams = {
-      ...filterParams,
-      page: 0
-    };
-    
-    setFilterParams(newFilterParams);
-    fetchDataRef.current?.(newFilterParams); // 새로운 파라미터 직접 전달
-  }, [filterParams]);
+  // 리셋 핸들러 (debounce 적용)
+  const handleReset = () => {
+    debounce(() => {
+      const resetFilterParams = {
+        myCard: getMyCardDefault(),
+        wantCard: getWantCardDefault(),
+        status: 99,
+        page: 0,
+        sort: defaultSort,
+        isMy: false,
+      };
+      
+      setFilterParams(resetFilterParams);
+      fetchData(resetFilterParams);
+    });
+  };
 
-  // 리셋 핸들러
-  const handleReset = useCallback(() => {
-    const resetFilterParams = {
-      myCard: getMyCardDefault(),
-      wantCard: getWantCardDefault(),
-      status: 99,
-      page: 0,
-      sort: defaultSort,
-      isMy: false,
-    };
-    
-    setFilterParams(resetFilterParams);
-    fetchDataRef.current?.(resetFilterParams); // 새로운 파라미터 직접 전달
-  }, []);
-
-  const handleFilterOptionChange = useCallback((value) => {
+  const handleFilterOptionChange = (value) => {
     setFilterParams(prev => ({
       ...prev,
       status: defaultFilterOptionList.find(option => option.value === value)?.value || 99
     }));
-  }, []);
+  };
 
-  const handleMyCheckChange = useCallback((value) => {
+  const handleMyCheckChange = (value) => {
     setFilterParams(prev => ({
       ...prev,
       isMy: value && isLogin ? true : false
     }));
-  }, []);
+  };
 
-  const handleSortChange = useCallback((value) => {
+  const handleSortChange = (value) => {
     setFilterParams(prev => ({
       ...prev,
       sort: defaultSortList.find(sort => sort.value === value)?.value || defaultSort
     }));
-  }, []);
+  };
 
   // 카드 선택 핸들러들
   const onFilterCardButton = useCallback((cardData) => {
@@ -322,7 +341,6 @@ export default function TradeListContainer() {
         myCard: { ...prev.myCard, ...cardData }
       }));
     } else {
-      // want 카드의 경우 해당 인덱스를 찾아서 업데이트
       const wantIndex = filterParams.wantCard.findIndex(card => 
         card.filterCardType === currentFilterCardType
       );
