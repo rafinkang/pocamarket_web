@@ -12,27 +12,13 @@ import { useForm } from "react-hook-form";
 import CardList from "@/components/cardList/list/CardList";
 import CommonPagination from "@/components/pagination/Pagination";
 import CardElement from "./CardElement";
-import BasicFilterArea from "./filterArea/BasicFilterArea";
 import ButtonArea from "./filterArea/ButtonArea";
-import DefailFilterArea from "./filterArea/DefailFilterArea";
+import FilterArea from "./filterArea/FilterArea";
 import SearchArea from "./filterArea/SearchArea";
 import SortArea from "./filterArea/SortArea";
 
 
 const debounceTime = 500;
-
-const parsingData = (res, setPage, setTotalPage, setTotalCount) => {
-  
-  const data = res.data;
-  setPage(data?.number ?? 0);
-  setTotalPage(data?.totalPages ?? 1);
-  setTotalCount(data.totalElements ?? 0);
-  if (!data.content || !Array.isArray(data.content)) {
-    console.error("Invalid card list format:", data.content);
-    return [];
-  }
-  return data.content;
-};
 
 export default function CardListContainer() {
   // Next.js 라우팅 훅들
@@ -226,13 +212,7 @@ export default function CardListContainer() {
             },
           },
           {
-            Component: BasicFilterArea,
-            props: {
-              form,
-            },
-          },
-          {
-            Component: DefailFilterArea,
+            Component: FilterArea,
             props: {
               form,
               open: openDetail,

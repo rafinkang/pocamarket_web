@@ -4,8 +4,8 @@ import { Form } from "@/components/ui/form";
 
 export default function SearchList({
   form,
-  filterComponents: FilterComponents,
-  sortComponents: SortComponents,
+  filterComponents,
+  sortComponents,
   onSubmit,
 }) {
   return (
@@ -20,17 +20,20 @@ export default function SearchList({
               onSubmit={form.handleSubmit(onSubmit)}
               className={`flex flex-col gap-6`}
             >
+              {filterComponents && filterComponents.length > 0 && (
               <div className="flex flex-col gap-6 bg-[#f7f7f7] p-4 rounded">
-                {FilterComponents.map(({ Component, props }, index) => (
+                {filterComponents.map(({ Component, props }, index) => (
                   <Component key={index} {...props} />
                 ))}
               </div>
-              
+              )}
+              {sortComponents && sortComponents.length > 0 && (
               <div className="flex flex-col gap-6">
-                {SortComponents.map(({ Component, props }, index) => (
+                {sortComponents.map(({ Component, props }, index) => (
                   <Component key={index} {...props} />
                 ))}
               </div>
+              )}
             </form>
           </div>
         </Form>
