@@ -7,62 +7,68 @@ import ResetButton from "@/components/cardList/search/button/ResetButton";
 import SubmitButton from "../search/button/SubmitButton";
 
 export default function FilterArea({ form, open, onReset, isCardType, isCardPackSet, isRarity, isElement }) {
-  const selectOptions = [
-    ...(isCardType ? [
-      {
-        fieldName: "type",
-        labelValue: "카드 타입",
-        eachList: type,
-        Component: SelectBoxOption,
-        resetField: "subtype",
-      },
-      {
-        fieldName: "subtype",
-        labelValue: "세부 타입",
-        eachList: subtype,
-        Component: SelectBoxOption,
-        parentField: "type",
-      },
-    ] : []),
-    ...(isCardPackSet ? [
-      {
+  
+  const selectOptions = [];
+  const checkOptions = [];
+
+  if (isCardType) {
+    selectOptions.push({
+      fieldName: "type",
+      labelValue: "카드 타입",
+      eachList: type,
+      Component: SelectBoxOption,
+      resetField: "subtype",
+    });
+    selectOptions.push({
+      fieldName: "subtype",
+      labelValue: "세부 타입",
+      eachList: subtype,
+      Component: SelectBoxOption,
+      parentField: "type",
+    });
+  }
+
+  if (isCardPackSet) {
+    selectOptions.push({
         fieldName: "packSet",
         labelValue: "확장팩",
         eachList: packSet,
         Component: SelectBoxOption,
         resetField: "pack",
-      },
-      {
+      });
+    selectOptions.push({
         fieldName: "pack",
         labelValue: "팩",
         eachList: pack,
         Component: SelectBoxOption,
         parentField: "packSet",
-      },
-    ] : []),
-  ];
+      });
+  }
 
-  const checkOptions = [
-    ...(isRarity ? [{
+  if (isRarity) {
+    checkOptions.push({
       fieldName: "rarity",
       labelValue: "희귀도",
       eachList: rarity,
       Component: CheckBoxOption,
-    }] : []),
-    ...(isElement ? [{
+    });
+  }
+
+  if (isElement) {
+    checkOptions.push({
       fieldName: "element",
       labelValue: "속성",
       eachList: element,
       Component: CheckBoxOption,
-    }] : []),
-  ];
+    });
+  }
 
   return (
     open && (
       <>
         <div className="flex flex-col gap-6">
           <div className="flex flex-wrap gap-6">
-            {selectOptions.filter(Boolean).map((opt) => (
+            {selectOptions.map((opt) => (
               <opt.Component
                 key={opt.fieldName}
                 form={form}
@@ -72,7 +78,7 @@ export default function FilterArea({ form, open, onReset, isCardType, isCardPack
           </div>
 
           <div className="flex flex-col gap-4 w-full">
-            {checkOptions.filter(Boolean).map((opt) => (
+            {checkOptions.map((opt) => (
               <opt.Component
                 key={opt.fieldName}
                 form={form}
@@ -85,7 +91,7 @@ export default function FilterArea({ form, open, onReset, isCardType, isCardPack
             <ResetButton onReset={onReset} />
           </div>
         </div>
-    </>
+      </>
     )
   );
 }
