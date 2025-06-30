@@ -9,6 +9,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+import RarityIcon from "@/components/icon/RarityIcon";
+
+import { getPokemonTypeName, getPokemonPackSetName, getPokemonPackName } from "@/constants/pokemon";
+
 /**
  * 포켓몬 카드 컴포넌트
  * @param {Object} data - 카드 데이터
@@ -35,16 +39,24 @@ export default function PokemonCard({
           data={data}
           priority={priority}
           testMode={testMode}
-          className="w-full h-full object-contain"
+          className="w-full object-contain"
         />
       </CardHeader>
       {showInfo && (
         <CardContent className="w-full flex-1 flex flex-col justify-between mt-2">
           <CardTitle>{data?.nameKo ? data.nameKo : "포켓몬 이름"}</CardTitle>
-          <CardDescription>
-            <p>{data?.type ? data.type : "포켓몬 타입"}</p>
-            <p>{data?.packSet ? data.packSet : "확장팩 이름"}</p>
-            <p>{data?.rarity ? data.rarity : "희귀도"}</p>
+          <CardDescription className="flex flex-col">
+            {data?.packSet && (
+              <p className="truncate">
+                {getPokemonPackSetName(data.packSet)}
+                {data?.pack && ` - ${getPokemonPackName(data.pack)}`}
+              </p>
+            )}
+            {data?.rarity && (
+              <div className="pb-[1px]">
+                <RarityIcon rarity={data?.rarity} size={20} />
+              </div>
+            )}
           </CardDescription>
         </CardContent>
       )}

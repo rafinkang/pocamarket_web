@@ -17,12 +17,12 @@ export default function SearchBar({
             <Input
               {...field}
               placeholder={placeholder}
-              className="w-[100%] bg-white"
+              className="w-[100%] bg-white pr-[50px] h-[40px]"
             />
           </FormControl>
           {/* <FormMessage /> */}
         </FormItem>
       )}
-      />
+    />
   );
 }

@@ -10,15 +10,15 @@ export default function SearchList({
 }) {
   return (
     <>
-      <div className="w-full flex flex-col gap-6">
+      <div className="w-full flex flex-col">
         <Form {...form}>
-          <div className="w-full flex flex-col gap-4">
+          <div className="w-full flex flex-col">
             <form
               method="GET"
               autoComplete="off"
               noValidate
               onSubmit={form.handleSubmit(onSubmit)}
-              className={`flex flex-col gap-6`}
+              className={`flex flex-col gap-2`}
             >
               {filterComponents && filterComponents.length > 0 && (
               <div className="flex flex-col gap-6 bg-[#f7f7f7] p-4 rounded">
@@ -28,7 +28,7 @@ export default function SearchList({
               </div>
               )}
               {sortComponents && sortComponents.length > 0 && (
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col">
                 {sortComponents.map(({ Component, props }, index) => (
                   <Component key={index} {...props} />
                 ))}

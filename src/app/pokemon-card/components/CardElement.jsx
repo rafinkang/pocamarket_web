@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import PokemonCard from "@/components/list/PokemonCard";
+import PokemonCard from "@/components/cardList/list/card/PokemonCard";
 
 /**
  * 포켓몬 카드 요소 컴포넌트
@@ -20,7 +20,7 @@ export default function CardElement({
   return (
     <Link
       href={`/pokemon-card/${cardCode}`}
-      className="no-underline w-full block hover:scale-105 transition-transform"
+      className="no-underline w-full h-full block hover:scale-105 transition-transform"
     >
       <PokemonCard data={data} priority={priority} testMode={testMode} />
     </Link>

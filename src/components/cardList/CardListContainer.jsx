@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import { getPokemonCardList } from "@/api/pokemon-card";
@@ -11,27 +11,33 @@ import { useForm } from "react-hook-form";
 
 import CardList from "@/components/cardList/list/CardList";
 import CommonPagination from "@/components/pagination/Pagination";
-import CardElement from "./CardElement";
-import ButtonArea from "./filterArea/ButtonArea";
 import FilterArea from "./filterArea/FilterArea";
 import SearchArea from "./filterArea/SearchArea";
 import SortArea from "./filterArea/SortArea";
 
 
+const testMode = process.env.NODE_ENV === "development";
 const debounceTime = 500;
 
-export default function CardListContainer() {
+export default function CardListContainer({ 
+  updateURL = null, 
+  cardElement, 
+  pageSize = 10, 
+  isDetail = true,
+  isSort = true,
+  isCardType = true, 
+  isCardPackSet = true, 
+  isRarity = true, 
+  isElement = true,
+}) {
   // Next.js 라우팅 훅들
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const pathname = usePathname();
 
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(() => Math.max(0, Number(searchParams.get("page")) || 0));
   const [totalPage, setTotalPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const pageSize = 10;
 
   const [openDetail, setOpenDetail] = useState(false);
   
@@ -73,6 +79,7 @@ export default function CardListContainer() {
 
   // API 파라미터 생성
   const createApiParams = (params) => {
+    console.log(params);
     const apiParams = Object.entries(params)
       .filter(([key, value]) => 
         value !== null && value !== undefined && value !== "" && value !== excludedValue)
@@ -97,31 +104,6 @@ export default function CardListContainer() {
     return JSON.stringify(params1) === JSON.stringify(params2);
   };
 
-  // URL 업데이트 함수
-  const createURL = (params, options = {}) => {
-    const urlParams = new URLSearchParams();
-    
-    Object.entries(params).forEach(([key, value]) => {
-      if (key !== "size" && value !== null && value !== undefined && value !== "" && value !== excludedValue && 
-        value !== defaultFilter[key] && value !== 0) {
-        if (Array.isArray(value) && value.length > 0) {
-          urlParams.set(key, value.join(","));
-        } else if (!Array.isArray(value)) {
-          urlParams.set(key, String(value));
-        }
-      }
-    });
-
-    const queryString = urlParams.toString();
-    const newUrl = queryString ? `${pathname}?${queryString}` : pathname;
-    
-    if (options.replace) {
-      router.replace(newUrl, { scroll: false });
-    } else {
-      router.push(newUrl, { scroll: true });
-    }
-  };
-
   // 데이터 로딩
   const fetchData = async (customFilterParams = null) => {
     const targetParams = customFilterParams || filterParams;
@@ -139,12 +121,14 @@ export default function CardListContainer() {
       
       // 기본 파싱
       const data = res?.data || res;
-      setItems(data.content || data.items || []);
+      setItems(data.content || []);
       setTotalPage(data.totalPages || 1);
-      setTotalCount(data.totalElements || data.totalCount || 0);
+      setTotalCount(data.totalElements || 0);
 
       setLastApiParams(apiParams);
-      createURL(apiParams);
+      if(updateURL) {
+        updateURL(apiParams);
+      }
     } catch (error) {
       console.error("데이터 로딩 에러:", error);
       setItems([]);
@@ -209,31 +193,30 @@ export default function CardListContainer() {
             props: {
               form,
               setOpenDetail: setOpenDetail,
+              isDetail,
             },
           },
-          {
+          ...(isDetail ? [{
             Component: FilterArea,
             props: {
               form,
               open: openDetail,
-            },
-          },
-          {
-            Component: ButtonArea,
-            props: {
-              form,
               onReset: handleReset,
+              isCardType,
+              isCardPackSet,
+              isRarity,
+              isElement,
             },
-          },
+          }] : []),
         ]}
         sortComponents={[
-          {
+          ...(isSort ? [{
             Component: SortArea,
             props: {
               form,
               totalCount,
             },
-          },
+          }] : []),
         ]}
         onSubmit={handleSubmit}
       />
@@ -243,7 +226,7 @@ export default function CardListContainer() {
         <div className="text-gray-500">로딩 중...</div>
       </div>
     ) : (
-      <CardList items={items} ItemComponent={CardElement} />
+      <CardList items={items} ItemComponent={cardElement} testMode={testMode} />
     )}
 
       <CommonPagination

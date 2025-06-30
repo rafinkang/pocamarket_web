@@ -4,8 +4,7 @@ import FlippableCard from "@/components/card/FlippableCard";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
+  HoverCardTrigger
 } from "@/components/ui/hover-card";
 import { memo } from "react";
 import { RiAddLine } from "react-icons/ri";
@@ -15,9 +14,6 @@ const FilterCard = memo(function FilterCard({
   onCardClick,
   onCancelClick,
 }) {
-  const title =
-    data.filterCardType === "my" ? "교환 카드" : "받는 카드";
-
   return (
     <>
       {data.code ? (
@@ -48,9 +44,6 @@ const FilterCard = memo(function FilterCard({
               </CardContent>
             </Card>
           </HoverCardTrigger>
-          <HoverCardContent className="w-[130px] sm:w-[130px] md:w-[110px] lg:w-[180px] xl:w-[200px] min-w-[100px] max-w-[200px]">
-            <p>{title}</p>
-          </HoverCardContent>
         </HoverCard>
       )}
     </>

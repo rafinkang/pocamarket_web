@@ -164,7 +164,7 @@ export default function TradeListContainer() {
     const params = new URLSearchParams();
     
     Object.entries(apiParams).forEach(([key, value]) => {
-      if (value !== null && value !== undefined && value !== "" && value !== 99) {
+      if (key !== "size" && value !== null && value !== undefined && value !== "" && value !== 99 && value !== defaultSort) {
         if (key === 'isMy' || value !== false) {
           params.set(key, String(value));
         }
