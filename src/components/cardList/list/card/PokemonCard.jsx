@@ -1,26 +1,18 @@
 "use client";
 
-import PokemonCardImage from "./Image/PokemonCardImage";
 import {
   Card,
-  CardHeader,
   CardContent,
   CardDescription,
+  CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import PokemonCardImage from "./Image/PokemonCardImage";
 
 import RarityIcon from "@/components/icon/RarityIcon";
 
-import { getPokemonTypeName, getPokemonPackSetName, getPokemonPackName } from "@/constants/pokemon";
+import { getPokemonPackName, getPokemonPackSetName } from "@/constants/pokemon";
 
-/**
- * 포켓몬 카드 컴포넌트
- * @param {Object} data - 카드 데이터
- * @param {boolean} priority - 이미지 우선 로딩 여부
- * @param {boolean} testMode - 테스트 모드(카드 이미지 대신 뒷면 이미지 표시) 여부
- * @param {boolean} showInfo - 카드 정보 표시 여부
- * @returns {JSX.Element} 포켓몬 카드 컴포넌트
- */
 export default function PokemonCard({
   data,
   priority = false,
@@ -43,7 +35,7 @@ export default function PokemonCard({
         />
       </CardHeader>
       {showInfo && (
-        <CardContent className="w-full flex-1 flex flex-col justify-between mt-2">
+        <CardContent className="w-full flex-1 flex flex-col justify-between mt-2 text-center">
           <CardTitle>{data?.nameKo ? data.nameKo : "포켓몬 이름"}</CardTitle>
           <CardDescription className="flex flex-col">
             {data?.packSet && (
@@ -52,11 +44,13 @@ export default function PokemonCard({
                 {data?.pack && ` - ${getPokemonPackName(data.pack)}`}
               </p>
             )}
-            {data?.rarity && (
-              <div className="pb-[1px]">
+            <div className="h-[22px]">
+              {data?.rarity ? (
                 <RarityIcon rarity={data?.rarity} size={20} />
-              </div>
-            )}
+              ) : (
+                <span className="text-gray-400">-</span>
+              )}
+            </div>
           </CardDescription>
         </CardContent>
       )}

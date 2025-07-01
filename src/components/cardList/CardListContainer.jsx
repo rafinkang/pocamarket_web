@@ -14,21 +14,25 @@ import CommonPagination from "@/components/pagination/Pagination";
 import FilterArea from "./filterArea/FilterArea";
 import SearchArea from "./filterArea/SearchArea";
 import SortArea from "./filterArea/SortArea";
+import { LoadingSpinner } from "../ui/loading-spinner";
 
 
 const testMode = process.env.NODE_ENV === "development";
 const debounceTime = 500;
 
 export default function CardListContainer({ 
-  updateURL = null, 
-  cardElement, 
+  updateURL = null,
+  initFilterParams = null,
+  setInitFilterParams = null,
   pageSize = 10, 
+  mobilePageSize = 5,
   isDetail = true,
   isSort = true,
   isCardType = true, 
   isCardPackSet = true, 
   isRarity = true, 
   isElement = true,
+  cardElement, 
 }) {
   // Next.js 라우팅 훅들
   const searchParams = useSearchParams();
@@ -42,6 +46,9 @@ export default function CardListContainer({
   const [openDetail, setOpenDetail] = useState(false);
   
   const [filterParams, setFilterParams] = useState(() => {
+    if(initFilterParams) {
+      return initFilterParams;
+    }
     const params = Object.fromEntries(searchParams.entries());
 
     const element = params.element?.split(",").filter(code => code?.trim());
@@ -79,7 +86,6 @@ export default function CardListContainer({
 
   // API 파라미터 생성
   const createApiParams = (params) => {
-    console.log(params);
     const apiParams = Object.entries(params)
       .filter(([key, value]) => 
         value !== null && value !== undefined && value !== "" && value !== excludedValue)
@@ -128,6 +134,9 @@ export default function CardListContainer({
       setLastApiParams(apiParams);
       if(updateURL) {
         updateURL(apiParams);
+      }
+      if(setInitFilterParams) {
+        setInitFilterParams({...defaultFilter, ...apiParams});
       }
     } catch (error) {
       console.error("데이터 로딩 에러:", error);
@@ -223,7 +232,7 @@ export default function CardListContainer({
 
     {isLoading ? (
       <div className="flex justify-center items-center py-8">
-        <div className="text-gray-500">로딩 중...</div>
+        <LoadingSpinner color="#3b82f6" size="lg" />
       </div>
     ) : (
       <CardList items={items} ItemComponent={cardElement} testMode={testMode} />
@@ -232,6 +241,8 @@ export default function CardListContainer({
       <CommonPagination
         page={page}
         totalPage={totalPage}
+        itemSize={pageSize}
+        mobileItemSize={mobilePageSize}
         onPageChange={handlePageChange}
       />
     </section>
