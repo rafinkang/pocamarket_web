@@ -29,13 +29,9 @@ export default async function callApi({ method, url, params, data, headers }) {
     // 1. 실행 환경 확인 
     const isBrowser = typeof window !== 'undefined';
     const ERROR_CODE = error.response ? error.response.status : null;
-    const ERROR_MESSAGE = error.response ? error.response.data.message : null;
 
     // 2. 환경에 따른 에러 처리 분기 
     if (isBrowser) {
-      // --- 클라이언트(브라우저) 환경일 때만 실행 ---
-      if (ERROR_MESSAGE) alert(ERROR_MESSAGE);
-
       switch (ERROR_CODE) {
         case UN_AUTHORIZED:
           alert('로그인 후 사용 가능합니다.');
