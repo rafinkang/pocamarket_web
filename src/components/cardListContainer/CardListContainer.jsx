@@ -110,6 +110,15 @@ export default function CardListContainer({
     return JSON.stringify(params1) === JSON.stringify(params2);
   };
 
+  const returnInitFilterParams = (params) => {
+    const newFilterParams = {...defaultFilter, ...params};
+    delete newFilterParams.page;
+    delete newFilterParams.size;
+    newFilterParams.element = typeof newFilterParams.element === "string" ? newFilterParams.element.split(",") : [];
+    newFilterParams.rarity = typeof newFilterParams.rarity === "string" ? newFilterParams.rarity.split(",") : [];
+    setInitFilterParams(newFilterParams);
+  }
+
   // 데이터 로딩
   const fetchData = async (customFilterParams = null) => {
     const targetParams = customFilterParams || filterParams;
@@ -136,7 +145,7 @@ export default function CardListContainer({
         updateURL(apiParams);
       }
       if(setInitFilterParams) {
-        setInitFilterParams({...defaultFilter, ...apiParams});
+        returnInitFilterParams(apiParams);
       }
     } catch (error) {
       console.error("데이터 로딩 에러:", error);

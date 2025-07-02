@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import CardListContainer from "@/components/cardListContainer/CardListContainer";
 import ListPickerCardElement from "@/components/card/ListPickerCardElement";
 
-export default function ListPickerDialog({ open, onOpenChange, placeholder, onSelect }) {
+export default function ListPickerDialog({ open, onOpenChange, onSelect, initFilterParams, setInitFilterParams }) {
   // 다이얼로그가 닫힐 때 브라우저 히스토리 정리
   useEffect(() => {
     if (!open) {
@@ -27,6 +27,8 @@ export default function ListPickerDialog({ open, onOpenChange, placeholder, onSe
         </DialogHeader>
 
         <CardListContainer
+          initFilterParams={initFilterParams ?? null}
+          setInitFilterParams={setInitFilterParams ?? null}
           cardElement={(itemProps) => (
             <ListPickerCardElement 
               {...itemProps} 

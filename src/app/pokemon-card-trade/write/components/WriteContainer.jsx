@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { MYPAGE, POKEMON_CARD_TRADE } from "@/constants/path";
+import { defaultFilter } from "@/constants/pokemonCardFilter";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -33,6 +34,8 @@ export default function WriteContainer({ tradeId }) {
   const [searchType, setSearchType] = useState(""); // 'my' 또는 'want' 구분용
   const [tcgCodeList, setTcgCodeList] = useState([]);
   const [tcgCode, setTcgCode] = useState("");
+
+  const [tradeCardListFilter, setTradeCardListFilter] = useState({ ...defaultFilter });
 
   const onMyCardClick = () => {
     setIsCardSearch(true);
@@ -136,11 +139,13 @@ export default function WriteContainer({ tradeId }) {
     <>
       {isCardSearch && (
         <ListPickerDialog
-          key={`dialog-${searchType}-${Date.now()}`}
+          // key={`dialog-${searchType}-${Date.now()}`}
           open={isCardSearch}
           onOpenChange={setIsCardSearch}
           placeholder={placeholder}
           onSelect={handleCardSelect}
+          initFilterParams={tradeCardListFilter}
+          setInitFilterParams={setTradeCardListFilter}
         />
       )}
       <div id="WriteContainer" className="w-[100%] flex flex-col gap-6">
@@ -173,7 +178,7 @@ export default function WriteContainer({ tradeId }) {
                   {wantCard.map((card, index) => (
                     <FlippableCard
                       handleClick={() => onWantCardDeleteClick(index)}
-                      key={card.code}
+                      key={card.code + index}
                       cardKey={card.code}
                       data={card}
                       btnName="선택 취소"

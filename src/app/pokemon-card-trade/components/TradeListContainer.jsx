@@ -373,6 +373,8 @@ export default function TradeListContainer() {
             setIsCardSearch(open);
             if (!open) setCurrentFilterCardType(null);
           }}
+          initFilterParams={tradeCardListFilter}
+          setInitFilterParams={setTradeCardListFilter}
           placeholder={"포켓몬 이름 검색"}
           onSelect={onCardClick}
         />

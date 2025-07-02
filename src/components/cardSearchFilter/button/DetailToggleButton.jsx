@@ -11,7 +11,7 @@ export default function DetailToggleButton({
   const [myText, setMyText] = useState(closeText);
 
   return (
-    <div className="buttonBox flex gap-2">
+    <div className="flex gap-2">
       <Button
         type="button"
         className="px-3 py-1 bg-gray-300 text-black"
