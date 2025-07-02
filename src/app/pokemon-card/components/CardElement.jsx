@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import PokemonCard from "@/components/cardList/list/card/PokemonCard";
+import PokemonCard from "@/components/card/PokemonCard";
 
 export default function CardElement({
   data,

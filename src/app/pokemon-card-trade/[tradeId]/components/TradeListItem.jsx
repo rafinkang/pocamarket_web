@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
 
-import PokemonCard from "@/components/list/PokemonCard";
+import PokemonCard from "@/components/card/PokemonCard";
 import { getTradeRequestStatusName } from "@/constants/tradeRequestStatus";
 
 export default function TradeItem ({id, card, isActiveCard, disabled, handleClick}) {

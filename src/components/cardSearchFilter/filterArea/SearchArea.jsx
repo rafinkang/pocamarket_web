@@ -1,8 +1,8 @@
 "use client";
 
-import DetailToggleButton from "@/components/cardList/search/button/DetailToggleButton";
-import SearchBar from "@/components/cardList/search/option/SearchBar";
-import SearchSubmitButton from "../search/button/SearchSubmitButton";
+import SearchBar from "@/components/cardSearchFilter/option/SearchBar";
+import DetailToggleButton from "@/components/cardSearchFilter/button/DetailToggleButton";
+import SearchSubmitButton from "@/components/cardSearchFilter/button/SearchSubmitButton";
 
 export default function SearchArea({
   form,

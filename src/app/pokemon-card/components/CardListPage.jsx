@@ -1,6 +1,6 @@
 "use client";
 
-import CardListContainer from "@/components/cardList/CardListContainer";
+import CardListContainer from "@/components/cardListContainer/CardListContainer";
 import { defaultFilter, excludedValue } from "@/constants/pokemonCardFilter";
 import { usePathname, useRouter } from "next/navigation";
 import CardElement from "./CardElement";

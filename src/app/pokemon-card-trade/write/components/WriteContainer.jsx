@@ -3,7 +3,7 @@
 import { getTcgCodeList } from "@/api/tcgCode";
 import { getTcgTradeDetail, postTcgTrade, putTcgTrade } from "@/api/tcgTrade";
 import FlippableCard from "@/components/card/FlippableCard";
-import ListPickerDialog from "@/components/list/ListPickerDialog";
+import ListPickerDialog from "@/components/cardListContainer/ListPickerDialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {

@@ -10,7 +10,7 @@ import {
   pack,
 } from "@/constants/pokemonCardFilter";
 
-import CardListContainer from "@/components/list/CardListContainer";
+import CardListContainer from "@/components/cardListContainer/CardListContainer";
 import CardSearch from "@/components/search/CardSearch";
 import CardList from "@/components/list/CardList";
 import CardElement from "./CardElement";

@@ -12,6 +12,8 @@ import {
   getWantCardDefault
 } from "@/constants/tradeFilter";
 
+import { defaultFilter } from "@/constants/pokemonCardFilter";
+
 // 거래 검색 필터
 import SearchContainer from "./Search/SearchContainer";
 
@@ -27,13 +29,13 @@ import TradeStatusFilter from "./Search/TradeStatusFilter";
 import Buttons from "./Search/Buttons";
 
 // - 카드 필터의 카드 검색
-import ListPickerDialog from "@/components/list/ListPickerDialog";
+import ListPickerDialog from "@/components/cardListContainer/ListPickerDialog";
 
 // 거래 목록
 import TradeList from "./TradeList";
 
 // 페이지네이션
-import CommonPagination from "../../../components/pagination/Pagination";
+import CommonPagination from "@/components/pagination/Pagination";
 
 // API
 import { getMyTcgTradeList, getTcgTradeList } from "@/api/tcgTrade";
@@ -66,6 +68,8 @@ export default function TradeListContainer() {
   const [totalPage, setTotalPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const pageSize = 3;
+
+  const [tradeCardListFilter, setTradeCardListFilter] = useState({ ...defaultFilter });
   
   // debounce를 위한 단일 ref
   const debounceRef = useRef(null);

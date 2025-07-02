@@ -1,7 +1,7 @@
 "use client";
 
-import SelectSortOption from "@/components/cardList/search/option/SelectSortOption";
-import TotalCount from "@/components/cardList/search/text/TotalCount";
+import SelectSortOption from "@/components/cardSearchFilter/option/SelectSortOption";
+import TotalCount from "@/components/cardSearchFilter/text/TotalCount";
 import { defaultSort } from "@/constants/pokemonCardFilter";
 
 export default function SortArea({ form, totalCount }) {

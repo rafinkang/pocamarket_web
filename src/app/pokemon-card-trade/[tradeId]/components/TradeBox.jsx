@@ -6,10 +6,10 @@ import { RiArrowLeftRightFill } from 'react-icons/ri';
 
 import FlippableCard from "@/components/card/FlippableCard";
 import AlertDialog from "@/components/dialog/AlertDialog";
-import PokemonCard from "@/components/list/PokemonCard";
+import PokemonCard from "@/components/card/PokemonCard";
 import useAuthStore from "@/store/authStore";
 
-import PokemonCardImage from "@/components/list/PokemonCardImage";
+import PokemonCardImage from "@/components/cardImage/PokemonCardImage";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MYPAGE } from "@/constants/path";

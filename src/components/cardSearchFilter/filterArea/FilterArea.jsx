@@ -1,10 +1,10 @@
 "use client";
 
-import CheckBoxOption from "@/components/cardList/search/option/CheckBoxOption";
-import SelectBoxOption from "@/components/cardList/search/option/SelectBoxOption";
+import CheckBoxOption from "@/components/cardSearchFilter/option/CheckBoxOption";
+import SelectBoxOption from "@/components/cardSearchFilter/option/SelectBoxOption";
 import { element, rarity, type, subtype, packSet, pack } from "@/constants/pokemonCardFilter";
-import ResetButton from "@/components/cardList/search/button/ResetButton";
-import SubmitButton from "../search/button/SubmitButton";
+import ResetButton from "@/components/cardSearchFilter/button/ResetButton";
+import SubmitButton from "@/components/cardSearchFilter/button/SubmitButton";
 
 export default function FilterArea({ form, open, onReset, isCardType, isCardPackSet, isRarity, isElement }) {
   

@@ -4,17 +4,17 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import { getPokemonCardList } from "@/api/pokemon-card";
-import SearchList from "@/components/cardList/search/SearchList";
 import { defaultFilter, defaultSort, excludedValue, formSchema } from "@/constants/pokemonCardFilter";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import CardList from "@/components/cardList/list/CardList";
+import SearchList from "@/components/cardSearchFilter/SearchList";
+import FilterArea from "@/components/cardSearchFilter/filterArea/FilterArea";
+import SearchArea from "@/components/cardSearchFilter/filterArea/SearchArea";
+import SortArea from "@/components/cardSearchFilter/filterArea/SortArea";
+import CardList from "@/components/cardList/CardList";
 import CommonPagination from "@/components/pagination/Pagination";
-import FilterArea from "./filterArea/FilterArea";
-import SearchArea from "./filterArea/SearchArea";
-import SortArea from "./filterArea/SortArea";
-import { LoadingSpinner } from "../ui/loading-spinner";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 
 const testMode = process.env.NODE_ENV === "development";

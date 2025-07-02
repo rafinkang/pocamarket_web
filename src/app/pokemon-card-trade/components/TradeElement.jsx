@@ -1,7 +1,7 @@
 "use client";
 
 import { patchTcgTradeRefresh } from "@/api/tcgTrade";
-import PokemonCardImage from "@/components/list/PokemonCardImage";
+import PokemonCardImage from "@/components/cardImage/PokemonCardImage";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { POKEMON_CARD_TRADE } from "@/constants/path";

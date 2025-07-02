@@ -3,8 +3,8 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialogFull";
 import { useEffect } from "react";
 
-import CardListContainer from "@/components/cardList/CardListContainer";
-import ListPickerCardElement from "./ListPickerCardElement";
+import CardListContainer from "@/components/cardListContainer/CardListContainer";
+import ListPickerCardElement from "@/components/card/ListPickerCardElement";
 
 export default function ListPickerDialog({ open, onOpenChange, placeholder, onSelect }) {
   // 다이얼로그가 닫힐 때 브라우저 히스토리 정리
