@@ -64,7 +64,7 @@ async function refreshTokenAndCookies() {
 
 // 모든 http 메소드 처리
 async function handler(request, { params }) {
-  console.log('route http 메소드 처리 시작')
+  console.log('route http 메소드 처리 시작');
   // 클라이언트가 요청한 경로 조합 (ex: /api/proxy/tcg-trade/1 -> /api/tcg-trade/1)
   const tempParams = await params;
   const slug = await tempParams.slug.join("/");

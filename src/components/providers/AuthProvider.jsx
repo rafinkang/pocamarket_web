@@ -13,7 +13,7 @@ export default function AuthProvider({ children }) {
     // 앱 로드 시, 서버에 내 인증 상태를 물어보는 함수
     const checkAuthStatus = async () => {
       try {
-        const res = await fetch('/api/auth/me'); // next.js 서버의 refreshToken 존재 여부를 확인하는 API
+        const res = await fetch('/next-api/auth/me'); // next.js 서버의 refreshToken 존재 여부를 확인하는 API
         const data = await res.json();
 
         if (!data.isLogin) {

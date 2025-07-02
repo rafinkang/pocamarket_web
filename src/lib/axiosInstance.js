@@ -7,11 +7,11 @@ const getBaseURL = () => {
     // 서버사이드에서는 완전한 URL 필요
     // const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
     const url = process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_SERVER_URL : 'http://localhost:3000';
-    // return `${protocol}://${host}/api/proxy`;
-    return `${url}/api/proxy`;
+    // return `${protocol}://${host}/next-api/proxy`;
+    return `${url}/next-api/proxy`;
   }
   // 클라이언트사이드에서는 상대 경로 사용
-  return '/api/proxy';
+  return '/next-api/proxy';
 };
 
 const baseURL = getBaseURL();
