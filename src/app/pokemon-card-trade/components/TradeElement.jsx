@@ -21,14 +21,6 @@ const statusClassMap = {
   [COMPLETE]: styles['badge-complete'],
 };
 
-/*
-  myCard = {
-    cardCode: "a1-001",
-    cardName: "테스트 마이 카드",
-    cardPackSet: "최강의 유전자",
-  }
-*/
-
 export default function TradeElement({
   tradeCode = "0",
   tradeUserNickname = "",
@@ -60,69 +52,75 @@ export default function TradeElement({
       className="w-full"
     >
       <div className="flex flex-col items-center gap-4 p-4 border rounded-lg w-full mx-auto">
-        <div>
+
+        {/* 헤드 영역, 교환 상태, 누가, 시간 */}
+        <div className="flex items-center justify-between gap-2 w-full">
+          <p>
+            <span className={cn(statusClassMap[status], "px-2 py-1 rounded-full text-[11px] whitespace-nowrap")}>
+              {getTradeStatusName(status)}
+            </span>
+          </p>
           <p className="text-black-800 truncate font-bold">
                 {tradeUserNickname}님의 교환 신청
           </p>
+          <p>{getTimeDifference(updatedAt)}</p>
         </div>
-        <div className="w-full grid grid-cols-1 grid-rows-[1fr_auto_auto_auto] justify-center items-start gap-4 lg:grid-cols-[2fr_auto_6fr_1fr] lg:grid-rows-1 lg:justify-start lg:items-center">
-          {/* 내 카드 섹션 */}
-            <div className="flex items-center justify-center lg:justify-end">
-              <div className="bg-[#f8f9fa] shadow-lg">
-                <Card className="flex flex-col items-center rounded-[12px] p-4 w-[200px] gap-2">
-                  <div className="relative w-[120px] aspect-[366/512]">
-                    <PokemonCardImage data={{code: myCard?.cardCode}} testMode={testMode} />
-                  </div>
-                  <div className="flex flex-col min-w-0 justify-center items-center">
-                    <h3 className="text-lg font-semibold truncate">
-                      {myCard?.cardName ?? "카드 없음"}
-                    </h3>
-                    <p>{getPackSetNameByText(myCard?.cardPackSet ?? "카드 없음")}</p>
-                  </div>
-                </Card>
-              </div>
+
+
+        <div className="flex flex-col items-center justify-center flex-wrap gap-4 w-full md:flex-row ">
+          {/* 카드 영역 */}
+          <div className="flex-1 flex items-stretch justify-start gap-4">
+            {/* 내 카드 섹션 */}
+            <div className="flex items-center">
+              <Card className="flex flex-col items-center rounded-[12px] p-2 gap-2 w-[80px] sm:w-[100px] md:w-[120px] lg:w-[180px] xl:w-[200px]">
+                <div className="relative w-full aspect-[366/512]">
+                  <PokemonCardImage data={{code: myCard?.cardCode}} testMode={testMode} />
+                </div>
+                <div className="flex flex-col justify-center items-center w-full">
+                  <h3 className="text-sm lg:text-lg font-semibold truncate w-full text-center">
+                    {myCard?.cardName ?? "카드 없음"}
+                  </h3>
+                  <p className="text-xs lg:text-sm text-center truncate w-full">{getPackSetNameByText(myCard?.cardPackSet ?? "카드 없음")}</p>
+                </div>
+              </Card>
             </div>
 
-          {/* 교환 화살표 */}
-          <div className="flex items-center px-2">
-            <span className="text-2xl mx-auto lg:mx-0 lg:rotate-0 rotate-90 transition-transform duration-300">↔</span>
+            {/* 교환 구분선 */}
+            <div className="flex items-center justify-center self-stretch w-[2px] md:w-[40px]">
+              <div className="w-[2px] h-[60%] bg-gray-400 lg:hidden"></div>
+              <div className="text-2xl hidden lg:block">↔</div>
+            </div>
+
+            {/* 원하는 카드들 */}
+            <div className="flex gap-4 flex-wrap md:flex-nowrap">
+              {wantedCards.map((card, index) => (
+                <div key={index} className="flex-shrink-0">
+                  <Card className="flex flex-col items-center rounded-[12px] p-2 gap-2 w-[80px] sm:w-[100px] md:w-[120px] lg:w-[180px] xl:w-[200px]">
+                    <div className="relative w-full aspect-[366/512]">
+                      <PokemonCardImage data={{code: card.cardCode}} testMode={testMode} />
+                    </div>
+                    <div className="flex flex-col justify-center items-center w-full">
+                      <h3 className="text-sm lg:text-lg font-semibold truncate w-full text-center">
+                        {card.cardName}
+                      </h3>
+                      <p className="text-xs lg:text-sm text-center truncate w-full">{getPackSetNameByText(card.cardPackSet)}</p>
+                    </div>
+                  </Card>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* 원하는 카드들 */}
-          <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
-            {wantedCards.map((card, index) => (
-              <div key={index} className="bg-[#f8f9fa] shadow-lg">
-                <Card className="flex flex-col items-center rounded-[12px] p-4 min-w-[200px] gap-2">
-                  <div className="relative w-[120px] aspect-[366/512]">
-                    <PokemonCardImage data={{code: card.cardCode}} testMode={testMode} />
-                  </div>
-                  <div className="flex flex-col min-w-0 justify-center items-center">
-                    <h3 className="text-lg font-semibold truncate">
-                      {card.cardName}
-                    </h3>
-                    <p>{getPackSetNameByText(card.cardPackSet)}</p>
-                  </div>
-                </Card>
-              </div>
-            ))}
-          </div>
-
-          {/* 교환 정보 */}
-          <div className="flex flex-col items-center pl-2 self-center w-full min-w-[100px] gap-4">
-            <p>{getTimeDifference(updatedAt)}</p>
-            <p>
-              <span className={cn(statusClassMap[status], "px-2 py-1 rounded-full text-[11px] whitespace-nowrap")}>
-                {getTradeStatusName(status)}
-              </span>
-            </p>
+          {/* 버튼 영역 */}
+          <div className="flex flex-col items-center justify-center w-[100px] md:w-[150px]">
             {isMyList && (DELETED < status && status < PROCESS) && (
               <Button variant="outline" onClick={handleRefresh}>
                 끌어올리기
               </Button>
             )}
-            {/* <p>{requestCount}</p> */}
           </div>
         </div>
+
       </div>
     </Link>
   );
