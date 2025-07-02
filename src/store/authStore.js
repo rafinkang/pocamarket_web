@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware"
-import { logout } from "@/api/login";
+import { postLogout } from "@/api/login";
 
 const useAuthStore = create(
   // 상태를 영속적으로 저장하기 위한 미들웨어 (첫번째 인자: 상태값과 액션을 정의하는 함수, persist 옵션)
@@ -26,7 +26,7 @@ const useAuthStore = create(
       // 로그아웃 후
       logout: async () => {
         try {
-          await logout()
+          await postLogout()
           set({
             isLogin: false,
             user: null

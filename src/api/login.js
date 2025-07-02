@@ -15,9 +15,9 @@ export const postLogin = async (data) => {
 /**
  * 로그아웃
  */
-export const logout = async () => {
+export const postLogout = async () => {
   return callApi({
-    method: 'get',
+    method: 'post',
     url: '/logout',
   });
 };

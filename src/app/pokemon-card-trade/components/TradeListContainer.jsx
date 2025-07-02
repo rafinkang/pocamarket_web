@@ -83,6 +83,7 @@ export default function TradeListContainer() {
   };
   
   const [lastApiParams, setLastApiParams] = useState(null);
+  const lastApiParamsRef = useRef(null);
   const [filterParams, setFilterParams] = useState(() => {
     const params = Object.fromEntries(searchParams.entries());
 
@@ -164,7 +165,7 @@ export default function TradeListContainer() {
   };
 
   // URL 업데이트 함수
-  const updateURL = useCallback((apiParams, options = {}) => {
+  const updateURL = (apiParams, options = {}) => {
     const params = new URLSearchParams();
     
     Object.entries(apiParams).forEach(([key, value]) => {
@@ -183,7 +184,7 @@ export default function TradeListContainer() {
     } else {
       router.push(newUrl, { scroll: true });
     }
-  }, [router, pathname, lastApiParams]);
+  };
 
   // 초기 데이터 로딩 (debounce 적용)
   useEffect(() => {
@@ -204,7 +205,7 @@ export default function TradeListContainer() {
     const targetParams = customFilterParams || filterParams;
     const apiParams = getActiveFilterParams(createApiParams(targetParams));
 
-    if (areParamsEqual(apiParams, lastApiParams)) {
+    if (areParamsEqual(apiParams, lastApiParamsRef.current)) {
       return;
     }
     
@@ -225,6 +226,7 @@ export default function TradeListContainer() {
         setTotalCount(data.totalElements ?? 0);
         setContentList(data.content ?? []);
         setLastApiParams(apiParams); // 성공한 API 파라미터 저장
+        lastApiParamsRef.current = apiParams;
         updateURL(apiParams);
       } else {
         throw new Error("데이터를 불러올 수 없습니다.");
@@ -247,7 +249,7 @@ export default function TradeListContainer() {
         ...filterParams,
         page: Math.min(Math.max(0, newPage), totalPage)
       };
-      
+
       setFilterParams(newFilterParams);
       fetchData(newFilterParams);
     });
