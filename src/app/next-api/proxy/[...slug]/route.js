@@ -13,7 +13,8 @@ let refreshPromise = null;
 // api 요청 함수
 async function apiRequest(slug, search, request, token) {
   // 최종 요청 URL에 쿼리 스트링(search)을 포함.
-  const url = API_CONFIG.getApiUrl(`/api/${slug}${search}`);
+  const IS_DEV = process.env.NODE_ENV === "development";
+  const url = API_CONFIG.getApiUrl(`${IS_DEV ? "" : "/api"}/${slug}${search}`);
   console.log(`Forwarding request to: ${url}`); // 디버깅을 위한 로그
 
   const headers = new Headers(request.headers); // 기존 헤더
