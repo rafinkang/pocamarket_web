@@ -19,13 +19,22 @@ async function apiRequest(slug, search, request, token) {
   const headers = new Headers(request.headers); // 기존 헤더
   if (token) headers.set("Authorization", `Bearer ${token}`);
   headers.delete("host"); // next.js가 자동으로 추가하는 host 헤더 삭제
+  headers.delete("content-type");
 
-  return await fetch(url, {
+  const options = {
     method: request.method,
     headers: headers,
-    body: request.body,
-    duplex: "half",
-  });
+  };
+
+  if (request.method !== 'GET' && request.method !== 'HEAD' && request.body) {
+    const bodyText = await request.text();
+    if (bodyText) {
+      options.body = bodyText;
+      headers.set('Content-Type', 'application/json');
+    }
+  }
+
+  return await fetch(url, options);
 }
 
 // 토큰을 재발급하는 로직을 별도 함수로 분리
