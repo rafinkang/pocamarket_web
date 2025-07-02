@@ -2,7 +2,7 @@
 
 import TradeElement from "./TradeElement";
 
-export default function TradeList({ tradeList }) {
+export default function TradeList({ tradeList, testMode }) {
   return (
     <>
       <section className="flex flex-col items-center w-full min-w-[360px]">
@@ -19,7 +19,7 @@ export default function TradeList({ tradeList }) {
                     updatedAt={trade.updated_at}
                     status={trade.status}
                     isMyList={trade.isMyList}
-                    testMode={true}
+                    testMode={testMode}
                     // requestCount={trade.requestCount}
                   />
                 </li>

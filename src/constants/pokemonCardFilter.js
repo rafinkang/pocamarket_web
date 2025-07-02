@@ -38,28 +38,35 @@ export const pack = Object.freeze([
 
 export const element = ([
     // Object.freeze({ name: "전체", value: excludedValue }),
-    Object.freeze({ name: "풀", value: "GRASS", image: "grass" }),
-    Object.freeze({ name: "불", value: "FIRE", image: "fire" }),
-    Object.freeze({ name: "물", value: "WATER", image: "water" }),
-    Object.freeze({ name: "전기", value: "LIGHTNING", image: "lightning" }),
-    Object.freeze({ name: "초", value: "PSYCHIC", image: "psychic" }),
-    Object.freeze({ name: "격투", value: "FIGHTING", image: "fighting" }),
-    Object.freeze({ name: "악", value: "DARKNESS", image: "darkness" }),
-    Object.freeze({ name: "강철", value: "METAL", image: "metal" }),
-    Object.freeze({ name: "드래곤", value: "DRAGON", image: "dragon" }),
-    Object.freeze({ name: "노말", value: "COLORLESS", image: "colorless" }),
+    Object.freeze({ name: "풀", value: "GRASS" }),
+    Object.freeze({ name: "불", value: "FIRE" }),
+    Object.freeze({ name: "물", value: "WATER" }),
+    Object.freeze({ name: "전기", value: "LIGHTNING" }),
+    Object.freeze({ name: "초", value: "PSYCHIC" }),
+    Object.freeze({ name: "격투", value: "FIGHTING" }),
+    Object.freeze({ name: "악", value: "DARKNESS" }),
+    Object.freeze({ name: "강철", value: "METAL" }),
+    Object.freeze({ name: "드래곤", value: "DRAGON" }),
+    Object.freeze({ name: "노말", value: "COLORLESS" }),
 ]);
 
 export const rarity = Object.freeze([
     // { name: "전체", value: null },
-    Object.freeze({ name: "◇", value: "COMMON", image: "dia", count: 1 }),
-    Object.freeze({ name: "◇◇", value: "UNCOMMON", image: "dia", count: 2 }),
-    Object.freeze({ name: "◇◇◇", value: "RARE", image: "dia", count: 3 }),
-    Object.freeze({ name: "◇◇◇◇", value: "RARE EX", image: "dia", count: 4 }),
-    Object.freeze({ name: "☆", value: "FULL ART", image: "star", count: 1 }),
-    Object.freeze({ name: "☆☆", value: "FULL ART EX/SUPPORT", image: "star", count: 2 }),
-    Object.freeze({ name: "☆☆☆", value: "IMMERSIVE", image: "star", count: 3 }),
-    Object.freeze({ name: "♕", value: "GOLD CROWN", image: "crown", count: 1 }),
+    Object.freeze({ name: "◇", value: "COMMON" }),
+    Object.freeze({ name: "◇◇", value: "UNCOMMON" }),
+    Object.freeze({ name: "◇◇◇", value: "RARE" }),
+    Object.freeze({ name: "◇◇◇◇", value: "RARE EX" }),
+    Object.freeze({ name: "☆", value: "FULL ART" }),
+    Object.freeze({ name: "☆☆", value: "FULL ART EX/SUPPORT" }),
+    Object.freeze({ name: "☆☆☆", value: "IMMERSIVE" }),
+    Object.freeze({ name: "♕", value: "GOLD CROWN" }),
+]);
+
+export const defaultSort = Object.freeze([
+    Object.freeze({ name: "코드순", value: "code,asc" }),
+    Object.freeze({ name: "코드역순", value: "code,desc" }),
+    Object.freeze({ name: "이름순", value: "nameKo,asc" }),
+    Object.freeze({ name: "이름역순", value: "nameKo,desc" }),
 ]);
 
 export const defaultFilter = Object.freeze({
@@ -68,16 +75,10 @@ export const defaultFilter = Object.freeze({
     subtype: excludedValue,
     packSet: excludedValue,
     pack: excludedValue,
-    element: Object.freeze([]),
-    rarity: Object.freeze([]),
+    element: [],
+    rarity: [],
+    sort: "code,asc",
 });
-
-export const defaultSort = Object.freeze([
-    Object.freeze({ name: "코드순", value: "code" }),
-    Object.freeze({ name: "코드역순", value: "code,desc" }),
-    Object.freeze({ name: "이름순", value: "nameKo" }),
-    Object.freeze({ name: "이름역순", value: "nameKo,desc" }),
-]);
 
 export const formSchema = z.object({
     nameKo: z.string().nullable()
@@ -113,5 +114,8 @@ export const formSchema = z.object({
     rarity: z.array(z.string()).refine(arr =>
         arr.every((v) => rarity.some((item) => item.value === v || v === null)), {
         message: "유효하지 않은 레어도가 포함되어 있습니다."
+    }),
+    sort: z.string().nullable().refine(v => defaultSort.some((item) => item.value === v || v === null), {
+        message: "유효하지 않은 정렬 기준입니다."
     })
 });

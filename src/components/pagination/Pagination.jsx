@@ -10,15 +10,7 @@ import {
 } from "@/components/ui/pagination";
 import { useState, useEffect } from "react";
 
-/**
- * @param {Int} page 현재 페이지
- * @param {Int} totalPage 최대 페이지
- * @param {Int} itemSize 출력 아이템 사이즈
- * @param {Int} mobileItemSize 모바일에서 출력 사이즈
- * @param {Int} switchWindowWidth 모바일 출력으로 전환될 가로 사이즈
- * @param {useStateSetFunc} setPageInfo useState page set 메서드
- * @returns
- */
+
 export default function CommonPagination({
   page = 0,
   totalPage = 1,

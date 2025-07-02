@@ -13,7 +13,7 @@ let refreshPromise = null;
 // api 요청 함수
 async function apiRequest(slug, search, request, token) {
   // 최종 요청 URL에 쿼리 스트링(search)을 포함.
-  const url = API_CONFIG.getApiUrl(`/api/${slug}${search}`);
+  const url = API_CONFIG.getApiUrl(`/${slug}${search}`);
   console.log(`Forwarding request to: ${url}`); // 디버깅을 위한 로그
 
   const headers = new Headers(request.headers); // 기존 헤더
@@ -37,7 +37,7 @@ async function refreshTokenAndCookies() {
   if (!refreshToken) throw new Error("No refresh token available for reissue.");
 
   // Spring Boot에 토큰 재발급 요청
-  const refreshRes = await fetch(API_CONFIG.getApiUrl('/api/reissue'), {
+  const refreshRes = await fetch(API_CONFIG.getApiUrl('/reissue'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ refreshToken }),
@@ -64,7 +64,7 @@ async function refreshTokenAndCookies() {
 
 // 모든 http 메소드 처리
 async function handler(request, { params }) {
-  console.log('route http 메소드 처리 시작')
+  console.log('route http 메소드 처리 시작');
   // 클라이언트가 요청한 경로 조합 (ex: /api/proxy/tcg-trade/1 -> /api/tcg-trade/1)
   const tempParams = await params;
   const slug = await tempParams.slug.join("/");

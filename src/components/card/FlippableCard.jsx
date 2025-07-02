@@ -1,6 +1,6 @@
 "use client"
 
-import PokemonCard from "@/components/list/PokemonCard";
+import PokemonCard from "@/components/card/PokemonCard";
 import { useAnimationControls, motion } from "framer-motion";
 
 export default function FlippableCard ({ data, cardKey, rotateY = 360, duration = 0.7, hideBtn, btnName = "확인", btnColor = "#2B7FFF", btnTextColor = "#fff", width = "20vw", maxWidth = "200px", handleClick = () => {} }) {

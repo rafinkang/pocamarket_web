@@ -31,7 +31,7 @@ function TradeListLoading() {
             </div>
           </div>
         </div>
-        
+
         {/* 거래 목록 영역 */}
         <div className="space-y-4">
           {[1, 2, 3].map((item) => (

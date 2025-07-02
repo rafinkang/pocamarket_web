@@ -1,6 +1,6 @@
 "use client"
 
-import PokemonCard from "@/components/list/PokemonCard";
+import PokemonCard from "@/components/card/PokemonCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AnimatePresence, motion } from "motion/react";

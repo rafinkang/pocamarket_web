@@ -1,6 +1,6 @@
 "use client";
 
-import PokemonCard from "@/components/list/PokemonCard";
+import PokemonCard from "@/components/card/PokemonCard";
 import RarityIcon from "@/components/icon/RarityIcon";
 import ElementIcon from "@/components/icon/ElementIcon";
 

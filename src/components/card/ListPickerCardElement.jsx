@@ -1,6 +1,6 @@
 "use client";
 
-import PokemonCard from "@/components/list/PokemonCard";
+import PokemonCard from "@/components/card/PokemonCard";
 
 export default function CardElement({
   data,

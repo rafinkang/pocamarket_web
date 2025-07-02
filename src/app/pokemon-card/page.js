@@ -1,5 +1,6 @@
 import CardListPage from "./components/CardListPage"
 import { siteConfig } from "@/config/siteConfig";
+import { Suspense } from 'react'
 
 export const metadata = {
   title: '포켓몬 카드 목록',
@@ -9,10 +10,10 @@ export const metadata = {
 
 export default function PokemonCardPage() {
   return (
-    <>
+    <Suspense fallback={<div>Loading...</div>}>
       <div id="pokemonCardList" className="w-[100%] flex flex-col gap-6">
         <CardListPage />
       </div>
-    </>
+    </Suspense>
   );
 }
