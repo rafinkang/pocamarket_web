@@ -4,12 +4,13 @@ import SelectSortOption from "@/components/cardSearchFilter/option/SelectSortOpt
 import TotalCount from "@/components/cardSearchFilter/text/TotalCount";
 import { defaultSort } from "@/constants/pokemonCardFilter";
 
-export default function SortArea({ form, totalCount }) {
+export default function SortArea({ form, totalCount, onChange }) {
   const selectOptions = [
     {
       fieldName: "sort",
       labelValue: "카드 정렬",
       eachList: defaultSort,
+      onChange,
       Component: SelectSortOption,
     }
   ];

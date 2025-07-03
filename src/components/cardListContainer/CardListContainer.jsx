@@ -47,7 +47,7 @@ export default function CardListContainer({
   
   const [filterParams, setFilterParams] = useState(() => {
     if(initFilterParams) {
-      return initFilterParams;
+      return { ...initFilterParams };
     }
     const params = Object.fromEntries(searchParams.entries());
 
@@ -147,6 +147,13 @@ export default function CardListContainer({
       if(setInitFilterParams) {
         returnInitFilterParams(apiParams);
       }
+
+      setPage(apiParams.page || 0);
+      const tempFilter = {...defaultFilter, ...apiParams};
+      delete tempFilter.page;
+      delete tempFilter.size;
+      setFilterParams(tempFilter);
+
     } catch (error) {
       console.error("데이터 로딩 에러:", error);
       setItems([]);
@@ -185,9 +192,7 @@ export default function CardListContainer({
         ...filterParams,
         page: Math.min(Math.max(0, newPage), totalPage)
       };
-      
-      setFilterParams(newParams);
-      setPage(newPage);
+      setPage(newParams.page);
       fetchData(newParams);
     });
   };
@@ -195,9 +200,21 @@ export default function CardListContainer({
   // 리셋 핸들러
   const handleReset = () => {
     debounce(() => {
-      form.reset(defaultFilter);
-      setFilterParams(defaultFilter);
-      fetchData(defaultFilter);
+      form.reset({...defaultFilter});
+      setFilterParams({...defaultFilter});
+      fetchData({...defaultFilter});
+    });
+  };
+
+  // 정렬 핸들러
+  const handleSortChange = (value) => {
+    debounce(() => {
+      const newParams = {
+        ...filterParams,
+        sort: value
+      };
+      setFilterParams(newParams);
+      fetchData(newParams);
     });
   };
 
@@ -233,6 +250,7 @@ export default function CardListContainer({
             props: {
               form,
               totalCount,
+              onChange: handleSortChange,
             },
           }] : []),
         ]}

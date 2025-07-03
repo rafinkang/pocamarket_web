@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export default function SelectSortOption({ form, fieldName, labelValue, eachList }) {
+export default function SelectSortOption({ form, fieldName, labelValue, eachList, onChange }) {
   return (
     <FormField
       control={form.control}
@@ -21,6 +21,7 @@ export default function SelectSortOption({ form, fieldName, labelValue, eachList
           value={field.value}
           onValueChange={(value) => {
             field.onChange(value);
+            onChange?.(value);
           }}
         >
           <SelectTrigger className="w-[125px] bg-white">
