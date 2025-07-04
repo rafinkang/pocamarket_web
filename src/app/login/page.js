@@ -33,8 +33,9 @@ export default function LoginPage() {
                 <Suspense fallback={<LoginLoading />}>
                     <Login test="test!!!" />
                 </Suspense>
-                <GoogleLogin />
-
+                <div className="flex justify-center mt-4">
+                    <GoogleLogin />
+                </div>
             </div>
         </div>
     );

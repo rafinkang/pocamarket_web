@@ -1,14 +1,22 @@
 "use client"
 
-import {GoogleLogin} from "@react-oauth/google";
-import {GoogleOAuthProvider} from "@react-oauth/google";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import { useRouter, useSearchParams } from 'next/navigation';
+import { toast } from "sonner";
+
+// store
+import { postSocialLogin } from "@/api/auth";
+import useAuthStore from '@/store/authStore';
 
 const GoogleLoginButton = () => {
   const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
-  const handleLoginSuccess = async (response) => {
-    console.log(response);
+  // login 액션 가져오기
+  const loginAction = useAuthStore((state) => state.login);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
+  const handleLoginSuccess = async (response) => {
     if (!response?.credential) {
       console.error("Google 인증 토큰을 받지 못했습니다.");
       return;
@@ -16,28 +24,21 @@ const GoogleLoginButton = () => {
     // Google의 ID 토큰 추출
     const idToken = response.credential;
 
-
-// auth/social/login/google
     try {
       // 백엔드 서버로 ID 토큰 전송
-      const res = await fetch('http://localhost:8080/auth/social/login/google', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          code: idToken,
-          provider: 'google',
-          redirectUri: 'http://localhost:3000'
-        })
+      await postSocialLogin('google', {
+        code: idToken,
+        provider: 'google',
+        redirectUri: '/auth/social/login/google'
+      }).then(res => {
+        console.log(res);
+        loginAction(res.data);
+        toast.success('로그인 성공! 환영합니다! 🎉');
+        setTimeout(() => {
+          const redirectTo = searchParams.get('redirect') || '/';
+          router.push(redirectTo);
+        }, 1500);
       });
-
-      if (!res.ok) {
-        throw new Error('Failed to authenticate');
-      }
-
-
-      window.location.href = '/';
     } catch (error) {
       console.error('Error during login:', error);
     }
@@ -48,12 +49,12 @@ const GoogleLoginButton = () => {
   };
 
   return (
-      <GoogleOAuthProvider clientId={clientId}>
-        <GoogleLogin
-            onSuccess={handleLoginSuccess}
-            onFailure={handleLoginFailure}
-        />
-      </GoogleOAuthProvider>
+    <GoogleOAuthProvider clientId={clientId}>
+      <GoogleLogin
+        onSuccess={handleLoginSuccess}
+        onFailure={handleLoginFailure}
+      />
+    </GoogleOAuthProvider>
   );
 };
 
