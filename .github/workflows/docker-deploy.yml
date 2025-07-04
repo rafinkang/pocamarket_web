@@ -72,8 +72,8 @@ jobs:
             # Docker Compose로 'pocamarket-web' 서비스만 재시작
             docker-compose up -d --no-deps pocamarket-web
             
-            # 사용하지 않는 이전 Docker 이미지 정리 (EC2 서버 용량 확보)
-            docker image prune -af
+            # 모든 도커 이미지, 컨테이너, 네트워크, 빌드캐시 정리
+            docker system prune -af
 
       # 6. Docker Hub 오래된 이미지 정리 (Docker Hub API 사용)
       - name: Clean up old Docker Hub images
