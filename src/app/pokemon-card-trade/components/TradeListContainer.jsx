@@ -70,6 +70,7 @@ export default function TradeListContainer() {
   const pageSize = 3;
 
   const [tradeCardListFilter, setTradeCardListFilter] = useState({ ...defaultFilter });
+  const [tradeCardListPage, setTradeCardListPage] = useState(1);
   
   // debounce를 위한 단일 ref
   const debounceRef = useRef(null);
@@ -100,7 +101,7 @@ export default function TradeListContainer() {
       myCard: params.myCardCode ? { ...getMyCardDefault(), code: params.myCardCode } : getMyCardDefault(),
       wantCard,
       status: Number(params.status) || 99,
-      page: Math.max(0, Number(params.page) || 0),
+      page: Math.max(1, Number(params.page) || 1),
       sort: params.sort || defaultSort,
       isMy: params.isMy === 'true' ? true : false,
     };
@@ -114,7 +115,7 @@ export default function TradeListContainer() {
       myCardCode: filterParams.myCard?.code || null,
       wantCardCode: wantCardCode.length > 0 ? wantCardCode : null,
       status: filterParams.status == 99 ? null : filterParams.status,
-      page: Math.min(Math.max(0, Number(filterParams.page) || 0)),
+      page: Math.min(Math.max(1, Number(filterParams.page) || 1)),
       size: pageSize,
       sort: filterParams.sort,
       isMy: filterParams.isMy,
@@ -169,7 +170,13 @@ export default function TradeListContainer() {
     const params = new URLSearchParams();
     
     Object.entries(apiParams).forEach(([key, value]) => {
-      if (key !== "size" && value !== null && value !== undefined && value !== "" && value !== 99 && value !== defaultSort) {
+      if (key !== "size" && 
+          (key === "page" && value !== 1) &&
+          value !== null && 
+          value !== undefined && 
+          value !== "" && 
+          value !== 99 && 
+          value !== defaultSort) {
         if (key === 'isMy' || value !== false) {
           params.set(key, String(value));
         }
@@ -247,7 +254,7 @@ export default function TradeListContainer() {
     debounce(() => {
       const newFilterParams = {
         ...filterParams,
-        page: Math.min(Math.max(0, newPage), totalPage)
+        page: Math.min(Math.max(1, newPage), totalPage)
       };
 
       setFilterParams(newFilterParams);
@@ -260,7 +267,7 @@ export default function TradeListContainer() {
     debounce(() => {
       const newFilterParams = {
         ...filterParams,
-        page: 0
+        page: 1
       };
       
       setFilterParams(newFilterParams);
@@ -275,7 +282,7 @@ export default function TradeListContainer() {
         myCard: getMyCardDefault(),
         wantCard: getWantCardDefault(),
         status: 99,
-        page: 0,
+        page: 1,
         sort: defaultSort,
         isMy: false,
       };
@@ -377,6 +384,8 @@ export default function TradeListContainer() {
           }}
           initFilterParams={tradeCardListFilter}
           setInitFilterParams={setTradeCardListFilter}
+          initPage={tradeCardListPage}
+          setInitPage={setTradeCardListPage}
           placeholder={"포켓몬 이름 검색"}
           onSelect={onCardClick}
         />

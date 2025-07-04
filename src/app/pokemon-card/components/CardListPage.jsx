@@ -14,8 +14,14 @@ export default function CardListPage() {
     const urlParams = new URLSearchParams();
     
     Object.entries(params).forEach(([key, value]) => {
-      if (key !== "size" && value !== null && value !== undefined && value !== "" && value !== excludedValue && 
-        value !== defaultFilter[key] && value !== 0) {
+      if (key !== "size" && 
+        (key === "page" && value !== 1) &&
+        value !== null && 
+        value !== undefined && 
+        value !== "" && 
+        value !== excludedValue && 
+        value !== defaultFilter[key]
+      ) {
         if (Array.isArray(value) && value.length > 0) {
           urlParams.set(key, value.join(","));
         } else if (!Array.isArray(value)) {

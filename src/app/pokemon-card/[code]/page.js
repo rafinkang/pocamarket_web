@@ -30,7 +30,7 @@ export async function generateMetadata({ params }) {
   try {
     const { code } = await params;
     console.log("generateMetadata 실행 - code:", code);
-    
+
     const res = await getCachedPokemonCardDetail(code);
     console.log("generateMetadata - 데이터 받음:", !!res?.data);
 
@@ -93,7 +93,7 @@ export default async function PokemonCardDetailPage({ params }) {
   try {
     const { code } = await params;
     console.log("PokemonCardDetailPage 실행 - code:", code);
-    
+
     const res = await getCachedPokemonCardDetail(code);
     console.log("상세 정보 data ::: ", res.data)
     console.log("PokemonCardDetailPage - 데이터 받음:", !!res?.data, "(캐시에서 가져옴)");
@@ -101,7 +101,7 @@ export default async function PokemonCardDetailPage({ params }) {
     const tradeRes = await getCachedTcgTrade({
       myCardCode: code,
       status: 99,
-      page: 0,
+      page: 1,
       size: 3,
       sort: "sortedAt,desc"
     });

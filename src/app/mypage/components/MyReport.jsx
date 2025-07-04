@@ -29,7 +29,7 @@ import moment from "moment";
 
 export default function MyReport({ className }) {
   const PAGE_SIZE = 15;
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [reportList, setReportList] = useState([]);
 

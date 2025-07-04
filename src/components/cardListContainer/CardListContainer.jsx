@@ -24,6 +24,8 @@ export default function CardListContainer({
   updateURL = null,
   initFilterParams = null,
   setInitFilterParams = null,
+  initPage = 1,
+  setInitPage = null,
   pageSize = 10, 
   mobilePageSize = 5,
   isDetail = true,
@@ -38,7 +40,12 @@ export default function CardListContainer({
   const searchParams = useSearchParams();
 
   const [items, setItems] = useState([]);
-  const [page, setPage] = useState(() => Math.max(0, Number(searchParams.get("page")) || 0));
+  const [page, setPage] = useState(() => { 
+    if(initPage) {
+      return initPage;
+    }
+    return Math.max(1, Number(searchParams.get("page")) || 1)
+  });
   const [totalPage, setTotalPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -88,7 +95,12 @@ export default function CardListContainer({
   const createApiParams = (params) => {
     const apiParams = Object.entries(params)
       .filter(([key, value]) => 
-        value !== null && value !== undefined && value !== "" && value !== excludedValue)
+        value !== null && 
+        value !== undefined && 
+        value !== "" && 
+        value !== excludedValue &&
+        value !== defaultSort
+      )
       .reduce((acc, [key, value]) => {
         if (Array.isArray(value) && value.length > 0) {
           acc[key] = value.join(",");
@@ -98,7 +110,7 @@ export default function CardListContainer({
         return acc;
       }, {});
 
-    apiParams.page = Math.min(Math.max(0, Number(apiParams.page) || 0));
+    apiParams.page = Math.min(Math.max(1, Number(apiParams.page) || 1));
     apiParams.size = pageSize;
 
     return apiParams;
@@ -147,8 +159,11 @@ export default function CardListContainer({
       if(setInitFilterParams) {
         returnInitFilterParams(apiParams);
       }
+      if(setInitPage) {
+        setInitPage(apiParams.page || 1);
+      }
 
-      setPage(apiParams.page || 0);
+      setPage(apiParams.page || 1);
       const tempFilter = {...defaultFilter, ...apiParams};
       delete tempFilter.page;
       delete tempFilter.size;
@@ -190,7 +205,7 @@ export default function CardListContainer({
     debounce(() => {
       const newParams = {
         ...filterParams,
-        page: Math.min(Math.max(0, newPage), totalPage)
+        page: Math.min(Math.max(1, newPage), totalPage)
       };
       setPage(newParams.page);
       fetchData(newParams);
