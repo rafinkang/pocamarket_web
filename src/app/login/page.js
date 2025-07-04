@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import Login from './components/Login';
+import GoogleLogin from './components/GoogleLoginButton';
 
 /**
  * 로딩 컴포넌트
@@ -32,6 +33,8 @@ export default function LoginPage() {
                 <Suspense fallback={<LoginLoading />}>
                     <Login test="test!!!" />
                 </Suspense>
+                <GoogleLogin />
+
             </div>
         </div>
     );
