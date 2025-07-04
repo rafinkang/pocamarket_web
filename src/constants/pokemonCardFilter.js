@@ -67,6 +67,8 @@ export const defaultSort = Object.freeze([
     Object.freeze({ name: "코드역순", value: "code,desc" }),
     Object.freeze({ name: "이름순", value: "nameKo,asc" }),
     Object.freeze({ name: "이름역순", value: "nameKo,desc" }),
+    Object.freeze({ name: "레어도순", value: "rarityNum,asc" }),
+    Object.freeze({ name: "레어도역순", value: "rarityNum,desc" }),
 ]);
 
 export const defaultFilter = Object.freeze({
