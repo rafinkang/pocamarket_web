@@ -15,7 +15,7 @@ export default function CardListPage() {
     
     Object.entries(params).forEach(([key, value]) => {
       if (key !== "size" && 
-        (key === "page" && value !== 1) &&
+        (key !== "page" || value !== 1) &&
         value !== null && 
         value !== undefined && 
         value !== "" && 

@@ -193,10 +193,31 @@ export default function TradeListContainer() {
     }
   };
 
-  // 초기 데이터 로딩 (debounce 적용)
   useEffect(() => {
+    const params = Object.fromEntries(searchParams.entries());
+
+    const wantCard = getWantCardDefault();
+    const wantCardCode = params.wantCardCode?.split(",").filter(code => code?.trim());
+
+    wantCardCode?.forEach((code, index) => {
+      if(index < wantCard.length) {
+        wantCard[index].code = code;
+      }
+    });
+
+    const newFilterParams = {
+      myCard: params.myCardCode ? { ...getMyCardDefault(), code: params.myCardCode } : getMyCardDefault(),
+      wantCard,
+      status: Number(params.status) || 99,
+      page: Math.max(1, Number(params.page) || 1),
+      sort: params.sort || defaultSort,
+      isMy: params.isMy === 'true' ? true : false,
+    };
+
+    setFilterParams(newFilterParams);
+    
     debounce(() => {
-      fetchData(filterParams);
+      fetchData(newFilterParams);
     });
     
     return () => {
@@ -205,7 +226,7 @@ export default function TradeListContainer() {
         clearTimeout(debounceRef.current);
       }
     };
-  }, []);
+  }, [searchParams.toString(), isLogin]);
 
   // 데이터 로딩
   const fetchData = async (customFilterParams = null) => {

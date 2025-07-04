@@ -99,7 +99,7 @@ export default function CardListContainer({
         value !== undefined && 
         value !== "" && 
         value !== excludedValue &&
-        value !== defaultSort
+        value !== defaultSort[0].value
       )
       .reduce((acc, [key, value]) => {
         if (Array.isArray(value) && value.length > 0) {
@@ -179,11 +179,38 @@ export default function CardListContainer({
     }
   };
 
-  // 초기 데이터 로딩
   useEffect(() => {
-    debounce(() => {
-      fetchData({...filterParams, page});
-    });
+    if (!initFilterParams) { // URL 파라미터 기반 동작
+      const params = Object.fromEntries(searchParams.entries());
+      
+      const element = params.element?.split(",").filter(code => code?.trim());
+      const rarity = params.rarity?.split(",").filter(code => code?.trim());
+      const sort = defaultSort.find(item => item.value === params.sort)?.value || defaultSort[0].value;
+      const newPage = Math.max(1, Number(params.page) || 1);
+
+      const newFilterParams = {
+        nameKo: params.nameKo || "",
+        type: params.type || excludedValue,
+        subtype: params.subtype || excludedValue,
+        packSet: params.packSet || excludedValue,
+        pack: params.pack || excludedValue,
+        element: element || [],
+        rarity: rarity || [],
+        sort: sort,
+      };
+
+      setPage(newPage);
+      setFilterParams(newFilterParams);
+      form.reset(newFilterParams);
+      
+      debounce(() => {
+        fetchData({...newFilterParams, page: newPage});
+      });
+    } else {
+      debounce(() => {
+        fetchData({...filterParams, page});
+      });
+    }
     
     return () => {
       // debounce timeout 정리
@@ -191,7 +218,7 @@ export default function CardListContainer({
         clearTimeout(debounceRef.current);
       }
     };
-  }, []);
+  }, [searchParams.toString()]);
 
   // 폼 제출 핸들러
   const handleSubmit = (data) => {
