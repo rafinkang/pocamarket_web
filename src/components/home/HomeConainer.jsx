@@ -4,7 +4,7 @@ import Image from "next/image";
 import ImageCarousel from "@/components/carousel/ImageCarousel.jsx";
 import { PokemonThreeDMarquee } from "@/components/ui/pokemon-3d-marquee.jsx";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
-import { Search, TrendingUp, Users, Package, Star } from "lucide-react";
+import { Search, TrendingUp, Users, Package, Star, ArrowUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 /**
@@ -167,6 +167,11 @@ export default function HomeContainer() {
       });
     }
   }, [sections]);
+
+  // 맨위로 가기 함수
+  const scrollToTop = useCallback(() => {
+    scrollToSection(0);
+  }, [scrollToSection]);
 
   // Intersection Observer 설정
   useEffect(() => {
@@ -521,6 +526,18 @@ export default function HomeContainer() {
           <ScrollHint isLastSection={true} />
         </section>
       </div>
+
+      {/* 맨위로 가기 버튼 */}
+      <button
+        onClick={scrollToTop}
+        className={`fixed bottom-6 right-6 z-50 w-12 h-12 md:w-14 md:h-14 bg-gray-700 hover:bg-gray-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 border border-gray-500 group ${
+          currentSection > 0 
+            ? 'opacity-100 translate-y-0 pointer-events-auto' 
+            : 'opacity-0 translate-y-4 pointer-events-none'
+        }`}
+      >
+        <ArrowUp className="w-5 h-5 md:w-6 md:h-6 mx-auto group-hover:animate-bounce" />
+      </button>
     </div>
   )
 }
