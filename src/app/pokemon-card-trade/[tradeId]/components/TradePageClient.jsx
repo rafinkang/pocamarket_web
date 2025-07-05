@@ -204,16 +204,20 @@ export default function TradePageClient() {
         msg={alertMsg}
         contentClassName={"z-[151]"}
       />
-      <TradeHeader data={data} />
-      <div className="flex flex-col gap-2 mt-2">
-        <TradeBox checkLogin={checkLogin} data={data} isMy={isMy} tcgCodeList={tcgCodeList} onTradeRequest={handleTradeRequest} />
-        <ButtonGroup tradeId={tradeId} data={data} isMy={isMy} isLogin={isLogin}/>
-        <TradeList isMy={isMy} isLogin={isLogin} requestList={Array.isArray(requestList) ? requestList : requestList.content}
-          onRequestAccept={handleRequestAccept}
-          onRequestCancel={handleRequestCancel}
-          onOpenTcgCode={handleOpenTcgCode}
-        />
-      </div>
+      {data && 
+        <>
+          <TradeHeader data={data} />
+          <div className="flex flex-col gap-2 mt-2">
+            <TradeBox checkLogin={checkLogin} data={data} isMy={isMy} tcgCodeList={tcgCodeList} onTradeRequest={handleTradeRequest} />
+            <ButtonGroup tradeId={tradeId} data={data} isMy={isMy} isLogin={isLogin}/>
+            <TradeList isMy={isMy} isLogin={isLogin} requestList={Array.isArray(requestList) ? requestList : requestList.content}
+              onRequestAccept={handleRequestAccept}
+              onRequestCancel={handleRequestCancel}
+              onOpenTcgCode={handleOpenTcgCode}
+            />
+          </div>
+        </>
+      }
     </>
   );
 }
