@@ -15,10 +15,11 @@ async function apiRequest(slug, search, request, token) {
   // 최종 요청 URL에 쿼리 스트링(search)을 포함.
   const url = API_CONFIG.getApiUrl(`/${slug}${search}`);
   console.log(`Forwarding request to: ${url}`); // 디버깅을 위한 로그
-
+  console.log("process.env.NODE_ENV >>>>>>>>>>>>>>>>>>>>>> ", process.env.NODE_ENV)
   const headers = new Headers(request.headers); // 기존 헤더
   if (token) headers.set("Authorization", `Bearer ${token}`);
   headers.delete("host"); // next.js가 자동으로 추가하는 host 헤더 삭제
+  headers.delete("connection"); // connection 헤더 삭제 (fetch가 자동 처리)
   headers.delete("content-type");
 
   const options = {

@@ -7,11 +7,10 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 const nextConfig = {
   reactStrictMode: true,
-  output: 'standalone', // docker에서 읽을 빌드 결과물을 Standalone로 output
-  // sassOptions: {
-  //   includePaths: [path.join(process.cwd(), 'src', 'styles')], // @import 시 기본 경로로 추가
-  //   prependData: `@import "variables.scss";`, // 모든 SCSS 파일에 자동으로 특정 파일 import (예: 변수 파일)
-  // },
+  
+  // 프로덕션에서만 standalone 설정 (개발환경에서는 HMR 방해)
+  ...(isProduction && { output: 'standalone' }),
+  
   compiler: {
     removeConsole: isProduction ? { except: ['error'] } : false,
   },
@@ -26,6 +25,18 @@ const nextConfig = {
     ],
   },
   transpilePackages: ['framer-motion'],
+  
+  // Docker 환경에서 HMR 최적화
+  webpack: (config, { dev }) => {
+    if (dev) {
+      config.watchOptions = {
+        poll: 1000,
+        aggregateTimeout: 300,
+        ignored: /node_modules/,
+      };
+    }
+    return config;
+  },
 };
 
 export default nextConfig;

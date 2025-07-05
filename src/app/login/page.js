@@ -32,10 +32,10 @@ export default function LoginPage() {
             <div className="w-full max-w-sm">
                 <Suspense fallback={<LoginLoading />}>
                     <Login test="test!!!" />
+                    <div className="flex justify-center mt-4">
+                        <GoogleLogin />
+                    </div>
                 </Suspense>
-                <div className="flex justify-center mt-4">
-                    <GoogleLogin />
-                </div>
             </div>
         </div>
     );
