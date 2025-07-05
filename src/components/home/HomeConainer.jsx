@@ -3,8 +3,9 @@
 import Image from "next/image";
 import ImageCarousel from "@/components/carousel/ImageCarousel.jsx";
 import { PokemonThreeDMarquee } from "@/components/ui/pokemon-3d-marquee.jsx";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { Search, TrendingUp, Users, Package, Star } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 /**
  * EXcards 폴더의 모든 이미지 파일명을 동적으로 생성하는 함수
@@ -70,7 +71,7 @@ const generateEXCardImages = () => {
     `a2-206`,
     `a2-207`,
   ];;
-  
+
   return imageFiles.map(fileName => `${fileName}`);
 };
 
@@ -92,12 +93,12 @@ const shuffleArray = (array) => {
  * 포켓몬 카드 카테고리 데이터 (닌텐도 스타일)
  */
 const cardCategories = [
-  { name: "EX 카드", description: "강력한 EX 포켓몬", icon: "⚡", color: "bg-gradient-to-br from-yellow-300 via-yellow-400 to-yellow-500", shadow: "shadow-yellow-200" },
+  { name: "GOLD 카드", description: "희귀한 빤짝이!", icon: "⚡", color: "bg-gradient-to-br from-yellow-300 via-yellow-400 to-yellow-500", shadow: "shadow-yellow-200", link: "/pokemon-card?rarity=GOLD+CROWN" },
+  { name: "EX 카드", description: "강력한 EX 포켓몬", icon: "🔥", color: "bg-gradient-to-br from-red-300 via-red-400 to-red-500", shadow: "shadow-red-200", link: "/pokemon-card?rarity=RARE+EX" },
+  { name: "트레이너 카드", description: "서포트 & 아이템", icon: "🎯", color: "bg-gradient-to-br from-blue-300 via-blue-400 to-blue-500", shadow: "shadow-blue-200", link: "/pokemon-card?type=TRAINER" },
   // { name: "GX 카드", description: "특수 GX 기술", icon: "🌟", color: "bg-gradient-to-br from-purple-300 via-purple-400 to-purple-500", shadow: "shadow-purple-200" },
   // { name: "V 카드", description: "포켓몬 V 시리즈", icon: "💎", color: "bg-gradient-to-br from-cyan-300 via-cyan-400 to-cyan-500", shadow: "shadow-cyan-200" },
-  { name: "VMAX 카드", description: "거대화 VMAX", icon: "🔥", color: "bg-gradient-to-br from-red-300 via-red-400 to-red-500", shadow: "shadow-red-200" },
   // { name: "일반 카드", description: "기본 포켓몬 카드", icon: "🍃", color: "bg-gradient-to-br from-green-300 via-green-400 to-green-500", shadow: "shadow-green-200" },
-  { name: "트레이너 카드", description: "서포트 & 아이템", icon: "🎯", color: "bg-gradient-to-br from-blue-300 via-blue-400 to-blue-500", shadow: "shadow-blue-200" },
 ];
 
 /**
@@ -111,172 +112,398 @@ const tradeStats = [
 ];
 
 export default function HomeContainer() {
+  const router = useRouter();
+  // 상태 초기화 - controlled input을 위해 명확한 초기값 설정
   const [isClient, setIsClient] = useState(false);
   const [randomizedImages, setRandomizedImages] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  
-  useEffect(() => {
-    // 컴포넌트가 마운트될 때마다 이미지를 랜덤하게 정렬
+  const [searchQuery, setSearchQuery] = useState(""); // 빈 문자열로 명확히 초기화
+  const [visibleSections, setVisibleSections] = useState(new Set());
+  const [currentSection, setCurrentSection] = useState(0);
+  const [isScrolling, setIsScrolling] = useState(false);
+
+  // 각 섹션에 대한 ref
+  const heroRef = useRef(null);
+  const categoryRef = useRef(null);
+  const statsRef = useRef(null);
+  const ctaRef = useRef(null);
+  const containerRef = useRef(null);
+
+  // 섹션 배열 메모이제이션
+  const sections = useMemo(() => [heroRef, categoryRef, statsRef, ctaRef], []);
+
+  // 이미지 셔플링을 한 번만 실행
+  const shuffledImages = useMemo(() => {
     const exImages = generateEXCardImages();
-    const shuffledImages = shuffleArray(exImages);
+    return shuffleArray(exImages);
+  }, []);
+
+  useEffect(() => {
+    // 컴포넌트가 마운트될 때만 이미지 설정
     setRandomizedImages(shuffledImages);
     setIsClient(true);
+  }, [shuffledImages]);
+
+  // 검색어 변경 핸들러 메모이제이션
+  const handleSearchChange = useCallback((e) => {
+    setSearchQuery(e.target.value);
+  }, []);
+
+  const handleSearchKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearchClick();
+    }
+  };
+
+  const handleSearchClick = () => {
+    router.push(`/pokemon-card?nameKo=${searchQuery}`);
+  };
+
+  // 섹션 이동 함수 메모이제이션
+  const scrollToSection = useCallback((index) => {
+    if (index >= 0 && index < sections.length && sections[index].current) {
+      sections[index].current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  }, [sections]);
+
+  // Intersection Observer 설정
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisibleSections((prev) => new Set([...prev, entry.target.id]));
+            // 현재 섹션 업데이트
+            const sectionIndex = sections.findIndex(ref => ref.current?.id === entry.target.id);
+            if (sectionIndex !== -1) {
+              setCurrentSection(sectionIndex);
+            }
+          }
+        });
+      },
+      {
+        threshold: 0.5, // 50%가 보이면 트리거
+        rootMargin: '0px',
+      }
+    );
+
+    // 모든 섹션 관찰 시작
+    sections.forEach((ref) => {
+      if (ref.current) {
+        observer.observe(ref.current);
+      }
+    });
+
+    return () => {
+      sections.forEach((ref) => {
+        if (ref.current) {
+          observer.unobserve(ref.current);
+        }
+      });
+    };
+  }, [sections]);
+
+  // 휠 이벤트 핸들러 메모이제이션
+  const handleWheel = useCallback((e) => {
+    if (isScrolling) return;
+
+    e.preventDefault();
+    setIsScrolling(true);
+
+    const delta = e.deltaY;
+    let nextSection = currentSection;
+
+    if (delta > 0 && currentSection < sections.length - 1) {
+      // 아래로 스크롤
+      nextSection = currentSection + 1;
+    } else if (delta < 0 && currentSection > 0) {
+      // 위로 스크롤
+      nextSection = currentSection - 1;
+    }
+
+    if (nextSection !== currentSection) {
+      scrollToSection(nextSection);
+    }
+
+    // 스크롤 딜레이 설정
+    setTimeout(() => {
+      setIsScrolling(false);
+    }, 1000);
+  }, [currentSection, isScrolling, scrollToSection, sections.length]);
+
+  // 휠 이벤트 핸들러 - window에서 전체 화면 스크롤 가능
+  useEffect(() => {
+    // window에 이벤트 리스너 추가하여 전체 화면에서 스크롤 가능
+    window.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+    };
+  }, [handleWheel]);
+
+  // 스크롤 힌트 컴포넌트 메모이제이션
+  const ScrollHint = useCallback(({ isLastSection = false }) => {
+    if (isLastSection) return null;
+
+    return (
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 transition-all duration-1000 delay-800 opacity-70 hover:opacity-100">
+        <div className="animate-bounce">
+          <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center">
+            <div className="w-1 h-3 bg-gray-400 rounded-full mt-2 animate-pulse"></div>
+          </div>
+        </div>
+      </div>
+    );
   }, []);
 
   return (
-    <div className="w-full min-h-screen bg-white">
-      {/* 히어로 섹션 */}
-      <section className="relative py-16 px-4">
-        <div className="max-w-6xl mx-auto text-center">
-          {/* 닌텐도 스타일 타이틀 */}
-          <div className="relative inline-block mb-8">
-            <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-blue-400 rounded-3xl blur-sm opacity-30"></div>
-            <h1 className="relative text-5xl md:text-7xl font-black text-white px-8 py-4 bg-gradient-to-r from-red-500 via-yellow-400 to-blue-500 rounded-3xl shadow-2xl border-4 border-white transform hover:scale-105 transition-transform duration-300">
-              POCA MARKET
-            </h1>
-          </div>
-          
-          <p className="text-xl md:text-2xl text-gray-700 mb-8 font-semibold">
-            🎮 포켓몬 카드의 모든 것, 게임처럼 재미있는 거래 플랫폼 🎮
-          </p>
-          
-          {/* 닌텐도 스타일 검색바 */}
-          <div className="relative max-w-2xl mx-auto mb-12">
-            <div className="relative bg-white rounded-full border-4 border-gray-800 shadow-xl">
-              <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 text-gray-600 w-6 h-6" />
-              <input
-                type="text"
-                placeholder="포켓몬 카드를 검색하세요! 🔍"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-16 pr-4 py-5 text-lg rounded-full focus:outline-none font-semibold text-gray-800"
-              />
-              <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-green-400 to-blue-400 text-white px-8 py-3 rounded-full font-black hover:from-green-500 hover:to-blue-500 transition-all duration-300 shadow-lg border-2 border-white">
-                GO!
-              </button>
+    <div
+      ref={containerRef}
+      className="w-full h-screen bg-white overflow-hidden"
+      style={{
+        scrollbarWidth: 'none', // Firefox
+        msOverflowStyle: 'none', // IE/Edge
+      }}
+    >
+      {/* 스크롤바 숨기기 스타일 */}
+      <style jsx>{`
+        div::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
+
+      <div className="h-full overflow-y-scroll scroll-smooth snap-y snap-mandatory"
+        style={{
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+        }}
+      >
+        {/* 히어로 섹션 + 인기 카드 컬렉션 */}
+        <section
+          ref={heroRef}
+          id="hero"
+          className={`relative py-16 px-4 snap-start h-screen flex flex-col justify-center transition-all duration-1000 ${visibleSections.has('hero')
+              ? 'opacity-100 transform translate-y-0'
+              : 'opacity-0 transform translate-y-10'
+            }`}
+        >
+          <div className="max-w-6xl mx-auto text-center w-full">
+            {/* 닌텐도 스타일 타이틀 */}
+            <div className={`relative inline-block mb-8 transition-all duration-1000 delay-200 ${visibleSections.has('hero')
+                ? 'opacity-100 transform translate-y-0 scale-100'
+                : 'opacity-0 transform translate-y-10 scale-95'
+              }`}>
+              <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-blue-400 rounded-3xl blur-sm opacity-30"></div>
+              <h1 className="relative text-4xl md:text-6xl font-black text-white px-6 py-3 bg-gradient-to-r from-red-500 via-yellow-400 to-blue-500 rounded-3xl shadow-2xl border-4 border-white transform hover:scale-105 transition-transform duration-300">
+                POCA MARKET
+              </h1>
+            </div>
+
+            <p className={`text-lg md:text-xl text-gray-700 mb-6 font-semibold transition-all duration-1000 delay-400 ${visibleSections.has('hero')
+                ? 'opacity-100 transform translate-y-0'
+                : 'opacity-0 transform translate-y-10'
+              }`}>
+              🎮 포켓몬 카드의 모든 것, 게임처럼 재미있는 거래 플랫폼 🎮
+            </p>
+
+            {/* 닌텐도 스타일 검색바 */}
+            <div className={`relative max-w-2xl mx-auto mb-8 transition-all duration-1000 delay-600 ${visibleSections.has('hero')
+                ? 'opacity-100 transform translate-y-0'
+                : 'opacity-0 transform translate-y-10'
+              }`}>
+              <div className="relative bg-white rounded-full border-4 border-gray-800 shadow-xl">
+                <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 text-gray-600 w-5 h-5" />
+                <input
+                  type="text"
+                  placeholder="포켓몬 카드를 검색하세요! 🔍"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  onKeyDown={handleSearchKeyDown}
+                  className="w-full pl-14 pr-4 py-4 text-lg rounded-full focus:outline-none font-semibold text-gray-800"
+                />
+                <button
+                  onClick={handleSearchClick}
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-green-400 to-blue-400 text-white px-6 py-2 rounded-full font-black hover:from-green-500 hover:to-blue-500 transition-all duration-300 shadow-lg border-2 border-white cursor-pointer"
+                >
+                  GO!
+                </button>
+              </div>
+            </div>
+
+            {/* 3D 마퀴 카드 */}
+            <div className={`w-full transition-all duration-1000 delay-800 ${visibleSections.has('hero')
+                ? 'opacity-100 transform translate-y-0'
+                : 'opacity-0 transform translate-y-10'
+              }`}>
+              {isClient && <PokemonThreeDMarquee images={randomizedImages} />}
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* 3D 마퀴 카드 섹션 */}
-      <section className="py-12">
-        <div className="max-w-6xl mx-auto px-4 mb-8">
-          <div className="text-center mb-8">
-            <h2 className="text-4xl font-black text-gray-800 mb-4 relative inline-block">
-              <span className="bg-gradient-to-r from-pink-400 to-purple-500 text-transparent bg-clip-text">
-                ⭐ 인기 카드 컬렉션 ⭐
-              </span>
-            </h2>
-            <p className="text-lg text-gray-600 font-semibold bg-yellow-100 px-6 py-3 rounded-full inline-block border-2 border-yellow-300">
-              🎯 현재 가장 HOT한 포켓몬 카드들! 🎯
-            </p>
-          </div>
-        </div>
-        <div className="w-full">
-          {isClient && <PokemonThreeDMarquee images={randomizedImages} />}
-        </div>
-      </section>
+          {/* 스크롤 힌트 */}
+          <ScrollHint />
+        </section>
 
-      {/* 카테고리 섹션 - 닌텐도 게임기 스타일 */}
-      <section className="py-16 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-black text-gray-800 mb-4">
-              <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text">
-                🎮 카드 카테고리 🎮
-              </span>
-            </h2>
-            <p className="text-lg text-gray-600 font-semibold bg-blue-100 px-6 py-3 rounded-full inline-block border-2 border-blue-300">
-              🎯 나만의 카드를 찾아보세요! 🎯
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {cardCategories.map((category, index) => (
-              <div
-                key={index}
-                className={`group relative overflow-hidden rounded-3xl ${category.color} ${category.shadow} shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 hover:scale-105 border-4 border-white`}
-              >
-                <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="relative p-8 text-center">
-                  <div className="text-6xl mb-4 transform group-hover:scale-110 transition-transform duration-300">
-                    {category.icon}
+        {/* 카테고리 섹션 - 닌텐도 게임기 스타일 */}
+        <section
+          ref={categoryRef}
+          id="category"
+          className={`relative py-16 px-4 snap-start h-screen flex items-center transition-all duration-1000 ${visibleSections.has('category')
+              ? 'opacity-100 transform translate-y-0'
+              : 'opacity-0 transform translate-y-10'
+            }`}
+        >
+          <div className="max-w-6xl mx-auto w-full">
+            <div className={`text-center mb-12 transition-all duration-1000 delay-200 ${visibleSections.has('category')
+                ? 'opacity-100 transform translate-y-0'
+                : 'opacity-0 transform translate-y-10'
+              }`}>
+              <h2 className="text-4xl font-black text-gray-800 mb-4">
+                <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text">
+                  🎮 카드 카테고리 🎮
+                </span>
+              </h2>
+              <p className="text-lg text-gray-600 font-semibold bg-blue-100 px-6 py-3 rounded-full inline-block border-2 border-blue-300">
+                🎯 나만의 카드를 찾아보세요! 🎯
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 cursor-pointer">
+              {cardCategories.map((category, index) => (
+                <div
+                  key={index}
+                  className={`group relative overflow-hidden rounded-3xl ${category.color} ${category.shadow} shadow-xl hover:shadow-2xl transition-all duration-1000 transform hover:-translate-y-2 hover:scale-105 border-4 border-white ${visibleSections.has('category')
+                      ? 'opacity-100 translate-y-0'
+                      : 'opacity-0 translate-y-10'
+                    }`}
+                  style={{
+                    transitionDelay: `${600 + index * 100}ms`
+                  }}
+                  onClick={() => router.push(category.link)}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="relative p-8 text-center">
+                    <div className="text-6xl mb-4 transform group-hover:scale-110 transition-transform duration-300">
+                      {category.icon}
+                    </div>
+                    <h3 className="text-2xl font-black text-white mb-3 text-shadow-lg">
+                      {category.name}
+                    </h3>
+                    <p className="text-white/90 mb-6 font-semibold text-lg">
+                      {category.description}
+                    </p>
+                    <button className="bg-white text-gray-800 font-black px-6 py-3 rounded-full hover:bg-gray-100 transition-colors shadow-lg border-2 border-gray-800 transform hover:scale-105 cursor-pointer">
+                      START! →
+                    </button>
                   </div>
-                  <h3 className="text-2xl font-black text-white mb-3 text-shadow-lg">
-                    {category.name}
-                  </h3>
-                  <p className="text-white/90 mb-6 font-semibold text-lg">
-                    {category.description}
-                  </p>
-                  <button className="bg-white text-gray-800 font-black px-6 py-3 rounded-full hover:bg-gray-100 transition-colors shadow-lg border-2 border-gray-800 transform hover:scale-105">
-                    START! →
-                  </button>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 거래 통계 섹션 - 게임기 스타일 */}
-      <section className="py-16 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-black text-gray-800 mb-4">
-              <span className="bg-gradient-to-r from-green-500 to-blue-600 text-transparent bg-clip-text">
-                📊 실시간 게임 현황 📊
-              </span>
-            </h2>
-            <p className="text-lg text-gray-600 font-semibold bg-green-100 px-6 py-3 rounded-full inline-block border-2 border-green-300">
-              🎮 포카마켓의 생생한 현황! 🎮
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {tradeStats.map((stat, index) => (
-              <div
-                key={index}
-                className={`${stat.bgColor} ${stat.borderColor} rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border-4 group`}
-              >
-                <div className="text-center">
-                  <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full bg-white ${stat.borderColor} border-4 mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                    <stat.icon className={`w-8 h-8 ${stat.color}`} />
-                  </div>
-                  <div className="text-3xl font-black text-gray-800 mb-2">
-                    {stat.value}
-                  </div>
-                  <p className="text-gray-700 font-bold text-sm uppercase tracking-wide">
-                    {stat.label}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA 섹션 - 닌텐도 게임 스타일 */}
-      <section className="py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="bg-gradient-to-r from-red-100 via-yellow-100 to-blue-100 rounded-3xl p-12 border-4 border-gray-800 shadow-2xl">
-            <h2 className="text-4xl md:text-5xl font-black text-gray-800 mb-6">
-              🎮 게임 시작! 🎮
-            </h2>
-            <p className="text-xl text-gray-700 mb-8 font-semibold">
-              ⭐ 포켓몬 카드 거래의 새로운 모험을 시작하세요! ⭐
-            </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <button className="bg-gradient-to-r from-red-400 to-pink-500 text-white px-10 py-5 rounded-full font-black text-lg hover:from-red-500 hover:to-pink-600 transition-all duration-300 shadow-xl border-4 border-white transform hover:scale-105">
-                🎯 카드 판매하기
-              </button>
-              <button className="bg-gradient-to-r from-blue-400 to-purple-500 text-white px-10 py-5 rounded-full font-black text-lg hover:from-blue-500 hover:to-purple-600 transition-all duration-300 shadow-xl border-4 border-white transform hover:scale-105">
-                🔍 카드 둘러보기
-              </button>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+
+          {/* 스크롤 힌트 */}
+          <ScrollHint />
+        </section>
+
+        {/* 거래 통계 섹션 - 게임기 스타일 */}
+        <section
+          ref={statsRef}
+          id="stats"
+          className={`relative py-16 px-4 snap-start h-screen flex items-center transition-all duration-1000 ${visibleSections.has('stats')
+              ? 'opacity-100 transform translate-y-0'
+              : 'opacity-0 transform translate-y-10'
+            }`}
+        >
+          <div className="max-w-6xl mx-auto w-full">
+            <div className={`text-center mb-12 transition-all duration-1000 delay-200 ${visibleSections.has('stats')
+                ? 'opacity-100 transform translate-y-0'
+                : 'opacity-0 transform translate-y-10'
+              }`}>
+              <h2 className="text-4xl font-black text-gray-800 mb-4">
+                <span className="bg-gradient-to-r from-green-500 to-blue-600 text-transparent bg-clip-text">
+                  📊 실시간 게임 현황 📊
+                </span>
+              </h2>
+              <p className="text-lg text-gray-600 font-semibold bg-green-100 px-6 py-3 rounded-full inline-block border-2 border-green-300">
+                🎮 포카마켓의 생생한 현황! 🎮
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {tradeStats.map((stat, index) => (
+                <div
+                  key={index}
+                  className={`${stat.bgColor} ${stat.borderColor} rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-1000 transform hover:-translate-y-1 border-4 group ${visibleSections.has('stats')
+                      ? 'opacity-100 translate-y-0 scale-100'
+                      : 'opacity-0 translate-y-10 scale-95'
+                    }`}
+                  style={{
+                    transitionDelay: `${400 + index * 100}ms`
+                  }}
+                >
+                  <div className="text-center">
+                    <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full bg-white ${stat.borderColor} border-4 mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                      <stat.icon className={`w-8 h-8 ${stat.color}`} />
+                    </div>
+                    <div className="text-3xl font-black text-gray-800 mb-2">
+                      {stat.value}
+                    </div>
+                    <p className="text-gray-700 font-bold text-sm uppercase tracking-wide">
+                      {stat.label}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 스크롤 힌트 */}
+          <ScrollHint />
+        </section>
+
+        {/* CTA 섹션 - 닌텐도 게임 스타일 */}
+        <section
+          ref={ctaRef}
+          id="cta"
+          className={`relative py-20 px-4 snap-start h-screen flex items-center transition-all duration-1000 ${visibleSections.has('cta')
+              ? 'opacity-100 transform translate-y-0'
+              : 'opacity-0 transform translate-y-10'
+            }`}
+        >
+          <div className="max-w-4xl mx-auto text-center w-full">
+            <div className={`bg-gradient-to-r from-red-100 via-yellow-100 to-blue-100 rounded-3xl p-12 border-4 border-gray-800 shadow-2xl transition-all duration-1000 delay-200 ${visibleSections.has('cta')
+                ? 'opacity-100 transform translate-y-0 scale-100'
+                : 'opacity-0 transform translate-y-10 scale-95'
+              }`}>
+              <h2 className="text-4xl md:text-5xl font-black text-gray-800 mb-6">
+                🎮 게임 시작! 🎮
+              </h2>
+              <p className="text-xl text-gray-700 mb-8 font-semibold">
+                ⭐ 포켓몬 카드 거래의 새로운 모험을 시작하세요! ⭐
+              </p>
+              <div className={`flex flex-col sm:flex-row gap-6 justify-center transition-all duration-1000 delay-400 ${visibleSections.has('cta')
+                  ? 'opacity-100 transform translate-y-0'
+                  : 'opacity-0 transform translate-y-10'
+                }`}>
+                <button
+                  onClick={() => router.push('/pokemon-card-trade')}
+                  className="bg-gradient-to-r from-red-400 to-pink-500 text-white px-10 py-5 rounded-full font-black text-lg hover:from-red-500 hover:to-pink-600 transition-all duration-300 shadow-xl border-4 border-white transform hover:scale-105 cursor-pointer">
+                  🎯 카드 판매하기
+                </button>
+                <button
+                  onClick={() => router.push('/pokemon-card')}
+                  className="bg-gradient-to-r from-blue-400 to-purple-500 text-white px-10 py-5 rounded-full font-black text-lg hover:from-blue-500 hover:to-purple-600 transition-all duration-300 shadow-xl border-4 border-white transform hover:scale-105 cursor-pointer">
+                  🔍 카드 둘러보기
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* 마지막 섹션이므로 스크롤 힌트 없음 */}
+          <ScrollHint isLastSection={true} />
+        </section>
+      </div>
     </div>
   )
 }
