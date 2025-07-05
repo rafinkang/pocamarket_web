@@ -19,7 +19,8 @@ const useAuthStore = create(
           status: userData.status,
           grade: userData.grade,
           gradeDesc: userData.gradeDesc,
-          lastLoginAt: userData.lastLoginAt
+          profileImageUrl: userData.profileImageUrl,
+          lastLoginAt: userData.lastLoginAt,
         }
       }),
 
