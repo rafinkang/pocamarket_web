@@ -7,6 +7,8 @@ import { motion } from "motion/react";
 import PokemonCard from "@/components/card/PokemonCard";
 import { getTradeRequestStatusName } from "@/constants/tradeRequestStatus";
 
+const testMode = process.env.NODE_ENV === "development";
+
 export default function TradeItem ({id, card, isActiveCard, disabled, handleClick}) {
   const activeClass = "bg-blue-500 text-white dark:bg-blue-600"
 
@@ -23,8 +25,8 @@ export default function TradeItem ({id, card, isActiveCard, disabled, handleClic
           layoutId={`image-${card.code}-${card.id}-${id}`} 
           className="flex justify-center items-center"
         >
-          <div className="relative aspect-[366/512]" style={{ width: "20vw", maxWidth: "80px" }}>
-            <PokemonCard data={{code : card.code}} showInfo={false} className="relative aspect-[366/512]" />
+          <div className="relative" style={{ width: "20vw", maxWidth: "80px", aspectRatio: "366/512" }}>
+            <PokemonCard data={{code : card.code}} showInfo={false} className="relative w-full h-full" testMode={testMode} />
           </div>
         </motion.div>
         <div className="">

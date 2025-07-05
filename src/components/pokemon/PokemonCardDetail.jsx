@@ -10,6 +10,8 @@ import RarityIcon from "@/components/icon/RarityIcon"
 import { COLORLESS, getPokemonElementName, getPokemonPackSetName, getPokemonPackName } from "@/constants/pokemon"
 import { getGradientClass } from "@/constants/gradients"
 
+const testMode = process.env.NODE_ENV === "development";
+
 // 스타일 객체
 const styles = {
   // 페이지 구조
@@ -39,7 +41,8 @@ const styles = {
   cardOwner: "text-xl font-bold text-gray-800 relative z-[1]",
 
   // 공통 섹션 스타일
-  section: "mb-4 bg-white/90 p-4 relative z-[1] border-t border-gray-200",
+  section: "bg-white/90 p-4 relative z-[1] border-t border-gray-200",
+  sectionWithMargin: "mb-4 bg-white/90 p-4 relative z-[1] border-t border-gray-200",
   sectionTitle: "mb-4 text-[1.1rem] font-semibold text-gray-700",
 
   // 정보 리스트 스타일
@@ -88,7 +91,7 @@ const InfoItem = ({ label, children }) => (
  */
 const SkillContainer = ({ title, items, renderItem }) => (
   items?.length > 0 && (
-    <div className={styles.section}>
+    <div className={styles.sectionWithMargin}>
       <h3 className={styles.sectionTitle}>{title}</h3>
       <div className={styles.infoList}>
         {items.map((item, idx) => renderItem(item, idx))}
@@ -135,6 +138,7 @@ export default function PokemonCardDetail({
               data={data} 
               showInfo={false} 
               className="w-full h-full !bg-transparent" 
+              testMode={testMode}
             />
           </div>
         </div>

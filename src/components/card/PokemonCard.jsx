@@ -22,7 +22,7 @@ export default function PokemonCard({
 }) {
   return (
     <Card
-      className={`flex flex-col items-center py-0 gap-0 max-w-[366px] ${
+      className={`flex flex-col items-center py-0 gap-0 max-w-[366px] w-[inherit] ${
         !showInfo ? "shadow-none border-none" : ""
       } ${props.className}`}
     >

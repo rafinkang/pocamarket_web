@@ -70,7 +70,7 @@ export default function TradeList({isMy, isLogin, requestList, onRequestAccept, 
   }, [cards, dialogData])
 
   return (
-    <>
+    <div className="sm:mt-20 mt-10">
       <TradeListItemDialog handleClick={setDialogData} isMy={isMy} isLogin={isLogin} 
         dialogData={dialogData} 
         onRequestAccept={onRequestAccept} 
@@ -78,7 +78,8 @@ export default function TradeList({isMy, isLogin, requestList, onRequestAccept, 
         onOpenOkChange={onOpenOkChange} 
         onOpenTcgCode={onOpenTcgCode} 
       />
-      <ul className="max-w-2xl mx-auto w-full gap-4">
+      <h3 className="text-[1.1rem] font-semibold text-gray-700">요청 목록</h3>
+      <ul className="w-full gap-4">
         {cards.map(card => 
           <TradeListItem
             handleClick={setDialogData}
@@ -99,6 +100,6 @@ export default function TradeList({isMy, isLogin, requestList, onRequestAccept, 
         msg="신고 접수가 완료됐습니다.<br/>자세한 내용은 마이페이지에서 확인하세요."
         okBtnName="확인"
       />
-    </>
+    </div>
   );
 }

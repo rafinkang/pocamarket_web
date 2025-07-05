@@ -9,6 +9,7 @@ import TradeHeader from "./TradeHeader";
 import ButtonGroup from "./ButtonGroup";
 import TradeBox from "./TradeBox";
 import TradeList from "./TradeList";
+import PokemonCardDetail from "@/components/pokemon/PokemonCardDetail";
 
 import { getTcgCodeList, getTradeRequestTcgCode } from "@/api/tcgCode";
 import { getTcgTradeDetail } from "@/api/tcgTrade";
@@ -207,9 +208,14 @@ export default function TradePageClient() {
       {data && 
         <>
           <TradeHeader data={data} />
+          <ButtonGroup tradeId={tradeId} data={data} isMy={isMy} isLogin={isLogin}/>
           <div className="flex flex-col gap-2 mt-2">
+            {/* 포켓몬 정보 영역 */}
+            <PokemonCardDetail
+              data={data.myCard}
+              className="transition-all duration-300 backdrop-blur-sm bg-opacity-95"
+            />
             <TradeBox checkLogin={checkLogin} data={data} isMy={isMy} tcgCodeList={tcgCodeList} onTradeRequest={handleTradeRequest} />
-            <ButtonGroup tradeId={tradeId} data={data} isMy={isMy} isLogin={isLogin}/>
             <TradeList isMy={isMy} isLogin={isLogin} requestList={Array.isArray(requestList) ? requestList : requestList.content}
               onRequestAccept={handleRequestAccept}
               onRequestCancel={handleRequestCancel}

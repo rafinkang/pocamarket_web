@@ -3,6 +3,8 @@
 import PokemonCard from "@/components/card/PokemonCard";
 import { useAnimationControls, motion } from "framer-motion";
 
+const testMode = process.env.NODE_ENV === "development";
+
 export default function FlippableCard ({ data, cardKey, rotateY = 360, duration = 0.7, hideBtn, btnName = "확인", btnColor = "#2B7FFF", btnTextColor = "#fff", width = "20vw", maxWidth = "200px", handleClick = () => {} }) {
   const controls = useAnimationControls();
 
@@ -73,7 +75,8 @@ export default function FlippableCard ({ data, cardKey, rotateY = 360, duration 
           <PokemonCard 
             data={data} 
             showInfo={false}
-            className="[backface-visibility:hidden]"
+            className="[backface-visibility:hidden] w-[width]"
+            testMode={testMode}
           />
         </motion.div>
 

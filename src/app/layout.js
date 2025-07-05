@@ -1,9 +1,9 @@
-
 import { Noto_Sans_KR } from 'next/font/google';
 
 import AuthProvider from '@/components/providers/AuthProvider';
 import { Geist, Geist_Mono } from "next/font/google";
 import "@/styles/globals.css";
+import "@/styles/animations.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/sonner"

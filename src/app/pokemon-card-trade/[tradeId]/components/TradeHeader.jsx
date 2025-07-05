@@ -1,10 +1,14 @@
 "use client"
 
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+
 import { useEffect, useState } from "react"
 import { getTradeStatusName, REQUEST, PROCESS, COMPLETE } from "@/constants/tradeStatus";
 import statusStyles from "src/styles/trade-status.module.scss"
 import moment from "moment";
 import { cn } from "@/lib/utils";
+import { POKEMON_CARD_TRADE } from "@/constants/path";
 
 const styles = {
   pageTitle: "flex items-center text-2xl font-bold text-gray-800",
@@ -35,7 +39,7 @@ export default function TradeHeader ({data}) {
   }, [data])
 
   return (<>
-    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 w-full">
+    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 w-full mt-1 mb-1">
       <h1 className={styles.pageTitle}>
         카드 교환
       </h1>
