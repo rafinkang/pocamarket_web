@@ -89,25 +89,25 @@ const shuffleArray = (array) => {
 };
 
 /**
- * 포켓몬 카드 카테고리 데이터
+ * 포켓몬 카드 카테고리 데이터 (닌텐도 스타일)
  */
 const cardCategories = [
-  { name: "EX 카드", description: "강력한 EX 포켓몬", icon: "⚡", color: "from-yellow-400 to-orange-500" },
-  { name: "GX 카드", description: "특수 GX 기술", icon: "🌟", color: "from-purple-400 to-pink-500" },
-  { name: "V 카드", description: "포켓몬 V 시리즈", icon: "💎", color: "from-blue-400 to-cyan-500" },
-  { name: "VMAX 카드", description: "거대화 VMAX", icon: "🔥", color: "from-red-400 to-rose-500" },
-  { name: "일반 카드", description: "기본 포켓몬 카드", icon: "🍃", color: "from-green-400 to-emerald-500" },
-  { name: "트레이너 카드", description: "서포트 & 아이템", icon: "🎯", color: "from-indigo-400 to-blue-500" },
+  { name: "EX 카드", description: "강력한 EX 포켓몬", icon: "⚡", color: "bg-gradient-to-br from-yellow-300 via-yellow-400 to-yellow-500", shadow: "shadow-yellow-200" },
+  // { name: "GX 카드", description: "특수 GX 기술", icon: "🌟", color: "bg-gradient-to-br from-purple-300 via-purple-400 to-purple-500", shadow: "shadow-purple-200" },
+  // { name: "V 카드", description: "포켓몬 V 시리즈", icon: "💎", color: "bg-gradient-to-br from-cyan-300 via-cyan-400 to-cyan-500", shadow: "shadow-cyan-200" },
+  { name: "VMAX 카드", description: "거대화 VMAX", icon: "🔥", color: "bg-gradient-to-br from-red-300 via-red-400 to-red-500", shadow: "shadow-red-200" },
+  // { name: "일반 카드", description: "기본 포켓몬 카드", icon: "🍃", color: "bg-gradient-to-br from-green-300 via-green-400 to-green-500", shadow: "shadow-green-200" },
+  { name: "트레이너 카드", description: "서포트 & 아이템", icon: "🎯", color: "bg-gradient-to-br from-blue-300 via-blue-400 to-blue-500", shadow: "shadow-blue-200" },
 ];
 
 /**
- * 거래 통계 데이터
+ * 거래 통계 데이터 (닌텐도 스타일)
  */
 const tradeStats = [
-  { label: "총 거래량", value: "2,847", icon: TrendingUp, color: "text-green-500" },
-  { label: "활성 사용자", value: "1,234", icon: Users, color: "text-blue-500" },
-  { label: "등록 상품", value: "5,672", icon: Package, color: "text-purple-500" },
-  { label: "평균 평점", value: "4.8", icon: Star, color: "text-yellow-500" },
+  { label: "총 거래량", value: "2,847", icon: TrendingUp, color: "text-green-600", bgColor: "bg-green-100", borderColor: "border-green-300" },
+  { label: "활성 사용자", value: "1,234", icon: Users, color: "text-blue-600", bgColor: "bg-blue-100", borderColor: "border-blue-300" },
+  { label: "등록 상품", value: "5,672", icon: Package, color: "text-purple-600", bgColor: "bg-purple-100", borderColor: "border-purple-300" },
+  { label: "평균 평점", value: "4.8", icon: Star, color: "text-yellow-600", bgColor: "bg-yellow-100", borderColor: "border-yellow-300" },
 ];
 
 export default function HomeContainer() {
@@ -115,8 +115,6 @@ export default function HomeContainer() {
   const [randomizedImages, setRandomizedImages] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   
-  const images = ["/next.svg", "/next.svg", "/next.svg", "/next.svg", "/next.svg"];
-
   useEffect(() => {
     // 컴포넌트가 마운트될 때마다 이미지를 랜덤하게 정렬
     const exImages = generateEXCardImages();
@@ -126,30 +124,35 @@ export default function HomeContainer() {
   }, []);
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="w-full min-h-screen bg-white">
       {/* 히어로 섹션 */}
-      <section className="relative py-20 px-4">
+      <section className="relative py-16 px-4">
         <div className="max-w-6xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent mb-6">
-            포카마켓
-          </h1>
-          <p className="text-xl md:text-2xl text-gray-600 mb-8">
-            포켓몬 카드의 모든 것, 안전하고 신뢰할 수 있는 거래 플랫폼
+          {/* 닌텐도 스타일 타이틀 */}
+          <div className="relative inline-block mb-8">
+            <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-blue-400 rounded-3xl blur-sm opacity-30"></div>
+            <h1 className="relative text-5xl md:text-7xl font-black text-white px-8 py-4 bg-gradient-to-r from-red-500 via-yellow-400 to-blue-500 rounded-3xl shadow-2xl border-4 border-white transform hover:scale-105 transition-transform duration-300">
+              POCA MARKET
+            </h1>
+          </div>
+          
+          <p className="text-xl md:text-2xl text-gray-700 mb-8 font-semibold">
+            🎮 포켓몬 카드의 모든 것, 게임처럼 재미있는 거래 플랫폼 🎮
           </p>
           
-          {/* 검색바 */}
+          {/* 닌텐도 스타일 검색바 */}
           <div className="relative max-w-2xl mx-auto mb-12">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <div className="relative bg-white rounded-full border-4 border-gray-800 shadow-xl">
+              <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 text-gray-600 w-6 h-6" />
               <input
                 type="text"
-                placeholder="원하는 포켓몬 카드를 검색해보세요..."
+                placeholder="포켓몬 카드를 검색하세요! 🔍"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 text-lg rounded-2xl border-2 border-gray-200 focus:border-blue-400 focus:outline-none shadow-lg"
+                className="w-full pl-16 pr-4 py-5 text-lg rounded-full focus:outline-none font-semibold text-gray-800"
               />
-              <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition-colors">
-                검색
+              <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-green-400 to-blue-400 text-white px-8 py-3 rounded-full font-black hover:from-green-500 hover:to-blue-500 transition-all duration-300 shadow-lg border-2 border-white">
+                GO!
               </button>
             </div>
           </div>
@@ -157,47 +160,57 @@ export default function HomeContainer() {
       </section>
 
       {/* 3D 마퀴 카드 섹션 */}
-      <section className="py-16">
+      <section className="py-12">
         <div className="max-w-6xl mx-auto px-4 mb-8">
-          <h2 className="text-3xl font-bold text-center text-gray-800 mb-4">
-            인기 카드 컬렉션
-          </h2>
-          <p className="text-center text-gray-600 mb-8">
-            현재 가장 인기 있는 포켓몬 카드들을 만나보세요
-          </p>
+          <div className="text-center mb-8">
+            <h2 className="text-4xl font-black text-gray-800 mb-4 relative inline-block">
+              <span className="bg-gradient-to-r from-pink-400 to-purple-500 text-transparent bg-clip-text">
+                ⭐ 인기 카드 컬렉션 ⭐
+              </span>
+            </h2>
+            <p className="text-lg text-gray-600 font-semibold bg-yellow-100 px-6 py-3 rounded-full inline-block border-2 border-yellow-300">
+              🎯 현재 가장 HOT한 포켓몬 카드들! 🎯
+            </p>
+          </div>
         </div>
         <div className="w-full">
           {isClient && <PokemonThreeDMarquee images={randomizedImages} />}
         </div>
       </section>
 
-      {/* 카테고리 섹션 */}
+      {/* 카테고리 섹션 - 닌텐도 게임기 스타일 */}
       <section className="py-16 px-4">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-center text-gray-800 mb-4">
-            카드 카테고리
-          </h2>
-          <p className="text-center text-gray-600 mb-12">
-            다양한 종류의 포켓몬 카드를 카테고리별로 찾아보세요
-          </p>
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-black text-gray-800 mb-4">
+              <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text">
+                🎮 카드 카테고리 🎮
+              </span>
+            </h2>
+            <p className="text-lg text-gray-600 font-semibold bg-blue-100 px-6 py-3 rounded-full inline-block border-2 border-blue-300">
+              🎯 나만의 카드를 찾아보세요! 🎯
+            </p>
+          </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {cardCategories.map((category, index) => (
               <div
                 key={index}
-                className="group relative overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                className={`group relative overflow-hidden rounded-3xl ${category.color} ${category.shadow} shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 hover:scale-105 border-4 border-white`}
               >
-                <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
-                <div className="p-8">
-                  <div className="text-4xl mb-4">{category.icon}</div>
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="relative p-8 text-center">
+                  <div className="text-6xl mb-4 transform group-hover:scale-110 transition-transform duration-300">
+                    {category.icon}
+                  </div>
+                  <h3 className="text-2xl font-black text-white mb-3 text-shadow-lg">
                     {category.name}
                   </h3>
-                  <p className="text-gray-600 mb-4">
+                  <p className="text-white/90 mb-6 font-semibold text-lg">
                     {category.description}
                   </p>
-                  <button className="text-blue-600 font-medium hover:text-blue-800 transition-colors">
-                    더 보기 →
+                  <button className="bg-white text-gray-800 font-black px-6 py-3 rounded-full hover:bg-gray-100 transition-colors shadow-lg border-2 border-gray-800 transform hover:scale-105">
+                    START! →
                   </button>
                 </div>
               </div>
@@ -206,51 +219,61 @@ export default function HomeContainer() {
         </div>
       </section>
 
-      {/* 거래 통계 섹션 */}
-      <section className="py-16 px-4 bg-white/50">
+      {/* 거래 통계 섹션 - 게임기 스타일 */}
+      <section className="py-16 px-4">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-center text-gray-800 mb-4">
-            실시간 거래 현황
-          </h2>
-          <p className="text-center text-gray-600 mb-12">
-            포카마켓의 활발한 거래 현황을 확인해보세요
-          </p>
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-black text-gray-800 mb-4">
+              <span className="bg-gradient-to-r from-green-500 to-blue-600 text-transparent bg-clip-text">
+                📊 실시간 게임 현황 📊
+              </span>
+            </h2>
+            <p className="text-lg text-gray-600 font-semibold bg-green-100 px-6 py-3 rounded-full inline-block border-2 border-green-300">
+              🎮 포카마켓의 생생한 현황! 🎮
+            </p>
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {tradeStats.map((stat, index) => (
               <div
                 key={index}
-                className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300"
+                className={`${stat.bgColor} ${stat.borderColor} rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border-4 group`}
               >
-                <div className="flex items-center justify-between mb-4">
-                  <stat.icon className={`w-8 h-8 ${stat.color}`} />
-                  <span className="text-2xl font-bold text-gray-800">
+                <div className="text-center">
+                  <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full bg-white ${stat.borderColor} border-4 mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                    <stat.icon className={`w-8 h-8 ${stat.color}`} />
+                  </div>
+                  <div className="text-3xl font-black text-gray-800 mb-2">
                     {stat.value}
-                  </span>
+                  </div>
+                  <p className="text-gray-700 font-bold text-sm uppercase tracking-wide">
+                    {stat.label}
+                  </p>
                 </div>
-                <p className="text-gray-600 font-medium">{stat.label}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA 섹션 */}
+      {/* CTA 섹션 - 닌텐도 게임 스타일 */}
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6">
-            지금 시작하세요!
-          </h2>
-          <p className="text-xl text-gray-600 mb-8">
-            포켓몬 카드 거래의 새로운 경험을 만나보세요
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-blue-700 transition-colors shadow-lg">
-              카드 판매하기
-            </button>
-            <button className="bg-white text-blue-600 border-2 border-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-blue-50 transition-colors shadow-lg">
-              카드 둘러보기
-            </button>
+          <div className="bg-gradient-to-r from-red-100 via-yellow-100 to-blue-100 rounded-3xl p-12 border-4 border-gray-800 shadow-2xl">
+            <h2 className="text-4xl md:text-5xl font-black text-gray-800 mb-6">
+              🎮 게임 시작! 🎮
+            </h2>
+            <p className="text-xl text-gray-700 mb-8 font-semibold">
+              ⭐ 포켓몬 카드 거래의 새로운 모험을 시작하세요! ⭐
+            </p>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <button className="bg-gradient-to-r from-red-400 to-pink-500 text-white px-10 py-5 rounded-full font-black text-lg hover:from-red-500 hover:to-pink-600 transition-all duration-300 shadow-xl border-4 border-white transform hover:scale-105">
+                🎯 카드 판매하기
+              </button>
+              <button className="bg-gradient-to-r from-blue-400 to-purple-500 text-white px-10 py-5 rounded-full font-black text-lg hover:from-blue-500 hover:to-purple-600 transition-all duration-300 shadow-xl border-4 border-white transform hover:scale-105">
+                🔍 카드 둘러보기
+              </button>
+            </div>
           </div>
         </div>
       </section>
