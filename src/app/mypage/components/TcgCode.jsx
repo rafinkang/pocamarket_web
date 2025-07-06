@@ -205,6 +205,12 @@ export default function TcgCode({ className }) {
               >
                 수정
               </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(rowData.tcgCode)}
+                className="cursor-pointer hover:bg-blue-50"
+              >
+                TCG 코드 복사
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => handleDelete(rowData)}
