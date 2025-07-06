@@ -24,33 +24,60 @@ export default function AboutUsContainer() {
   const developers = [
     {
       id: 1,
-      name: "김태욱",
-      role: "Frontend Developer",
-      position: "팀장",
-      experience: "3년차",
-      location: "서울, 대한민국",
-      introduction: "사용자 경험을 최우선으로 생각하는 프론트엔드 개발자입니다. 모던한 웹 기술과 효율적인 코드 작성에 관심이 많습니다.",
+      name: "강태욱",
+      role: "Full Stack Developer",
+      position: "",
+      experience: "8년차",
+      location: "서울",
+      introduction: "풀스택 개발 경험을 바탕으로 DevOps와 인프라 관리까지 다 했다. 뭐라고 써야되냐 이거 남사시럽구로",
       skills: {
         "Frontend": [
-          { name: "React", level: "전문가" },
-          { name: "Next.js", level: "고급" },
-          { name: "TypeScript", level: "고급" },
           { name: "JavaScript", level: "전문가" },
-          { name: "Tailwind CSS", level: "고급" }
+          { name: "JQuery", level: "전문가" },
+          { name: "Svelte", level: "전문가" },
+          { name: "React", level: "고급" },
+          { name: "Next.js", level: "중급" },
+          { name: "CSS/SCSS", level: "중급" },
+          { name: "AngularJS", level: "초급" },
+          { name: "Tailwind CSS", level: "초급" },
+        ],
+        "Backend": [
+          { name: "PHP", level: "전문가" },
+          { name: "MySQL", level: "전문가" },
+          { name: "Java", level: "중급" },
+          { name: "Spring Boot", level: "중급" },
+          { name: "Python", level: "중급" },
+          { name: "Node.js", level: "중급" },
+        ],
+        "DevOps": [
+          { name: "Git", level: "전문가" },
+          { name: "GitHub Actions", level: "중급" },
+          { name: "Docker", level: "고급" },
+          { name: "Docker Hub", level: "중급" },
+          { name: "AWS", level: "중급" },
+          { name: "Nginx", level: "중급" },
         ],
         "기타": [
-          { name: "Git", level: "고급" },
-          { name: "Figma", level: "중급" }
+          { name: "Notion", level: "고급" },
+          { name: "Slack", level: "고급" },
+          { name: "Discord", level: "중급" },
+          { name: "Figma", level: "초급" },
         ]
       },
       projects: [
         "포카마켓 웹 플랫폼",
-        "React 기반 대시보드",
-        "모바일 웹 애플리케이션"
+        "프로젝트 관리",
+        "Next.js 프론트엔드",
+        "Spring Boot 백엔드",
+        "Docker 컨테이너 관리",
+        "AWS 인프라 관리",
+        "GitHub Actions CI/CD",
+        "MySQL 데이터베이스 관리",
+        "Nginx 리버스 프록시 설정",
       ],
       contact: {
-        email: "developer1@example.com",
-        github: "https://github.com/developer1"
+        email: "rkdxodnr07@gmail.com",
+        github: "https://github.com/rafinkang"
       }
     },
     {
@@ -319,10 +346,10 @@ export default function AboutUsContainer() {
           {/* 개발자 카드 그리드 */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {developers.map((developer) => (
-              <Card key={developer.id} className="hover:shadow-xl transition-all duration-300 border-8 border-gray-800 bg-gray-200" style={{
+              <Card key={developer.id} className="hover:shadow-xl transition-all duration-300 border-8 pt-0 border-gray-800 bg-gray-200" style={{
                 boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
               }}>
-                <CardHeader className="pb-4 bg-gray-900 border-b-8 border-gray-800">
+                <CardHeader className="pb-4 bg-gray-900 border-b-8 border-gray-800 pt-6">
                   <div>
                     <CardTitle className="text-2xl font-bold text-white font-mono">
                       {developer.name}

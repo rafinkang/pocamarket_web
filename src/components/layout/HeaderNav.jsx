@@ -1,27 +1,25 @@
 "use client";
 
-import * as React from "react";
-import Link from "next/link";
-import { Menu, X, ChevronDown, User } from "lucide-react";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  navigationMenuTriggerStyle
+} from "@/components/ui/navigation-menu";
+import { ChevronDown, Menu, User, X } from "lucide-react";
+import Link from "next/link";
+import * as React from "react";
 
-import useAuthStore from '@/store/authStore'
-import { POKEMON_CARD, POKEMON_CARD_TRADE, LOGIN, MYPAGE } from "@/constants/path"
+import { ABOUT_US, LOGIN, MYPAGE, POKEMON_CARD, POKEMON_CARD_TRADE } from "@/constants/path";
+import useAuthStore from '@/store/authStore';
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 /**
@@ -31,6 +29,7 @@ const navigationMenus = [
   { title: "홈", href: "/" },
   { title: "포켓몬 카드", href: POKEMON_CARD },
   { title: "카드 교환", href: POKEMON_CARD_TRADE },
+  { title: "About Us", href: ABOUT_US },
 ];
 
 export function HeaderNav() {
