@@ -171,7 +171,7 @@ export default function TradeListContainer() {
     
     Object.entries(apiParams).forEach(([key, value]) => {
       if (key !== "size" && 
-          (key === "page" && value !== 1) &&
+          (key !== "page" || value !== 1) &&
           value !== null && 
           value !== undefined && 
           value !== "" && 
