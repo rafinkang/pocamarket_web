@@ -36,8 +36,6 @@ const styles = {
   dialogSelect: "w-[300px]"
 }
 
-const CARD_BACK_IMAGE = '/images/cardback.webp'
-
 // element별 색상 매핑 함수
 const elementColorMap = {
   WATER: '80,180,255',
@@ -60,41 +58,89 @@ const getElementRGB = (element) => elementColorMap[element?.toUpperCase()] || '8
 const TradeCardItem = ({ card, isMy, handleClick, isAnyHover, setIsAnyHover, element }) => {
   const ROTATE_DURATION = 8 // 초
   const [isRestarting, setIsRestarting] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const restartTimeout = useRef(null)
 
-  // 모든 카드가 동일한 타이밍으로 회전하도록 현재 시간 기준 animationDelay 계산
-  const now = Date.now()
-  const elapsed = (now / 1000) % ROTATE_DURATION
-  const animationDelay = `-${elapsed}s`
+  // 모든 카드가 동일한 타이밍으로 회전하도록 현재 시간 기준 animationDelay 계산 - 메모이제이션
+  const animationDelay = useMemo(() => {
+    const now = Date.now()
+    const elapsed = (now / 1000) % ROTATE_DURATION
+    return `-${elapsed}s`
+  }, [ROTATE_DURATION])
 
-  const elementRGB = getElementRGB(element)
+  const elementRGB = useMemo(() => getElementRGB(element), [element])
 
-  const handleMouseEnter = () => setIsAnyHover(true)
-  const handleMouseLeave = () => {
-    setIsRestarting(true)
-    setIsAnyHover(false)
-    restartTimeout.current = setTimeout(() => {
-      requestAnimationFrame(() => {
-        setIsRestarting(false)
-      })
-    }, 0)
-  }
+  // 화면 크기 변경 감지 및 모바일 상태 업데이트
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640)
+    }
+
+    // 초기 상태 설정
+    checkMobile()
+
+    // resize 이벤트 리스너 추가
+    window.addEventListener('resize', checkMobile)
+
+    // 클린업 함수
+    return () => {
+      window.removeEventListener('resize', checkMobile)
+    }
+  }, [])
+  
+  const handleMouseEnter = useCallback(() => {
+    if (!isMobile) setIsAnyHover(true)
+  }, [isMobile, setIsAnyHover])
+
+  const handleMouseLeave = useCallback(() => {
+    if (!isMobile) {
+      setIsRestarting(true)
+      setIsAnyHover(false)
+      restartTimeout.current = setTimeout(() => {
+        requestAnimationFrame(() => {
+          setIsRestarting(false)
+        })
+      }, 0)
+    }
+  }, [isMobile, setIsAnyHover])
+
   useEffect(() => () => clearTimeout(restartTimeout.current), [])
-
-  const style = isRestarting
-    ? {
+  
+  // 스타일 객체 메모이제이션
+  const style = useMemo(() => {
+    if (isMobile) {
+      return {
+        transform: 'rotateY(0deg)',
+        transformStyle: 'preserve-3d',
+      }
+    }
+    
+    if (isRestarting) {
+      return {
         transform: 'rotateY(0deg)',
         transition: 'transform 0.2s cubic-bezier(0.4,0,0.2,1)',
         transformStyle: 'preserve-3d',
       }
-    : {
-        animation: !isAnyHover ? `cardRotate ${ROTATE_DURATION}s linear infinite` : undefined,
-        animationPlayState: !isAnyHover ? 'running' : 'paused',
-        animationDelay: !isAnyHover ? animationDelay : '0s',
-        transform: isAnyHover ? 'rotateY(0deg)' : undefined,
-        transition: isAnyHover ? 'transform 0.2s cubic-bezier(0.4,0,0.2,1)' : undefined,
-        transformStyle: 'preserve-3d',
-      }
+    }
+    
+    return {
+      animation: !isAnyHover ? `cardRotate ${ROTATE_DURATION}s linear infinite` : undefined,
+      animationPlayState: !isAnyHover ? 'running' : 'paused',
+      animationDelay: !isAnyHover ? animationDelay : '0s',
+      transform: isAnyHover ? 'rotateY(0deg)' : undefined,
+      transition: isAnyHover ? 'transform 0.2s cubic-bezier(0.4,0,0.2,1)' : undefined,
+      transformStyle: 'preserve-3d',
+    }
+  }, [isMobile, isRestarting, isAnyHover, ROTATE_DURATION, animationDelay])
+
+  // 그림자 스타일 메모이제이션
+  const shadowStyle = useMemo(() => ({
+    borderRadius: '50%',
+    background: `radial-gradient(ellipse at center, rgba(${elementRGB},0.6) 0%, rgba(${elementRGB},0.25) 50%, transparent 100%)`,
+    boxShadow: `0 8px 24px 0 rgba(${elementRGB},0.6), 0 2px 6px 0 rgba(${elementRGB},0.25)`,
+    filter: 'blur(1px)',
+    opacity: 0.9,
+  }), [elementRGB])
 
   return (
     <div 
@@ -105,18 +151,12 @@ const TradeCardItem = ({ card, isMy, handleClick, isAnyHover, setIsAnyHover, ele
       {/* 입체감 있는 바닥 그림자 - 모바일에서 숨김 */}
       <div
         className="absolute left-1/2 top-[97%] -translate-x-1/2 mt-6 w-[70%] h-8 z-0 pointer-events-none animate-blue-shadow hidden sm:block"
-        style={{
-          borderRadius: '50%',
-          background: `radial-gradient(ellipse at center, rgba(${elementRGB},0.6) 0%, rgba(${elementRGB},0.25) 50%, transparent 100%)`,
-          boxShadow: `0 8px 24px 0 rgba(${elementRGB},0.6), 0 2px 6px 0 rgba(${elementRGB},0.25)`,
-          filter: 'blur(1px)',
-          opacity: 0.9,
-        }}
+        style={shadowStyle}
       />
 
       {/* 카드와 그림자 등 기존 내용 */}
-      <div className="relative z-10 w-[80vw] sm:w-full sm:max-w-[320px] md:max-w-[366px] mx-auto aspect-[366/512] min-h-[200px] min-w-[100px]"
-        style={{ perspective: '1000px' }}
+      <div className="relative z-10 max-w-[280px] sm:w-full sm:max-w-[210px] mx-auto aspect-[366/512] min-h-[200px] min-w-[100px]"
+        style={{ perspective: '1000px', width: "70vw" }}
       >
         <div
           className="animate-card-rotate"
@@ -141,38 +181,23 @@ const TradeCardItem = ({ card, isMy, handleClick, isAnyHover, setIsAnyHover, ele
             }}
           >
             {isMy ? (
-              <PokemonCard data={card} showInfo={false} className="w-full h-full !max-w-none !p-0 sm:w-full sm:max-w-[320px] md:max-w-[366px]" testMode={testMode} />
+              <div className="w-full h-full flex items-center justify-center">
+                <div className="w-full h-full flex items-center justify-center" style={{ maxWidth: 'none' }}>
+                  <div style={{ width: '100%', height: '100%', maxWidth: 'none' }}>
+                    <PokemonCard data={card} showInfo={false} className="w-full h-full !max-w-none !p-0" testMode={testMode} />
+                  </div>
+                </div>
+              </div>
             ) : (
               <FlippableCard
                 handleClick={handleClick}
                 cardKey={card.code}
                 data={card}
                 btnName="교환 신청"
+                width="100%"
+                maxWidth="100%"
               />
             )}
-          </div>
-          {/* 카드 뒷면 */}
-          <div
-            style={{
-              backfaceVisibility: 'hidden',
-              transform: 'rotateY(180deg)',
-              zIndex: 9,
-              width: '100%',
-              height: '100%',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <img
-              src={CARD_BACK_IMAGE}
-              alt="카드 뒷면"
-              className="w-full h-full object-contain"
-              draggable={false}
-            />
           </div>
         </div>
       </div>
@@ -218,19 +243,13 @@ export default function TradeBox({checkLogin, data, isMy, tcgCodeList, onTradeRe
     }
   }, [tcgCode, tradeCard, onTradeRequest])
 
-  // const handleOk = () => {
-  //   onTradeRequest(tradeCard, tcgCode);
-  //   setOpenDialog(false)
-  // }
-
   const handleCancel = () => {
-    console.log("handleCancel")
     setOpenDialog(false)
   }
 
-  const onTcgCodeChange = (value) => {
+  const onTcgCodeChange = useCallback((value) => {
     setTcgCode(value);
-  }
+  }, [])
 
   /**
    * 카드 클릭 핸들러
@@ -245,7 +264,7 @@ export default function TradeBox({checkLogin, data, isMy, tcgCodeList, onTradeRe
     `${user?.nickname || "NONE"}님의 <span class="font-bold text-black">[ ${tradeCard.nameKo} ]</span>(으)로 교환 신청을 할까요?`
   ), [user, tradeCard])
 
-  const tradeRequestContent = (
+  const tradeRequestContent = useMemo(() => (
     <div className={styles.dialogContent}>
       <div className={styles.dialogCardImage}>
         <PokemonCard data={tradeCard} showInfo={false} testMode={testMode} />
@@ -269,7 +288,7 @@ export default function TradeBox({checkLogin, data, isMy, tcgCodeList, onTradeRe
         <Link href={MYPAGE}>코드 등록하러가기</Link>
       </Button>
     </div>
-  )
+  ), [tradeCard, onTcgCodeChange, tcgCode, tcgCodeList, testMode])
 
   if (!data) return null
 
@@ -293,17 +312,19 @@ export default function TradeBox({checkLogin, data, isMy, tcgCodeList, onTradeRe
       <div className={styles.tradeSection}>
         <h3 className={styles.tradeTitle}>이런 카드를 원해요!</h3>
         <div className={styles.tradeCardContainer}>
-          {wantCards.map((card, idx) => (
-            <TradeCardItem
-              key={card.id || idx}
-              card={card}
-              isMy={isMy}
-              handleClick={handleClick}
-              isAnyHover={isAnyHover}
-              setIsAnyHover={setIsAnyHover}
-              element={card.element}
-            />
-          ))}
+          {useMemo(() => 
+            wantCards.map((card, idx) => (
+              <TradeCardItem
+                key={card.id || idx}
+                card={card}
+                isMy={isMy}
+                handleClick={handleClick}
+                isAnyHover={isAnyHover}
+                setIsAnyHover={setIsAnyHover}
+                element={card.element}
+              />
+            )), [wantCards, isMy, handleClick, isAnyHover, setIsAnyHover]
+          )}
         </div>
       </div>
     </>
