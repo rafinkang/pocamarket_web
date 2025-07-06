@@ -4,13 +4,20 @@ import { getMyTcgTradeInfo } from "@/api/tcgTrade";
 import { Badge } from "@/components/ui/badge"
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { 
+  Activity, 
+  Clock, 
+  CheckCircle, 
+  AlertTriangle, 
+  Star, 
+  Coins,
+  ArrowRight
+} from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -23,45 +30,71 @@ const DEFAULT_TRADE_STATS = [
     count: 0,
     variant: 'outline',
     link: '/trade/my-trade/ongoing',
-    dataKey: 'tradingCount' // API 응답의 어떤 키와 매칭될지 정의
+    dataKey: 'tradingCount',
+    icon: Activity,
+    color: 'blue',
+    bgColor: 'bg-blue-50',
+    textColor: 'text-blue-700',
+    iconColor: 'text-blue-600'
   },
   {
-    label: '내가 신청중인 교환',
+    label: '내가 신청중',
     count: 0,
     variant: 'outline',
     link: '/trade/my-trade/requested',
-    dataKey: 'requestCount'
+    dataKey: 'requestCount',
+    icon: Clock,
+    color: 'yellow',
+    bgColor: 'bg-yellow-50',
+    textColor: 'text-yellow-700',
+    iconColor: 'text-yellow-600'
   },
   {
     label: '완료된 교환',
     count: 0,
     variant: 'outline',
     link: '/trade/my-trade/completed',
-    dataKey: 'tradeCount'
+    dataKey: 'tradeCount',
+    icon: CheckCircle,
+    color: 'green',
+    bgColor: 'bg-green-50',
+    textColor: 'text-green-700',
+    iconColor: 'text-green-600'
   },
   {
     label: '신고당한 횟수',
     count: 0,
     variant: 'destructive',
-    dataKey: 'reportCount'
+    dataKey: 'reportCount',
+    icon: AlertTriangle,
+    color: 'red',
+    bgColor: 'bg-red-50',
+    textColor: 'text-red-700',
+    iconColor: 'text-red-600'
   },
   {
     label: '거래 점수',
     count: 0,
     variant: 'default',
-    dataKey: 'exp'
+    dataKey: 'exp',
+    icon: Star,
+    color: 'purple',
+    bgColor: 'bg-purple-50',
+    textColor: 'text-purple-700',
+    iconColor: 'text-purple-600'
   },
   {
     label: '포인트',
     count: 0,
     variant: 'default',
-    dataKey: 'point'
+    dataKey: 'point',
+    icon: Coins,
+    color: 'orange',
+    bgColor: 'bg-orange-50',
+    textColor: 'text-orange-700',
+    iconColor: 'text-orange-600'
   }
 ];
-
-// 공통 스타일을 변수로 정의
-const listItemClassName = "flex justify-center-safe items-center gap-2";
-const badgeClassName = "h-5 min-w-5 rounded-full px-1 font-mono tabular-nums";
 
 export default function MyTrade({ className }) {
   const [tradeStats, setTradeStats] = useState(DEFAULT_TRADE_STATS);
@@ -106,24 +139,77 @@ export default function MyTrade({ className }) {
 
   return (
     <Card className={`${className}`}>
-      <CardHeader>
-        <CardTitle>나의 교환</CardTitle>
-        <CardDescription>카드교환 상세정보</CardDescription>
+      <CardHeader className="pb-4">
+        <div className="flex items-center space-x-3">
+          <div className="p-2 bg-blue-100 rounded-lg">
+            <Activity className="h-5 w-5 text-blue-600" />
+          </div>
+          <div>
+            <CardTitle className="text-xl font-bold text-gray-900">나의 교환</CardTitle>
+            <CardDescription className="text-gray-600">
+              카드 교환 활동 현황을 확인하세요
+            </CardDescription>
+          </div>
+        </div>
       </CardHeader>
-      <CardContent>
-        <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {tradeStats.map((stat, index) => (
-            <li key={index} className={listItemClassName}>
-              <Link href={stat?.link || '#'}>{stat.label}</Link>
-              <Badge
-                className={badgeClassName}
-                variant={stat.variant}
+      <CardContent className="space-y-4">
+        {/* 상위 3개 주요 통계 */}
+        <div className="grid grid-cols-1 gap-3">
+          {tradeStats.slice(0, 3).map((stat, index) => {
+            const Icon = stat.icon;
+            return (
+              <Link 
+                key={index} 
+                href={stat?.link || '#'}
+                className="group block"
               >
-                {isLoading ? '...' : stat.count}
-              </Badge>
-            </li>
-          ))}
-        </ul>
+                <div className={`${stat.bgColor} rounded-lg p-4 transition-all duration-300 hover:scale-105 hover:shadow-md border border-transparent hover:border-${stat.color}-200`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className={`p-2 bg-white rounded-lg shadow-sm`}>
+                        <Icon className={`h-5 w-5 ${stat.iconColor}`} />
+                      </div>
+                      <div>
+                        <p className={`text-sm font-medium ${stat.textColor}`}>
+                          {stat.label}
+                        </p>
+                        <p className={`text-2xl font-bold ${stat.textColor}`}>
+                          {isLoading ? '...' : stat.count}
+                        </p>
+                      </div>
+                    </div>
+                    <ArrowRight className={`h-5 w-5 ${stat.iconColor} opacity-0 group-hover:opacity-100 transition-opacity`} />
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* 하위 통계들 */}
+        <div className="grid grid-cols-1 gap-3 pt-2 border-t border-gray-100">
+          {tradeStats.slice(3).map((stat, index) => {
+            const Icon = stat.icon;
+            return (
+              <div key={index + 3} className={`${stat.bgColor} rounded-lg p-3`}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <Icon className={`h-4 w-4 ${stat.iconColor}`} />
+                    <span className={`text-sm font-medium ${stat.textColor}`}>
+                      {stat.label}
+                    </span>
+                  </div>
+                  <Badge
+                    className={`${stat.textColor} bg-white border-0 font-bold`}
+                    variant="outline"
+                  >
+                    {isLoading ? '...' : stat.count}
+                  </Badge>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </CardContent>
     </Card>
   )

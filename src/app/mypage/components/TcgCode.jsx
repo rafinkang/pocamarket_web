@@ -20,7 +20,7 @@ import {
   getSortedRowModel,
   useReactTable
 } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Plus, Code2 } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -171,16 +171,18 @@ export default function TcgCode({ className }) {
   const columns = [
     {
       accessorKey: "tcgCode",
-      header: () => <div className="text-center">TCG Code</div>,
+      header: () => <div className="text-center font-semibold">TCG Code</div>,
       cell: ({ row }) => (
-        <div className="text-center">{row.getValue("tcgCode")}</div>
+        <div className="text-center font-mono bg-gray-50 px-2 py-1 rounded text-sm">
+          {row.getValue("tcgCode")}
+        </div>
       ),
     },
     {
       accessorKey: "memo",
-      header: () => <div className="text-center">Memo</div>,
+      header: () => <div className="text-center font-semibold">메모</div>,
       cell: ({ row }) => (
-        <div className="capitalize">{row.getValue("memo")}</div>
+        <div className="text-gray-700">{row.getValue("memo")}</div>
       ),
     },
     {
@@ -191,28 +193,22 @@ export default function TcgCode({ className }) {
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0 float-right">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal />
+              <Button variant="ghost" className="h-8 w-8 p-0 float-right hover:bg-gray-100">
+                <span className="sr-only">메뉴 열기</span>
+                <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="w-40">
               <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(rowData.tcgCode)}
-              >
-                TCG Code 복사하기
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => {
-                  handleEditClick(rowData);
-                }}
+                onClick={() => handleEditClick(rowData)}
+                className="cursor-pointer hover:bg-blue-50"
               >
                 수정
               </DropdownMenuItem>
+              <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => handleDelete(rowData)}
-                className="text-red-600 focus:text-red-600"
+                className="cursor-pointer text-red-600 hover:bg-red-50"
               >
                 삭제
               </DropdownMenuItem>
@@ -244,31 +240,45 @@ export default function TcgCode({ className }) {
 
   return (
     <Card className={`${className}`}>
-      <CardHeader>
-        <CardTitle>친구 코드</CardTitle>
-        <CardDescription>
-          친구 코드를 복사하여 친구에게 공유할 수 있습니다.
-        </CardDescription>
+      <CardHeader className="pb-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="p-2 bg-green-100 rounded-lg">
+              <Code2 className="h-5 w-5 text-green-600" />
+            </div>
+            <div>
+              <CardTitle className="text-xl font-bold text-gray-900">TCG 코드 관리</CardTitle>
+              <CardDescription className="text-gray-600">
+                TCG 코드를 등록하고 관리하세요
+              </CardDescription>
+            </div>
+          </div>
+          <Button 
+            onClick={() => setIsDialogOpen(true)}
+            className="bg-green-600 hover:bg-green-700 text-white shadow-sm"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            코드 추가
+          </Button>
+        </div>
       </CardHeader>
-      <CardContent>
-        <div className="w-full">
-          <div className="rounded-md border">
+      <CardContent className="p-0">
+        {data.length > 0 ? (
+          <div className="overflow-hidden">
             <Table>
-              <TableHeader>
+              <TableHeader className="bg-gray-50">
                 {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => {
-                      return (
-                        <TableHead key={header.id}>
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                        </TableHead>
-                      );
-                    })}
+                  <TableRow key={headerGroup.id} className="border-b border-gray-200">
+                    {headerGroup.headers.map((header) => (
+                      <TableHead key={header.id} className="text-gray-700 font-semibold">
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </TableHead>
+                    ))}
                   </TableRow>
                 ))}
               </TableHeader>
@@ -278,9 +288,10 @@ export default function TcgCode({ className }) {
                     <TableRow
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
+                      className="hover:bg-gray-50 transition-colors"
                     >
                       {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
+                        <TableCell key={cell.id} className="py-3">
                           {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext()
@@ -293,25 +304,41 @@ export default function TcgCode({ className }) {
                   <TableRow>
                     <TableCell
                       colSpan={columns.length}
-                      className="h-24 text-center"
+                      className="h-24 text-center text-gray-500"
                     >
-                      등록된 친구 코드가 없습니다.
+                      등록된 TCG 코드가 없습니다.
                     </TableCell>
                   </TableRow>
                 )}
               </TableBody>
             </Table>
           </div>
-        </div>
+        ) : (
+          <div className="text-center py-12 space-y-4">
+            <Code2 className="h-16 w-16 text-gray-300 mx-auto" />
+            <div className="space-y-2">
+              <h3 className="text-lg font-semibold text-gray-700">TCG 코드가 없습니다</h3>
+              <p className="text-gray-500">
+                첫 번째 TCG 코드를 추가해보세요!
+              </p>
+            </div>
+            <Button 
+              onClick={() => setIsDialogOpen(true)}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              첫 코드 추가하기
+            </Button>
+          </div>
+        )}
       </CardContent>
-      <CardFooter>
-        <TcgCodeDialog
-          open={isDialogOpen}
-          onOpenChange={handleDialogOpenChange}
-          initialData={editingRow}
-          onSubmit={handleFormSubmit}
-        />
-      </CardFooter>
+
+      <TcgCodeDialog
+        isOpen={isDialogOpen}
+        onOpenChange={handleDialogOpenChange}
+        onSubmit={handleFormSubmit}
+        editingRow={editingRow}
+      />
     </Card>
   );
 }
