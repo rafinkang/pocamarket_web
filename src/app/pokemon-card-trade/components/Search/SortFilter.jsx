@@ -16,7 +16,7 @@ import {
  */
 export default function SortFilter({ sortList, onChange, value = "id,desc" }) {
   return (
-    <div className="flex justify-end items-center px-2 lg:px-4">
+    <div className="flex justify-end items-center">
       <Select
         value={value}
         onValueChange={(value) => {

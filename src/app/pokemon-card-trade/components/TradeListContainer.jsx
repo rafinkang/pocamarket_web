@@ -416,32 +416,27 @@ export default function TradeListContainer() {
         filterCardComponent={(props) => (
           <FilterCardBox {...props}>
             {/* 내 카드 (my) 섹션 */}
-            <div className="flex items-center justify-center w-full">
+            <div className="flex items-center justify-center">
               {filterParams.myCard && (
-                  <FilterCard
-                    key={filterParams.myCard.code}
-                    data={filterParams.myCard}
-                    type={filterParams.myCard.filterCardType}
-                    onCardClick={onFilterCardButton}
-                    onCancelClick={onFilterCardCancel}
-                  />
-                )}
+                <FilterCard
+                  key={filterParams.myCard.code}
+                  data={filterParams.myCard}
+                  type={filterParams.myCard.filterCardType}
+                  onCardClick={onFilterCardButton}
+                  onCancelClick={onFilterCardCancel}
+                />
+              )}
             </div>
 
-            {/* 교환 화살표 */}
-            <div className="flex justify-center items-center">
-              <RiArrowLeftRightFill 
-                size="40px" 
-                className="sm:text-[50px]" 
-              />
+            <div className="flex items-center justify-center self-stretch w-[2px] md:w-[40px]">
+              <div className="text-2xl hidden md:block">
+                <RiArrowLeftRightFill size="40px" className="sm:text-[50px]" />
+              </div>
+              <div className="w-[2px] h-[60%] bg-gray-400 block md:hidden"></div>
             </div>
 
             {/* 원하는 카드들 (want) 섹션 */}
-            <div className="
-              grid items-center justify-items-center w-full
-              grid-rows-3 grid-cols-1 gap-4
-              md:grid-rows-1 md:grid-cols-[1fr_1fr_1fr] md:gap-4"
-            >
+            <div className="flex items-center justify-items-center gap-4">
               {filterParams.wantCard.map((card, index) => (
                 <FilterCard
                   key={index}
