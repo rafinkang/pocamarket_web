@@ -9,89 +9,74 @@ export const PokemonThreeDMarquee = ({
   images,
   className
 }) => {
-  // Split the images array into 4 equal parts
-  const chunkSize = Math.ceil(images.length / 4);
-  const chunks = Array.from({ length: 4 }, (_, colIndex) => {
-    const start = colIndex * chunkSize;
-    return images.slice(start, start + chunkSize);
-  });
-
-  /**
-   * 각 컬럼의 총 높이를 계산하는 함수
-   * @param {number} imageCount 이미지 개수
-   * @returns {number} 총 높이 (px)
-   */
-  const calculateColumnHeight = (imageCount) => {
-    // 이미지 높이는 aspect-ratio [366/512]를 기준으로 계산
-    // 실제 렌더링 시 width가 약 200px 정도로 설정되므로 높이는 약 280px
-    const imageHeight = 280; // 실제 렌더링되는 이미지 높이
-    const gap = 32; // gap-8 = 32px
-
-    return (imageHeight + gap) * imageCount - gap; // 마지막 gap 제외
-  };
-
   return (
     <div
       className={cn(
-        "mx-auto block h-[600px] overflow-hidden rounded-2xl max-sm:h-100",
+        "mx-auto block overflow-hidden rounded-2xl",
+        // 뷰포트 높이에 맞춰 동적 높이 조절
+        // 헤더(4rem) + 여백을 고려하여 조절
+        "h-[calc(100vh-20rem)] min-h-[400px] max-h-[600px]",
+        // 모바일에서는 더 작게
+        "max-sm:h-[calc(100vh-16rem)] max-sm:min-h-[300px] max-sm:max-h-[400px]",
         className
       )}>
       <div className="flex size-full items-center justify-center">
-        <div className="size-[1720px] shrink-0 scale-50 sm:scale-75 lg:scale-100">
-          <div
-            style={{
-              transform: "rotateX(55deg) rotateY(0deg) rotateZ(-45deg)",
+        <div className="relative w-full h-full overflow-hidden">
+          {/* 좌우 마퀴 애니메이션 컨테이너 */}
+          <motion.div
+            animate={{
+              x: [0, -2000], // 오른쪽에서 왼쪽으로 이동
             }}
-            className="relative top-96 right-[50%] grid size-full origin-top-left grid-cols-4 gap-8 transform-3d">
-            {chunks.map((subarray, colIndex) => {
-              // 각 컬럼의 전체 높이 계산
-              const columnHeight = calculateColumnHeight(subarray.length);
-              // 애니메이션 범위: 컬럼 높이의 절반 정도로 설정하여 모든 이미지가 보이도록 함
-              const animationRange = columnHeight * 0.25;
-
+            transition={{
+              duration: 30, // 30초에 한 바퀴
+              repeat: Infinity,
+              ease: "linear", // 일정한 속도
+            }}
+            className="flex items-center gap-8 h-full"
+            style={{
+              width: 'max-content', // 콘텐츠 크기에 맞춤
+            }}
+          >
+            {/* 카드들을 두 번 렌더링하여 무한 루프 효과 */}
+            {[...images, ...images].map((image, index) => {
               return (
                 <motion.div
-                  animate={{
-                    y: colIndex % 2 === 0 ? animationRange : -animationRange
+                  key={index + image + 'marquee'}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ 
+                    delay: (index % images.length) * 0.1, 
+                    duration: 0.8,
+                    ease: "easeOut"
                   }}
-                  transition={{
-                    duration: colIndex % 2 === 0 ?
-                      12 + (subarray.length * 0.5) : // 이미지 개수에 따라 duration 조정
-                      15 + (subarray.length * 0.5),
-                    repeat: Infinity,
-                    repeatType: "reverse",
-                    ease: "linear", // 일정한 속도로 움직이도록 변경
-                  }}
-                  key={colIndex + "marquee"}
-                  className="flex flex-col items-start gap-8">
-                  {/* <GridLineVertical className="-left-4" offset="80px" /> */}
-                  {subarray.map((image, imageIndex) => (
-                    <div className="relative" key={imageIndex + image}>
-                      {/* <GridLineHorizontal className="-top-4" offset="20px" /> */}
-                      <Link href={`${POKEMON_CARD}/${image}`}>
-                        <motion.img
-                          whileHover={{
-                            y: -10,
-                            scale: 1.05, // 호버 시 약간 확대
-                          }}
-                          transition={{
-                            duration: 0.3,
-                            ease: "easeInOut",
-                          }}
-                          key={imageIndex + image}
-                          src={`/EXcards/${image}.webp`}
-                          alt={`Image ${imageIndex + 1}`}
-                          className="aspect-[366/512] rounded-lg object-cover ring ring-gray-950/5 hover:shadow-2xl"
-                          width={366}
-                          height={512} />
-                      </Link>
-
-                    </div>
-                  ))}
+                  className="flex-shrink-0"
+                >
+                  <Link href={`${POKEMON_CARD}/${image}`}>
+                    <motion.img
+                      whileHover={{
+                        scale: 1.1, // 호버 시 확대
+                        y: -10, // 위로 살짝 올리기
+                        boxShadow: "0 20px 40px rgba(0,0,0,0.3)", // 그림자 효과
+                      }}
+                      whileTap={{
+                        scale: 1.05, // 클릭 시 살짝 축소
+                      }}
+                      transition={{
+                        duration: 0.3,
+                        ease: "easeOut",
+                      }}
+                      src={`/EXcards/${image}.webp`}
+                      alt={`Image ${index + 1}`}
+                      className="aspect-[366/512] rounded-lg object-cover ring ring-gray-950/5 hover:shadow-2xl w-[250px] 
+                        transform-gpu will-change-transform cursor-pointer 
+                        transition-all duration-300 ease-out"
+                      width={250}
+                      height={350} />
+                  </Link>
                 </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>
