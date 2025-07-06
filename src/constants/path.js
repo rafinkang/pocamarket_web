@@ -7,3 +7,4 @@ export const POKEMON_CARD = "/pokemon-card";
 export const POKEMON_CARD_TRADE = "/pokemon-card-trade";
 
 export const ABOUT_US = "/about-us";
+export const PORTFOLIO = "/portfolio";

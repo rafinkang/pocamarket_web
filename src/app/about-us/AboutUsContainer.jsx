@@ -3,11 +3,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { 
-  Github, 
-  Mail, 
-  Code, 
-  Briefcase, 
+import {
+  Github,
+  Mail,
+  Code,
+  Briefcase,
   GraduationCap,
   Star,
   MapPin,
@@ -19,6 +19,8 @@ import {
   Server,
   Settings
 } from "lucide-react"
+import Link from "next/link"
+import { PORTFOLIO } from "@/constants/path"
 
 export default function AboutUsContainer() {
   const developers = [
@@ -82,13 +84,23 @@ export default function AboutUsContainer() {
     },
     {
       id: 2,
-      name: "이동현",
-      role: "Backend Developer",
-      position: "Backend Lead",
-      experience: "4년차",
-      location: "부산, 대한민국",
+      name: "박지연",
+      role: "Full Stack Developer",
+      position: "Frontend Lead",
+      experience: "7년차",
+      location: "서울, 대한민국",
       introduction: "확장 가능한 서버 아키텍처와 데이터베이스 설계에 전문성을 가진 백엔드 개발자입니다. 성능 최적화와 보안을 중시합니다.",
       skills: {
+        "Frontend": [
+          { name: "JavaScript", level: "전문가" },
+          { name: "JQuery", level: "전문가" },
+          { name: "Vue.js", level: "전문가" },
+          { name: "React", level: "고급" },
+          { name: "Next.js", level: "중급" },
+          { name: "CSS", level: "중급" },
+          { name: "AngularJS", level: "초급" },
+          { name: "Tailwind CSS", level: "초급" },
+        ],
         "Backend": [
           { name: "Java", level: "전문가" },
           { name: "Spring Boot", level: "전문가" },
@@ -158,24 +170,24 @@ export default function AboutUsContainer() {
 
   const getLevelBadge = (level) => {
     const levelConfig = {
-      "입문": { 
-        badge: <Badge className="bg-gray-600 text-gray-200 border-2 border-gray-900 font-mono hover:bg-gray-600" style={{boxShadow: '2px 2px 0px #000000'}}>입문</Badge>,
+      "입문": {
+        badge: <Badge className="bg-gray-600 text-gray-200 border-2 border-gray-900 font-mono hover:bg-gray-600" style={{ boxShadow: '2px 2px 0px #000000' }}>입문</Badge>,
         color: "bg-gray-600 text-gray-200"
       },
-      "초급": { 
-        badge: <Badge className="bg-blue-600 text-blue-100 border-2 border-blue-900 font-mono hover:bg-blue-600" style={{boxShadow: '2px 2px 0px #000000'}}>초급</Badge>,
+      "초급": {
+        badge: <Badge className="bg-blue-600 text-blue-100 border-2 border-blue-900 font-mono hover:bg-blue-600" style={{ boxShadow: '2px 2px 0px #000000' }}>초급</Badge>,
         color: "bg-blue-600 text-blue-100"
       },
-      "중급": { 
-        badge: <Badge className="bg-yellow-500 text-yellow-900 border-2 border-yellow-700 font-mono hover:bg-yellow-500" style={{boxShadow: '2px 2px 0px #000000'}}>중급</Badge>,
+      "중급": {
+        badge: <Badge className="bg-yellow-500 text-yellow-900 border-2 border-yellow-700 font-mono hover:bg-yellow-500" style={{ boxShadow: '2px 2px 0px #000000' }}>중급</Badge>,
         color: "bg-yellow-500 text-yellow-900"
       },
-      "고급": { 
-        badge: <Badge className="bg-red-600 text-red-100 border-2 border-red-900 font-mono hover:bg-red-600" style={{boxShadow: '2px 2px 0px #000000'}}>고급</Badge>,
+      "고급": {
+        badge: <Badge className="bg-red-600 text-red-100 border-2 border-red-900 font-mono hover:bg-red-600" style={{ boxShadow: '2px 2px 0px #000000' }}>고급</Badge>,
         color: "bg-red-600 text-red-100"
       },
-      "전문가": { 
-        badge: <Badge className="bg-green-600 text-green-100 border-2 border-green-900 font-mono hover:bg-green-600" style={{boxShadow: '2px 2px 0px #000000'}}>
+      "전문가": {
+        badge: <Badge className="bg-green-600 text-green-100 border-2 border-green-900 font-mono hover:bg-green-600" style={{ boxShadow: '2px 2px 0px #000000' }}>
           <Star className="h-3 w-3 mr-1" />전문가
         </Badge>,
         color: "bg-green-600 text-green-100"
@@ -199,7 +211,7 @@ export default function AboutUsContainer() {
 
 
   return (
-    <div className="min-h-screen bg-gray-300" style={{ 
+    <div className="min-h-screen bg-gray-300" style={{
       backgroundImage: `
         radial-gradient(circle at 2px 2px, #374151 1px, transparent 0),
         radial-gradient(circle at 6px 6px, #6b7280 1px, transparent 0)
@@ -236,7 +248,7 @@ export default function AboutUsContainer() {
             backgroundSize: '4px 4px'
           }}></div>
         </div>
-        
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="text-center">
             {/* 게임보이 스타일 아이콘 */}
@@ -247,7 +259,7 @@ export default function AboutUsContainer() {
                 <Rocket className="h-16 w-16 text-gray-900" />
               </div>
             </div>
-            
+
             {/* 게임보이 스타일 타이틀 */}
             <div className="bg-gray-200 border-8 border-gray-800 p-8 mb-8 max-w-4xl mx-auto shadow-2xl" style={{
               boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
@@ -263,7 +275,7 @@ export default function AboutUsContainer() {
                 ★ PRESS START TO TRADE ★
               </p>
             </div>
-            
+
             {/* 게임보이 스타일 특징 카드들 */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
               <div className="bg-gray-200 border-8 border-gray-800 p-6 transform hover:scale-105 transition-transform shadow-lg" style={{
@@ -276,10 +288,10 @@ export default function AboutUsContainer() {
                 </div>
                 <h3 className="text-xl font-bold mb-3 text-gray-900 font-mono">USER FRIENDLY</h3>
                 <p className="text-gray-700 font-mono text-sm leading-relaxed">
-                  누구나 쉽게 사용할 수 있는<br/>직관적인 거래 시스템
+                  누구나 쉽게 사용할 수 있는<br />직관적인 거래 시스템
                 </p>
               </div>
-              
+
               <div className="bg-gray-200 border-8 border-gray-800 p-6 transform hover:scale-105 transition-transform shadow-lg" style={{
                 boxShadow: '4px 4px 0px #000000, 8px 8px 0px #374151'
               }}>
@@ -290,10 +302,10 @@ export default function AboutUsContainer() {
                 </div>
                 <h3 className="text-xl font-bold mb-3 text-gray-900 font-mono">HIGH TECH</h3>
                 <p className="text-gray-700 font-mono text-sm leading-relaxed">
-                  최신 웹 기술로 구현된<br/>안정적인 플랫폼
+                  최신 웹 기술로 구현된<br />안정적인 플랫폼
                 </p>
               </div>
-              
+
               <div className="bg-gray-200 border-8 border-gray-800 p-6 transform hover:scale-105 transition-transform shadow-lg" style={{
                 boxShadow: '4px 4px 0px #000000, 8px 8px 0px #374151'
               }}>
@@ -304,18 +316,20 @@ export default function AboutUsContainer() {
                 </div>
                 <h3 className="text-xl font-bold mb-3 text-gray-900 font-mono">TEAM WORK</h3>
                 <p className="text-gray-700 font-mono text-sm leading-relaxed">
-                  3명의 개발자가<br/>협력하여 완성
+                  3명의 개발자가<br />협력하여 완성
                 </p>
               </div>
             </div>
-            
+
             {/* 게임보이 스타일 배지들 */}
             <div className="flex flex-wrap justify-center gap-4">
-              <div className="bg-gray-200 text-gray-900 px-6 py-3 border-4 border-gray-800 font-bold font-mono text-sm shadow-lg" style={{
-                boxShadow: '2px 2px 0px #000000'
-              }}>
-                🎮 PORTFOLIO
-              </div>
+              <Link href={PORTFOLIO}>
+                <div className="bg-gray-200 text-gray-900 px-6 py-3 border-4 border-gray-800 font-bold font-mono text-sm shadow-lg" style={{
+                  boxShadow: '2px 2px 0px #000000'
+                }}>
+                  🎮 PORTFOLIO
+                </div>
+              </Link>
               <div className="bg-gray-200 text-gray-900 px-6 py-3 border-4 border-gray-800 font-bold font-mono text-sm shadow-lg" style={{
                 boxShadow: '2px 2px 0px #000000'
               }}>
@@ -332,7 +346,7 @@ export default function AboutUsContainer() {
       </div>
 
       {/* 개발팀 소개 */}
-      <div className="py-20 bg-gray-300" style={{ 
+      <div className="py-20 bg-gray-300" style={{
         backgroundImage: `
           radial-gradient(circle at 2px 2px, #374151 1px, transparent 0),
           radial-gradient(circle at 6px 6px, #6b7280 1px, transparent 0)
@@ -352,7 +366,7 @@ export default function AboutUsContainer() {
             <p className="text-xl text-gray-800 max-w-3xl mx-auto font-mono bg-gray-200 border-4 border-gray-700 p-4" style={{
               boxShadow: '4px 4px 0px #000000'
             }}>
-              각각의 전문성과 경험을 바탕으로 사용자 중심의<br/>
+              각각의 전문성과 경험을 바탕으로 사용자 중심의<br />
               서비스를 만들어 나가는 개발자들을 소개합니다.
             </p>
           </div>
@@ -425,7 +439,7 @@ export default function AboutUsContainer() {
                           <div className="space-y-2">
                             {skills.map((skill, index) => (
                               <div key={index} className="flex items-center justify-between">
-                                <Badge className="bg-gray-700 text-gray-200 border-2 border-gray-900 font-mono hover:bg-gray-700" style={{boxShadow: '2px 2px 0px #000000'}}>
+                                <Badge className="bg-gray-700 text-gray-200 border-2 border-gray-900 font-mono hover:bg-gray-700" style={{ boxShadow: '2px 2px 0px #000000' }}>
                                   {skill.name}
                                 </Badge>
                                 {getLevelBadge(skill.level).badge}
@@ -462,9 +476,9 @@ export default function AboutUsContainer() {
                   {/* 연락처 */}
                   <div className="pt-4 border-t-4 border-gray-700">
                     <div className="grid grid-cols-2 gap-3">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
+                      <Button
+                        variant="outline"
+                        size="sm"
                         className="border-4 border-gray-800 bg-gray-200 text-gray-900 hover:bg-gray-300 font-mono font-bold"
                         style={{
                           boxShadow: '2px 2px 0px #000000'
@@ -474,9 +488,9 @@ export default function AboutUsContainer() {
                         <Mail className="h-4 w-4 mr-2" />
                         EMAIL
                       </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
+                      <Button
+                        variant="outline"
+                        size="sm"
                         className="border-4 border-gray-800 bg-gray-200 text-gray-900 hover:bg-gray-300 font-mono font-bold"
                         style={{
                           boxShadow: '2px 2px 0px #000000'
