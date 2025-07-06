@@ -112,32 +112,46 @@ export default function AboutUsContainer() {
     },
     {
       id: 3,
-      name: "박민수",
+      name: "윤유석",
       role: "Full Stack Developer",
-      position: "DevOps Engineer",
-      experience: "2년차",
-      location: "대전, 대한민국",
-      introduction: "풀스택 개발 경험을 바탕으로 DevOps와 인프라 관리에 특화된 개발자입니다. 자동화와 CI/CD 파이프라인 구축을 좋아합니다.",
+      position: "팀원",
+      experience: "4년차",
+      location: "서울, 대한민국",
+      introduction: `백엔드 풀스택 개발자입니다. 프로젝트에서 백엔드와 프론트엔드, 인프라까지 폭넓게 경험했습니다. 협업과 지속적인 성장에 가치를 두고 있습니다.`,
       skills: {
+        "Frontend": [
+          { name: "Next.js", level: "중급" },
+          { name: "Tailwind CSS", level: "중급" },
+          { name: "JQuery", level: "전문가" },
+          { name: "Svelte", level: "전문가" },
+        ],
         "Backend": [
-          { name: "Node.js", level: "고급" },
-          { name: "Python", level: "고급" },
-          { name: "MongoDB", level: "고급" }
+          { name: "Java", level: "전문가" },
+          { name: "Spring Boot", level: "전문가" },
+          { name: "PHP", level: "전문가" },
+          { name: "MariaDB", level: "고급" },
         ],
         "DevOps": [
-          { name: "Docker", level: "전문가" },
-          { name: "Kubernetes", level: "중급" },
-          { name: "Jenkins", level: "고급" }
+          { name: "Git", level: "고급" },
+          { name: "GitHub Actions", level: "중급" },
+          { name: "Docker", level: "중급" },
+          { name: "AWS", level: "중급" },
+          { name: "Swagger", level: "중급" },
+          { name: "Nginx", level: "중급" }
         ]
       },
       projects: [
-        "CI/CD 파이프라인 구축",
-        "컨테이너화된 마이크로서비스",
-        "인프라 자동화 도구"
+        "포켓몬 카드 리스트 페이지 API 및 프론트엔드 구현",
+        "카드 교환 리스트 페이지 API 및 프론트엔드 구현",
+        "Spring Security 기반 인증/인가 및 네이버 OAuth2 로그인 연동",
+        "JWT 기반 로그인 및 인증 토큰 발급",
+        "카드 데이터 업로드 및 관리 기능 개발",
+        "Swagger를 활용한 API 문서화",
+        "AWS 환경에서의 서비스 배포 및 운영 경험"
       ],
       contact: {
-        email: "developer3@example.com",
-        github: "https://github.com/developer3"
+        email: "yunys960@gmail.com",
+        github: "https://github.com/yunyuseok"
       }
     }
   ];
