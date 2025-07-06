@@ -9,6 +9,14 @@ export const PokemonThreeDMarquee = ({
   images,
   className
 }) => {
+  // 앞 10개 이미지만 사용
+  const displayImages = images.slice(0, 10);
+  
+  // 카드 하나의 너비 + 간격 (250px + 32px)
+  const cardWidth = 282;
+  // 전체 카드들의 총 너비
+  const totalWidth = displayImages.length * cardWidth;
+
   return (
     <div
       className={cn(
@@ -25,48 +33,73 @@ export const PokemonThreeDMarquee = ({
           {/* 좌우 마퀴 애니메이션 컨테이너 */}
           <motion.div
             animate={{
-              x: [0, -2000], // 오른쪽에서 왼쪽으로 이동
+              x: [0, -totalWidth], // 0에서 시작해서 totalWidth만큼 이동 (끊김 없는 루프)
             }}
             transition={{
-              duration: 30, // 30초에 한 바퀴
+              duration: displayImages.length * 4, // 더 천천히
               repeat: Infinity,
               ease: "linear", // 일정한 속도
+              repeatType: "loop", // 끝나면 즉시 처음 위치로
             }}
             className="flex items-center gap-8 h-full"
             style={{
               width: 'max-content', // 콘텐츠 크기에 맞춤
             }}
           >
-            {/* 카드들을 두 번 렌더링하여 무한 루프 효과 */}
-            {[...images, ...images].map((image, index) => {
+            {/* 끊김 없는 루프를 위해 두 번 렌더링 */}
+            {[...displayImages, ...displayImages].map((image, index) => {
+              const actualIndex = index % displayImages.length;
+              
               return (
                 <motion.div
-                  key={index + image + 'marquee'}
+                  key={index + image + 'loop'}
                   initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
+                  animate={{ 
+                    opacity: 1, 
+                    scale: 1,
+                  }}
                   transition={{ 
-                    delay: (index % images.length) * 0.1, 
+                    delay: actualIndex * 0.1, 
                     duration: 0.8,
-                    ease: "easeOut"
+                    ease: "easeOut",
                   }}
                   className="flex-shrink-0"
                 >
                   <Link href={`${POKEMON_CARD}/${image}`}>
                     <motion.img
-                      whileHover={{
-                        scale: 1.1, // 호버 시 확대
-                        y: -10, // 위로 살짝 올리기
-                        boxShadow: "0 20px 40px rgba(0,0,0,0.3)", // 그림자 효과
-                      }}
-                      whileTap={{
-                        scale: 1.05, // 클릭 시 살짝 축소
+                      // 부드러운 곡선 이동과 입체감 효과
+                      animate={{
+                        // 부드러운 사인 웨이브 곡선 이동 (더 많은 키프레임으로 부드럽게)
+                        y: [0, -8, -15, -8, 0, 8, 15, 8, 0],
+                        // 부드러운 스케일 변화 (중앙을 지날 때 더 크게)
+                        scale: [1, 1.02, 1.04, 1.06, 1.08, 1.06, 1.04, 1.02, 1],
                       }}
                       transition={{
-                        duration: 0.3,
-                        ease: "easeOut",
+                        duration: 12 + (actualIndex * 0.8), // 각 카드별 다른 속도로 자연스러운 흐름
+                        repeat: Infinity,
+                        ease: "easeInOut", // 부드러운 가속/감속
+                        delay: actualIndex * 0.4, // 카드별 지연 시간
+                      }}
+                      whileHover={{
+                        scale: 1.15, // 호버 시 더 크게 확대
+                        y: -15, // 위로 더 올리기
+                        boxShadow: "0 25px 50px rgba(0,0,0,0.4)", // 강한 그림자 효과
+                        zIndex: 10, // 다른 카드들 위로
+                        transition: {
+                          duration: 0.3,
+                          ease: "easeOut",
+                        }
+                      }}
+                      whileTap={{
+                        scale: 1.08, // 클릭 시 살짝 축소
+                        transition: {
+                          duration: 0.2,
+                          ease: "easeOut",
+                        }
                       }}
                       src={`/EXcards/${image}.webp`}
-                      alt={`Image ${index + 1}`}
+                      alt={`Pokemon Card ${actualIndex + 1}`}
+                      loading="lazy" // Lazy loading 적용
                       className="aspect-[366/512] rounded-lg object-cover ring ring-gray-950/5 hover:shadow-2xl w-[250px] 
                         transform-gpu will-change-transform cursor-pointer 
                         transition-all duration-300 ease-out"
