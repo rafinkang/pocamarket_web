@@ -71,7 +71,7 @@ const generateEXCardImages = () => {
     `a2-206`,
     `a2-207`,
   ];;
-
+  
   return imageFiles.map(fileName => `${fileName}`);
 };
 

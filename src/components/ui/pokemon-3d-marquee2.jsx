@@ -9,25 +9,13 @@ export const PokemonThreeDMarquee = ({
   images,
   className
 }) => {
-  // Split the images array into 4 equal parts
-  const chunkSize = Math.ceil(images.length / 4);
-  const chunks = Array.from({ length: 4 }, (_, colIndex) => {
-    const start = colIndex * chunkSize;
-    return images.slice(start, start + chunkSize);
-  });
-
-  /**
-   * 각 컬럼의 총 높이를 계산하는 함수
-   * @param {number} imageCount 이미지 개수
-   * @returns {number} 총 높이 (px)
-   */
-  const calculateColumnHeight = (imageCount) => {
-    // 원본 사이즈 기준으로 높이 계산 (366/512 비율)
-    const imageHeight = 512; // 원본 높이
-    const gap = 40; // gap 증가
-
-    return (imageHeight + gap) * imageCount - gap; // 마지막 gap 제외
-  };
+  // 앞 10개 이미지만 사용
+  const displayImages = images.slice(0, 10);
+  
+  // 카드 하나의 너비 + 간격 (250px + 32px)
+  const cardWidth = 282;
+  // 전체 카드들의 총 너비
+  const totalWidth = displayImages.length * cardWidth;
 
   return (
     <div
@@ -41,65 +29,80 @@ export const PokemonThreeDMarquee = ({
         className
       )}>
       <div className="flex size-full items-center justify-center">
-        <div className="shrink-0 w-[1000px] h-[1000px]">
-          <div
-            style={{
-              // transform: "rotateX(55deg) rotateY(0deg) rotateZ(-45deg)",
+        <div className="relative w-full h-full overflow-hidden">
+          {/* 좌우 마퀴 애니메이션 컨테이너 */}
+          <motion.div
+            animate={{
+              x: [0, -totalWidth], // 0에서 시작해서 totalWidth만큼 이동 (끊김 없는 루프)
             }}
-            className="relative grid w-full h-full origin-top-left grid-cols-4 gap-10 transform-3d">
-            {chunks.map((subarray, colIndex) => {
-              // 각 컬럼의 전체 높이 계산
-              const columnHeight = calculateColumnHeight(subarray.length);
-              // 카드들을 복제하여 연속적으로 보이게 함
-              const duplicatedCards = [...subarray, ...subarray];
-
+            transition={{
+              duration: displayImages.length * 4, // 더 천천히
+              repeat: Infinity,
+              ease: "linear", // 일정한 속도
+              repeatType: "loop", // 끝나면 즉시 처음 위치로
+            }}
+            className="flex items-center gap-8 h-full"
+            style={{
+              width: 'max-content', // 콘텐츠 크기에 맞춤
+            }}
+          >
+            {/* 끊김 없는 루프를 위해 두 번 렌더링 */}
+            {[...displayImages, ...displayImages].map((image, index) => {
+              const actualIndex = index % displayImages.length;
+              
               return (
                 <motion.div
-                  animate={{
-                    y: colIndex % 2 === 0 ? [-columnHeight, 0] : [0, -columnHeight]
+                  key={index + image + 'loop'}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ 
+                    opacity: 1, 
+                    scale: 1,
                   }}
-                  transition={{
-                    duration: 25 + (subarray.length * 10),
-                    repeat: Infinity,
-                    repeatType: "loop",
-                    ease: "linear",
+                  transition={{ 
+                    delay: actualIndex * 0.1, 
+                    duration: 0.8,
+                    ease: "easeOut",
                   }}
-                  key={colIndex + "marquee"}
-                  className="flex flex-col items-start gap-10">
-                  {/* <GridLineVertical className="-left-4" offset="80px" /> */}
-                  {duplicatedCards.map((image, imageIndex) => (
-                    <div className="relative" key={imageIndex + image + colIndex}>
-                      {/* <GridLineHorizontal className="-top-4" offset="20px" /> */}
-                      <Link href={`${POKEMON_CARD}/${image}`}>
-                        <motion.img
-                          whileHover={{
-                            scale: 1.15, // 호버 시 더 크게 확대
-                            y: -5, // 위로 더 올리기
-                            boxShadow: "0 25px 50px rgba(0,0,0,0.4)", // 강한 그림자 효과
-                            zIndex: 10, // 다른 카드들 위로
-                            transition: {
-                              duration: 0.3,
-                              ease: "easeOut",
-                            }
-                          }}
-                          transition={{
-                            duration: 0.3,
-                            ease: "easeInOut",
-                          }}
-                          key={imageIndex + image}
-                          src={`/EXcards/${image}.webp`}
-                          alt={`Image ${imageIndex + 1}`}
-                          className="aspect-[366/512] rounded-lg object-cover ring ring-gray-950/5 hover:shadow-2xl w-[366px]"
-                          width={366}
-                          height={512} />
-                      </Link>
-
-                    </div>
-                  ))}
+                  className="flex-shrink-0"
+                >
+                  <Link href={`${POKEMON_CARD}/${image}`}>
+                    <motion.img
+                      // 기본 상태 정의 (마우스 아웃 시 복원용)
+                      initial={{
+                        scale: 1,
+                        y: 0,
+                      }}
+                      // animate 속성 제거로 whileHover와의 충돌 방지
+                      whileHover={{
+                        scale: 1.15, // 호버 시 더 크게 확대
+                        y: -15, // 위로 더 올리기
+                        boxShadow: "0 25px 50px rgba(0,0,0,0.4)", // 강한 그림자 효과
+                        zIndex: 10, // 다른 카드들 위로
+                        transition: {
+                          duration: 0.3,
+                          ease: "easeOut",
+                        }
+                      }}
+                      whileTap={{
+                        scale: 1.08, // 클릭 시 살짝 축소
+                        transition: {
+                          duration: 0.2,
+                          ease: "easeOut",
+                        }
+                      }}
+                      src={`/EXcards/${image}.webp`}
+                      alt={`Pokemon Card ${actualIndex + 1}`}
+                      loading="lazy" // Lazy loading 적용
+                      className="aspect-[366/512] rounded-lg object-cover ring ring-gray-950/5 hover:shadow-2xl w-[250px] 
+                        transform-gpu will-change-transform cursor-pointer 
+                        transition-all duration-300 ease-out"
+                      width={366}
+                      height={512} />
+                  </Link>
                 </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>
