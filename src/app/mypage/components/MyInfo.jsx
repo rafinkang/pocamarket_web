@@ -196,11 +196,10 @@ export default function MyInfoPage({ className }) {
                 </div>
                 <div>
                   <CardTitle className="text-xl font-bold text-gray-900">
-                    {myInfo.nickname}님의 정보
+                    {myInfo.nickname} 님의 정보
                   </CardTitle>
                   <CardDescription className="text-gray-600 flex items-center space-x-2">
-                    <span>현재 등급:</span>
-                    {getGradeBadge(myInfo.gradeDesc, myInfo.grade)}
+                    <span>개인정보 보호를 위해 정보를 수정할 수 있습니다.</span>
                   </CardDescription>
                 </div>
               </div>
@@ -409,19 +408,6 @@ export default function MyInfoPage({ className }) {
                 </div>
               </CardContent>
               <CardFooter className="flex justify-end gap-2">
-                <Button
-                  onClick={() => setIsUpdate(true)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
-                >
-                  <Edit3 className="h-4 w-4 mr-2" />
-                  정보 수정
-                </Button>
-                <PasswordChangeDialog>
-                  <Button variant="outline" className="hover:bg-gray-100">
-                    <Shield className="h-4 w-4 mr-2" />
-                    비밀번호 변경
-                  </Button>
-                </PasswordChangeDialog>
                 <AlertDialog
                   handleOk={withdrawUser}
                   isConfirm={true}
@@ -432,6 +418,21 @@ export default function MyInfoPage({ className }) {
                     회원 탈퇴
                   </Button>
                 </AlertDialog>
+
+                <PasswordChangeDialog>
+                  <Button variant="outline" className="hover:bg-gray-100">
+                    <Shield className="h-4 w-4 mr-2" />
+                    비밀번호 변경
+                  </Button>
+                </PasswordChangeDialog>
+                
+                <Button
+                  onClick={() => setIsUpdate(true)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  <Edit3 className="h-4 w-4 mr-2" />
+                  정보 수정
+                </Button>
               </CardFooter>
             </>
           )}

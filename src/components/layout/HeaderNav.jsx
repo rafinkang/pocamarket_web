@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 
 import useAuthStore from '@/store/authStore'
 import { POKEMON_CARD, POKEMON_CARD_TRADE, LOGIN, MYPAGE } from "@/constants/path"
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 /**
  * 네비게이션 메뉴 목록
@@ -120,8 +121,18 @@ export function HeaderNav() {
                     variant="ghost"
                     className="flex items-center space-x-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                   >
-                    <User className="h-4 w-4" />
-                    <span>{user.nickname}님</span>
+                    <Avatar className="h-6 w-6 ring-4 ring-white shadow-lg">
+                      {user.profileImageUrl &&
+                        user.profileImageUrl !== null &&
+                        user.profileImageUrl !== '' &&
+                        user.profileImageUrl !== 'null' && (
+                          <AvatarImage src={user.profileImageUrl} alt="프로필이미지" />
+                        )}
+                      <AvatarFallback className="bg-gray-200 text-gray-600">
+                        <User className="h-8 w-8" />
+                      </AvatarFallback>
+                    </Avatar>
+                    <span>{user.nickname}</span>
                     <ChevronDown className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -174,7 +185,7 @@ export function HeaderNav() {
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-40 md:hidden">
           {/* 모바일 메뉴 */}
-          <div 
+          <div
             ref={mobileMenuRef}
             className="absolute top-16 left-0 right-0 bg-white/95 backdrop-blur border-t border-gray-200 shadow-lg"
           >
@@ -191,7 +202,7 @@ export function HeaderNav() {
                     {menu.title}
                   </Link>
                 ))}
-                
+
                 {/* 사용자 메뉴 */}
                 <div className="border-t border-gray-200 pt-4 mt-4">
                   {isLogin ? (
