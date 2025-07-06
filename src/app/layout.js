@@ -80,7 +80,7 @@ export default function RootLayout({ children }) {
       >
         <AuthProvider>
           <Header />
-          <div className="max-w-[1280px] mx-auto">
+          <div className="max-w-[1024px] mx-auto">
             <main className="min-h-[calc(100vh_-_112px)] w-full flex flex-col">
               {children}
             </main>
