@@ -6,14 +6,18 @@ import TradeReportDialog from "./TradeReportDialog";
 import PokemonCard from "@/components/card/PokemonCard";
 
 import { useState } from "react";
-import { REQUEST_DELETED, REQUEST_SUBMITTED, REQUEST_PROCESS, REQUEST_COMPLETE, getTradeRequestStatusName } from "@/constants/tradeRequestStatus";
+import { REQUEST_DELETED, REQUEST_SUBMITTED, REQUEST_COMPLETE, getTradeRequestStatusName } from "@/constants/tradeRequestStatus";
 import { cn } from "@/lib/utils";
 
 import { postUserReport } from "@/api/usersReport";
 
 const testMode = process.env.NODE_ENV === "development";
 
-export default function TradeItem ({isLogin, isMy, id, card, isActiveCard, onRequestCancel, onRequestAccept, onOpenOkChange}) {
+/**
+ * TradeListItem 컴포넌트
+ * - 교환 요청 카드 리스트의 각 아이템
+ */
+export default function TradeItem({ isLogin, isMy, id, card, isActiveCard, onRequestCancel, onRequestAccept, onOpenOkChange }) {
   const activeClass = "bg-blue-500 text-white"
   const [isReportOpen, setIsReportOpen] = useState(false);
   

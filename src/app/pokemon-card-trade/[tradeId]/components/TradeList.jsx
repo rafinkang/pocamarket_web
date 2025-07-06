@@ -6,11 +6,16 @@ import AlertDialog from "@/components/dialog/AlertDialog";
 import { REQUEST } from "@/constants/tradeStatus";
 import TradeListItem from "./TradeListItem";
 
-export default function TradeList({isMy, isLogin, requestList, onRequestAccept, onRequestCancel, onOpenTcgCode}) {
+/**
+ * TradeList 컴포넌트
+ * - 요청 목록을 보여줌
+ */
+export default function TradeList({ isMy, isLogin, requestList, onRequestAccept, onRequestCancel, onOpenTcgCode }) {
   const [cards, setCards] = useState([]);
   const [activeCard, setActiveCard] = useState(null);
-  const [openOk, onOpenOkChange] = useState(false)
+  const [openOk, onOpenOkChange] = useState(false);
 
+  // 상태별 설명 반환 함수
   const statusDescription = (nickname, cardName, status) => {
     const statusDescriptionMap = {
       0: `${nickname}님이 ${cardName}을(를) 교환 취소 하였습니다.`,
@@ -20,34 +25,31 @@ export default function TradeList({isMy, isLogin, requestList, onRequestAccept, 
     };
 
     return statusDescriptionMap[status] || "";
-  }
+  };
 
   useEffect(() => {
     if (!requestList || requestList.length === 0) return;
-
-    setCards(requestList.map(request => {
-      return {
-        id: request.tradeRequestId,
-        code: request.requestCardCode,
-        tcgCode: request.tcgCode,
-        isMy: request.isMy,
-        description: statusDescription(request.nickname, request.cardNameKo, request.status),
-        status: request.status,
-        tradeCount: request.tradeCount,
-        reportCount: request.reportCount,
-      }
-    }))
-  }, [requestList]) 
+    setCards(requestList.map(request => ({
+      id: request.tradeRequestId,
+      code: request.requestCardCode,
+      tcgCode: request.tcgCode,
+      isMy: request.isMy,
+      description: statusDescription(request.nickname, request.cardNameKo, request.status),
+      status: request.status,
+      tradeCount: request.tradeCount,
+      reportCount: request.reportCount,
+    })));
+  }, [requestList]);
 
   useEffect(() => {
-    setActiveCard(cards.find(card => card.status === REQUEST))
-  }, [])
+    setActiveCard(cards.find(card => card.status === REQUEST));
+  }, [cards]);
 
   return (
     <div className="sm:mt-20 mt-10">
       <h3 className="text-[1.1rem] font-semibold text-gray-700">요청 목록</h3>
       <ul className="w-full gap-4">
-        {cards.map(card => 
+        {cards.map(card => (
           <TradeListItem
             onRequestAccept={onRequestAccept}
             onRequestCancel={onRequestCancel}
@@ -59,7 +61,7 @@ export default function TradeList({isMy, isLogin, requestList, onRequestAccept, 
             isActiveCard={activeCard && activeCard.id === card.id}
             disabled={activeCard && activeCard.id !== card.id}
           />
-        )}
+        ))}
       </ul>
       <AlertDialog 
         open={openOk}
