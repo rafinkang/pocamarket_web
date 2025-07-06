@@ -208,13 +208,13 @@ export default function TradePageClient() {
       {data && 
         <>
           <TradeHeader data={data} />
-          <ButtonGroup tradeId={tradeId} data={data} isMy={isMy} isLogin={isLogin}/>
-          <div className="flex flex-col gap-2 mt-2">
+          <div className="flex flex-col gap-2 md:mt-2">
             {/* 포켓몬 정보 영역 */}
             <PokemonCardDetail
               data={data.myCard}
               className="transition-all duration-300 backdrop-blur-sm bg-opacity-95"
             />
+            <ButtonGroup tradeId={tradeId} data={data} isMy={true} isLogin={isLogin}/>
             <TradeBox checkLogin={checkLogin} data={data} isMy={isMy} tcgCodeList={tcgCodeList} onTradeRequest={handleTradeRequest} />
             <TradeList isMy={isMy} isLogin={isLogin} requestList={Array.isArray(requestList) ? requestList : requestList.content}
               onRequestAccept={handleRequestAccept}

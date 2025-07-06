@@ -9,7 +9,7 @@ import { REQUEST, SELECT } from "@/constants/tradeStatus";
 
 export default function ButtonGroup({ tradeId, data, isMy, isLogin }) {
   return (
-    <div className="flex justify-end gap-1 md:mx-3">
+    <div className="flex justify-end gap-1 md:mx-3 mt-3">
       {/* 거래 요청 단계에서만 수정 */}
       {isMy && isLogin && [REQUEST].includes(data?.status) && (
         <Button variant="default" className="text-xs px-3 h-[30px] font-bold">

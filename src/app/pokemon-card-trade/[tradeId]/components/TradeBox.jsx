@@ -108,13 +108,6 @@ const TradeCardItem = ({ card, isMy, handleClick, isAnyHover, setIsAnyHover, ele
   
   // 스타일 객체 메모이제이션
   const style = useMemo(() => {
-    if (isMobile) {
-      return {
-        transform: 'rotateY(0deg)',
-        transformStyle: 'preserve-3d',
-      }
-    }
-    
     if (isRestarting) {
       return {
         transform: 'rotateY(0deg)',
@@ -122,7 +115,6 @@ const TradeCardItem = ({ card, isMy, handleClick, isAnyHover, setIsAnyHover, ele
         transformStyle: 'preserve-3d',
       }
     }
-    
     return {
       animation: !isAnyHover ? `cardRotate ${ROTATE_DURATION}s linear infinite` : undefined,
       animationPlayState: !isAnyHover ? 'running' : 'paused',
@@ -131,15 +123,15 @@ const TradeCardItem = ({ card, isMy, handleClick, isAnyHover, setIsAnyHover, ele
       transition: isAnyHover ? 'transform 0.2s cubic-bezier(0.4,0,0.2,1)' : undefined,
       transformStyle: 'preserve-3d',
     }
-  }, [isMobile, isRestarting, isAnyHover, ROTATE_DURATION, animationDelay])
+  }, [isRestarting, isAnyHover, ROTATE_DURATION, animationDelay]);
 
   // 그림자 스타일 메모이제이션
   const shadowStyle = useMemo(() => ({
     borderRadius: '50%',
     background: `radial-gradient(ellipse at center, rgba(${elementRGB},0.6) 0%, rgba(${elementRGB},0.25) 50%, transparent 100%)`,
-    boxShadow: `0 8px 24px 0 rgba(${elementRGB},0.6), 0 2px 6px 0 rgba(${elementRGB},0.25)`,
+    boxShadow: `0 8px 4px 0 rgba(${elementRGB},0.6), 0 2px 6px 0 rgba(${elementRGB},0.25)`,
     filter: 'blur(1px)',
-    opacity: 0.9,
+    opacity: 1,
   }), [elementRGB])
 
   return (
