@@ -36,36 +36,7 @@ export default function MyPageContainer() {
               <MyInfoPage className="border-0 shadow-none bg-transparent" />
             </div>
 
-            {/* 나의 덱 섹션 */}
-            <Card className="bg-white shadow-sm hover:shadow-md transition-shadow duration-300">
-              <CardHeader className="pb-4">
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-purple-100 rounded-lg">
-                    <Package className="h-5 w-5 text-purple-600" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-xl font-bold text-gray-900">나의 덱</CardTitle>
-                    <CardDescription className="text-gray-600">
-                      나만의 포켓몬 카드 덱을 관리하세요
-                    </CardDescription>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-12 space-y-4">
-                  <Package className="h-16 w-16 text-gray-300 mx-auto" />
-                  <div className="space-y-2">
-                    <h3 className="text-lg font-semibold text-gray-700">덱 기능 준비중</h3>
-                    <p className="text-gray-500">
-                      곧 나만의 포켓몬 카드 덱을 만들고 관리할 수 있습니다!
-                    </p>
-                  </div>
-                  <div className="inline-flex items-center px-4 py-2 bg-purple-50 text-purple-700 rounded-full text-sm font-medium">
-                    <span className="animate-pulse">🚀 Coming Soon</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+
           </div>
 
           {/* 오른쪽 컬럼 - 통계 및 빠른 액션 */}
@@ -89,6 +60,37 @@ export default function MyPageContainer() {
             <MyReport className="border-0 shadow-none bg-transparent" />
           </div>
         </div>
+
+        {/* 나의 덱 섹션 */}
+        <Card className="bg-white shadow-sm hover:shadow-md transition-shadow duration-300">
+          <CardHeader className="pb-4">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-purple-100 rounded-lg">
+                <Package className="h-5 w-5 text-purple-600" />
+              </div>
+              <div>
+                <CardTitle className="text-xl font-bold text-gray-900">나의 덱</CardTitle>
+                <CardDescription className="text-gray-600">
+                  나만의 포켓몬 카드 덱을 관리하세요
+                </CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center py-12 space-y-4">
+              <Package className="h-16 w-16 text-gray-300 mx-auto" />
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold text-gray-700">덱 기능 준비중</h3>
+                <p className="text-gray-500">
+                  곧 나만의 포켓몬 카드 덱을 만들고 관리할 수 있습니다!
+                </p>
+              </div>
+              <div className="inline-flex items-center px-4 py-2 bg-purple-50 text-purple-700 rounded-full text-sm font-medium">
+                <span className="animate-pulse">🚀 Coming Soon</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* 빠른 액션 섹션 */}
         <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200 shadow-sm">
