@@ -67,19 +67,12 @@ export const PokemonThreeDMarquee = ({
                 >
                   <Link href={`${POKEMON_CARD}/${image}`}>
                     <motion.img
-                      // 부드러운 곡선 이동과 입체감 효과
-                      animate={{
-                        // 부드러운 사인 웨이브 곡선 이동 (더 많은 키프레임으로 부드럽게)
-                        y: [0, -8, -15, -8, 0, 8, 15, 8, 0],
-                        // 부드러운 스케일 변화 (중앙을 지날 때 더 크게)
-                        scale: [1, 1.02, 1.04, 1.06, 1.08, 1.06, 1.04, 1.02, 1],
+                      // 기본 상태 정의 (마우스 아웃 시 복원용)
+                      initial={{
+                        scale: 1,
+                        y: 0,
                       }}
-                      transition={{
-                        duration: 12 + (actualIndex * 0.8), // 각 카드별 다른 속도로 자연스러운 흐름
-                        repeat: Infinity,
-                        ease: "easeInOut", // 부드러운 가속/감속
-                        delay: actualIndex * 0.4, // 카드별 지연 시간
-                      }}
+                      // animate 속성 제거로 whileHover와의 충돌 방지
                       whileHover={{
                         scale: 1.15, // 호버 시 더 크게 확대
                         y: -15, // 위로 더 올리기
@@ -103,8 +96,8 @@ export const PokemonThreeDMarquee = ({
                       className="aspect-[366/512] rounded-lg object-cover ring ring-gray-950/5 hover:shadow-2xl w-[250px] 
                         transform-gpu will-change-transform cursor-pointer 
                         transition-all duration-300 ease-out"
-                      width={250}
-                      height={350} />
+                      width={366}
+                      height={512} />
                   </Link>
                 </motion.div>
               );
