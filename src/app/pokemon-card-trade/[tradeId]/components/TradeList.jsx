@@ -5,11 +5,9 @@ import { useEffect, useState } from "react";
 import AlertDialog from "@/components/dialog/AlertDialog";
 import { REQUEST } from "@/constants/tradeStatus";
 import TradeListItem from "./TradeListItem";
-import TradeListItemDialog from "./TradeListItemDialog";
 
 export default function TradeList({isMy, isLogin, requestList, onRequestAccept, onRequestCancel, onOpenTcgCode}) {
   const [cards, setCards] = useState([]);
-  const [dialogData, setDialogData] = useState(null);
   const [activeCard, setActiveCard] = useState(null);
   const [openOk, onOpenOkChange] = useState(false)
 
@@ -35,58 +33,30 @@ export default function TradeList({isMy, isLogin, requestList, onRequestAccept, 
         isMy: request.isMy,
         description: statusDescription(request.nickname, request.cardNameKo, request.status),
         status: request.status,
-        content: () => {
-          return (
-            <>
-              <p>교환 성공 횟수 : {request.tradeCount}</p>
-              <p>신고 횟수 : {request.reportCount}</p>
-            </>
-          );
-        },
+        tradeCount: request.tradeCount,
+        reportCount: request.reportCount,
       }
     }))
   }, [requestList]) 
 
   useEffect(() => {
-    if (dialogData) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-  }, [dialogData]);
-
-  useEffect(() => {
     setActiveCard(cards.find(card => card.status === REQUEST))
   }, [])
 
-  // requestList가 업데이트될 때 현재 열려있는 dialogData도 동기화
-  useEffect(() => {
-    if (dialogData && cards.length > 0) {
-      const updatedCard = cards.find(card => card.id === dialogData.id);
-      if (updatedCard) {
-        setDialogData(updatedCard);
-      }
-    }
-  }, [cards, dialogData])
-
   return (
     <div className="sm:mt-20 mt-10">
-      <TradeListItemDialog handleClick={setDialogData} isMy={isMy} isLogin={isLogin} 
-        dialogData={dialogData} 
-        onRequestAccept={onRequestAccept} 
-        onRequestCancel={onRequestCancel} 
-        onOpenOkChange={onOpenOkChange} 
-        onOpenTcgCode={onOpenTcgCode} 
-      />
       <h3 className="text-[1.1rem] font-semibold text-gray-700">요청 목록</h3>
       <ul className="w-full gap-4">
         {cards.map(card => 
           <TradeListItem
-            handleClick={setDialogData}
+            onRequestAccept={onRequestAccept}
+            onRequestCancel={onRequestCancel}
+            onOpenOkChange={onOpenOkChange}
+            isMy={isMy}
+            isLogin={isLogin}
             key={card.id}
             card={card}
             isActiveCard={activeCard && activeCard.id === card.id}
-            isVisible={dialogData === null}
             disabled={activeCard && activeCard.id !== card.id}
           />
         )}

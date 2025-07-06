@@ -56,7 +56,7 @@ const styles = {
   skillHeader: "flex items-center gap-2",
   skillName: "text-base font-medium text-gray-800",
   skillCost: "flex items-center",
-  skillDamage: "text-sm text-gray-600 ml-auto",
+  skillDamage: "text-sm text-gray-600 ml-auto font-bold",
   skillEffect: "text-sm text-gray-600",
 
   // 속성별 색상 CSS 변수
