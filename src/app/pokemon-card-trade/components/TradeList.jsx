@@ -6,7 +6,7 @@ export default function TradeList({ tradeList, testMode }) {
   return (
     <>
       <section className="flex flex-col items-center w-full min-w-[360px]">
-        <div className="contentList w-full px-[4px]">
+        <div className="w-full px-[4px]">
           {tradeList && tradeList.length > 0 ? (
             <ul className="flex flex-col items-center justify-items-center w-full gap-4">
               {tradeList.map((trade) => (

@@ -21,16 +21,14 @@ export function Header() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 w-full transition-shadow duration-300 bg-background text-card-foreground",
+        "sticky top-0 z-50 w-full border-b border-gray-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 transition-shadow duration-300",
         {
-          "shadow-[0_1px_1px_rgba(0,0,0,0.1)]": isScrolled,
+          "shadow-lg": isScrolled,
         }
       )}
     >
-      <div className="container-wrapper flex justify-center">
-        <div className="container flex h-14 items-center gap-2">
-          <HeaderNav />
-        </div>
+      <div className="w-full flex justify-center">
+        <HeaderNav />
       </div>
     </header>
   );

@@ -1,57 +1,88 @@
 "use client"
 
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
-import { motion } from "motion/react";
-
+import { Button } from "@/components/ui/button";
+import TradeReportDialog from "./TradeReportDialog";
 import PokemonCard from "@/components/card/PokemonCard";
-import { getTradeRequestStatusName } from "@/constants/tradeRequestStatus";
 
-export default function TradeItem ({id, card, isActiveCard, disabled, handleClick}) {
-  const activeClass = "bg-blue-500 text-white dark:bg-blue-600"
+import { useState } from "react";
+import { REQUEST_DELETED, REQUEST_SUBMITTED, REQUEST_COMPLETE, getTradeRequestStatusName } from "@/constants/tradeRequestStatus";
+import { cn } from "@/lib/utils";
+
+import { postUserReport } from "@/api/usersReport";
+
+const testMode = process.env.NODE_ENV === "development";
+
+/**
+ * TradeListItem 컴포넌트
+ * - 교환 요청 카드 리스트의 각 아이템
+ */
+export default function TradeItem({ isLogin, isMy, id, card, isActiveCard, onRequestCancel, onRequestAccept, onOpenOkChange }) {
+  const activeClass = "bg-blue-500 text-white"
+  const [isReportOpen, setIsReportOpen] = useState(false);
+  
+  const handleReport = async ({reportReason, reportDetail}) => {
+      const requestData = {
+        refId: card.id,
+        refType: "TRADE_REQUEST",
+        refStatus: card.status,
+        link: window.location.href,
+        content: `${reportReason}:${reportDetail}`,
+      };
+
+      await postUserReport(requestData);
+      onOpenOkChange(true);
+  }
 
   return (
-    <motion.div
-      layoutId={`card-${card.id}-${id}`}
+    <div
       key={`card-${card.id}-${id}`}
-      onClick={() => handleClick(card)}
-      style={{ zIndex: 1 }}
-      className="p-4 flex flex-col md:flex-row justify-between hover:bg-neutral-50 dark:hover:bg-neutral-800 cursor-pointer border-b"
+      className="my-2 p-4 flex flex-row gap-4 hover:bg-neutral-50 border-1 border-solid border-[#c6c9db] rounded-xl min-h-[150px]"
     >
-      <div className="flex gap-4 flex-col md:flex-row">
-        <motion.div 
-          layoutId={`image-${card.code}-${card.id}-${id}`} 
-          className="flex justify-center items-center"
-        >
-          <div className="relative aspect-[366/512]" style={{ width: "20vw", maxWidth: "80px" }}>
-            <PokemonCard data={{code : card.code}} showInfo={false} className="relative aspect-[366/512]" />
-          </div>
-        </motion.div>
-        <div className="">
-          <motion.h3
-            layoutId={`code-${card.id}-${id}`}
-            style={{ zIndex: 1 }}
-            className="font-medium text-neutral-800 dark:text-neutral-200 text-center md:text-left">
-            {/* {card.title} */}
-            <Badge variant="secondary" className={cn(isActiveCard && activeClass)}>{getTradeRequestStatusName(card.status)}</Badge>
-          </motion.h3>
-          <motion.p
-            layoutId={`description-${card.description}-${card.id}-${id}`}
-            style={{ zIndex: 1 }}
-            className="text-neutral-600 dark:text-neutral-400 text-center md:text-left">
-              {card.description}
-          </motion.p>
-        </div>
+      <div className="relative" style={{ width: "20vw", maxWidth: "80px", aspectRatio: "366/512" }}>
+        <PokemonCard data={{code : card.code}} showInfo={false} className="relative w-full h-full" testMode={testMode} />
       </div>
-      {/* <motion.button
-        layoutId={`button-${card.id}-${id}`}
-        className="mt-1 px-3 text-xs rounded-full font-bold h-[24px]" 
-        style={{backgroundColor: '#f1f3f3', color: '#404949'}}
-        whileHover={{backgroundColor: "#e8ecec", color: "#253131", cursor: 'pointer'}}
-        disabled={disabled}
-      >
-        자세히 보기
-      </motion.button> */}
-    </motion.div>
+      <div className="w-full h-full">
+        <Badge variant="secondary" className={cn(isActiveCard && activeClass)}>{getTradeRequestStatusName(card.status)}</Badge>
+        <p className="text-neutral-600 font-medium mt-1 text-[0.95rem]">
+            {card.description}
+        </p>
+        <div className="text-neutral-400 font-medium mt-1 text-[0.95rem]">
+          <p>교환 성공 횟수 : <span className="text-[#000]">{card.tradeCount}회</span></p>
+          <p>신고 횟수 : <span className="text-[#000]">{card.reportCount}회</span></p>
+        </div>
+        {isLogin && (
+          <div className="relative z-[104] flex justify-end items-center gap-2">
+            {!isMy && card.isMy && (card.status !== REQUEST_COMPLETE || card.status !== REQUEST_DELETED) && (
+              <Button variant="outline" className="mr-auto" onClick={() => { 
+                onRequestCancel(card.id);
+              }}>
+                교환 취소
+              </Button>
+            )}
+            <div className="flex justify-end items-center">
+              <Button variant="errorText" onClick={() => setIsReportOpen(true)} className="px-2 py-0 h-4">
+                신고하기
+              </Button>
+              {isMy && <>
+                {card.status === REQUEST_SUBMITTED &&
+                  <Button onClick={() => (onRequestAccept(card.id, card.status))}>
+                    교환 수락
+                  </Button>
+                }
+                {card.status === REQUEST_COMPLETE &&
+                  <span className="text-gray-500 text-[0.95rem]">교환 완료</span>
+                }
+              </>}
+            </div>
+          </div>
+        )}
+      </div>
+      <TradeReportDialog
+        open={isReportOpen}
+        onOpenChange={setIsReportOpen}
+        handleReport={handleReport}
+      />
+    </div>
     )
 }

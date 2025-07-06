@@ -1,9 +1,9 @@
-
 import { Noto_Sans_KR } from 'next/font/google';
 
 import AuthProvider from '@/components/providers/AuthProvider';
 import { Geist, Geist_Mono } from "next/font/google";
 import "@/styles/globals.css";
+import "@/styles/animations.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/sonner"
@@ -80,8 +80,8 @@ export default function RootLayout({ children }) {
       >
         <AuthProvider>
           <Header />
-          <div className="max-w-[1280px] mx-auto">
-            <main className="min-h-[calc(100vh_-_112px)] p-8 pb-20 sm:py-10 sm:px-20 w-full flex flex-col">
+          <div className="max-w-[1024px] mx-auto">
+            <main className="min-h-[calc(100vh_-_112px)] w-full flex flex-col">
               {children}
             </main>
             <Toaster />

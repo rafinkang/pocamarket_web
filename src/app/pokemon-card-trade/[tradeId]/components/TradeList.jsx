@@ -5,14 +5,17 @@ import { useEffect, useState } from "react";
 import AlertDialog from "@/components/dialog/AlertDialog";
 import { REQUEST } from "@/constants/tradeStatus";
 import TradeListItem from "./TradeListItem";
-import TradeListItemDialog from "./TradeListItemDialog";
 
-export default function TradeList({isMy, isLogin, requestList, onRequestAccept, onRequestCancel, onOpenTcgCode}) {
+/**
+ * TradeList 컴포넌트
+ * - 요청 목록을 보여줌
+ */
+export default function TradeList({ isMy, isLogin, requestList, onRequestAccept, onRequestCancel, onOpenTcgCode }) {
   const [cards, setCards] = useState([]);
-  const [dialogData, setDialogData] = useState(null);
   const [activeCard, setActiveCard] = useState(null);
-  const [openOk, onOpenOkChange] = useState(false)
+  const [openOk, onOpenOkChange] = useState(false);
 
+  // 상태별 설명 반환 함수
   const statusDescription = (nickname, cardName, status) => {
     const statusDescriptionMap = {
       0: `${nickname}님이 ${cardName}을(를) 교환 취소 하였습니다.`,
@@ -22,73 +25,43 @@ export default function TradeList({isMy, isLogin, requestList, onRequestAccept, 
     };
 
     return statusDescriptionMap[status] || "";
-  }
+  };
 
   useEffect(() => {
     if (!requestList || requestList.length === 0) return;
-
-    setCards(requestList.map(request => {
-      return {
-        id: request.tradeRequestId,
-        code: request.requestCardCode,
-        tcgCode: request.tcgCode,
-        isMy: request.isMy,
-        description: statusDescription(request.nickname, request.cardNameKo, request.status),
-        status: request.status,
-        content: () => {
-          return (
-            <>
-              <p>교환 성공 횟수 : {request.tradeCount}</p>
-              <p>신고 횟수 : {request.reportCount}</p>
-            </>
-          );
-        },
-      }
-    }))
-  }, [requestList]) 
+    setCards(requestList.map(request => ({
+      id: request.tradeRequestId,
+      code: request.requestCardCode,
+      tcgCode: request.tcgCode,
+      isMy: request.isMy,
+      description: statusDescription(request.nickname, request.cardNameKo, request.status),
+      status: request.status,
+      tradeCount: request.tradeCount,
+      reportCount: request.reportCount,
+    })));
+  }, [requestList]);
 
   useEffect(() => {
-    if (dialogData) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-  }, [dialogData]);
-
-  useEffect(() => {
-    setActiveCard(cards.find(card => card.status === REQUEST))
-  }, [])
-
-  // requestList가 업데이트될 때 현재 열려있는 dialogData도 동기화
-  useEffect(() => {
-    if (dialogData && cards.length > 0) {
-      const updatedCard = cards.find(card => card.id === dialogData.id);
-      if (updatedCard) {
-        setDialogData(updatedCard);
-      }
-    }
-  }, [cards, dialogData])
+    setActiveCard(cards.find(card => card.status === REQUEST));
+  }, [cards]);
 
   return (
-    <>
-      <TradeListItemDialog handleClick={setDialogData} isMy={isMy} isLogin={isLogin} 
-        dialogData={dialogData} 
-        onRequestAccept={onRequestAccept} 
-        onRequestCancel={onRequestCancel} 
-        onOpenOkChange={onOpenOkChange} 
-        onOpenTcgCode={onOpenTcgCode} 
-      />
-      <ul className="max-w-2xl mx-auto w-full gap-4">
-        {cards.map(card => 
+    <div className="sm:mt-20 mt-10">
+      <h3 className="text-[1.1rem] font-semibold text-gray-700">요청 목록</h3>
+      <ul className="w-full gap-4">
+        {cards.map(card => (
           <TradeListItem
-            handleClick={setDialogData}
+            onRequestAccept={onRequestAccept}
+            onRequestCancel={onRequestCancel}
+            onOpenOkChange={onOpenOkChange}
+            isMy={isMy}
+            isLogin={isLogin}
             key={card.id}
             card={card}
             isActiveCard={activeCard && activeCard.id === card.id}
-            isVisible={dialogData === null}
             disabled={activeCard && activeCard.id !== card.id}
           />
-        )}
+        ))}
       </ul>
       <AlertDialog 
         open={openOk}
@@ -99,6 +72,6 @@ export default function TradeList({isMy, isLogin, requestList, onRequestAccept, 
         msg="신고 접수가 완료됐습니다.<br/>자세한 내용은 마이페이지에서 확인하세요."
         okBtnName="확인"
       />
-    </>
+    </div>
   );
 }

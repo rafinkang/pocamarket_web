@@ -11,7 +11,7 @@ import Link from "next/link";
 
 import { getTradeStatusName, DELETED, REQUEST, SELECT, PROCESS, COMPLETE } from "@/constants/tradeStatus";
 import { cn } from "@/lib/utils";
-import styles from "@/styles/tradeStatus.module.scss";
+import styles from "@/styles/trade-status.module.scss";
 
 const statusClassMap = {
   [DELETED]: styles['badge-deleted'],

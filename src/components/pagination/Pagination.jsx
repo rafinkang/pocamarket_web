@@ -12,15 +12,15 @@ import { useState, useEffect } from "react";
 
 
 export default function CommonPagination({
-  page = 0,
+  page = 1,
   totalPage = 1,
   itemSize = 10,
   mobileItemSize = 5,
   switchWindowWidth = 640,
   onPageChange,
 }) {
-  // pageInfo.page는 0부터 시작, 프론트에서는 1부터 보여줌
-  const currentPage = (page ?? 0) + 1;
+  // pageInfo.page는 1부터 시작, 프론트에서도 1부터 보여줌
+  const currentPage = (page ?? 1);
   const totalPages = totalPage ?? 1;
   const [visiblePageNumbers, setVisiblePageNumbers] = useState(itemSize);
 
@@ -64,8 +64,7 @@ export default function CommonPagination({
     e.preventDefault();
     // 1보다 작거나, totalPages보다 크면 무시
     if (page < 1 || page > totalPages) return;
-    // onPageInfo에 0부터 시작하는 값으로 전달
-    onPageChange && onPageChange(page - 1);
+    onPageChange && onPageChange(page);
   };
 
   return (

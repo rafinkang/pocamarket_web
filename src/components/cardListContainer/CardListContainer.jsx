@@ -24,6 +24,8 @@ export default function CardListContainer({
   updateURL = null,
   initFilterParams = null,
   setInitFilterParams = null,
+  initPage = 1,
+  setInitPage = null,
   pageSize = 10, 
   mobilePageSize = 5,
   isDetail = true,
@@ -38,7 +40,12 @@ export default function CardListContainer({
   const searchParams = useSearchParams();
 
   const [items, setItems] = useState([]);
-  const [page, setPage] = useState(() => Math.max(0, Number(searchParams.get("page")) || 0));
+  const [page, setPage] = useState(() => { 
+    if(initPage) {
+      return initPage;
+    }
+    return Math.max(1, Number(searchParams.get("page")) || 1)
+  });
   const [totalPage, setTotalPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -47,7 +54,7 @@ export default function CardListContainer({
   
   const [filterParams, setFilterParams] = useState(() => {
     if(initFilterParams) {
-      return initFilterParams;
+      return { ...initFilterParams };
     }
     const params = Object.fromEntries(searchParams.entries());
 
@@ -88,7 +95,12 @@ export default function CardListContainer({
   const createApiParams = (params) => {
     const apiParams = Object.entries(params)
       .filter(([key, value]) => 
-        value !== null && value !== undefined && value !== "" && value !== excludedValue)
+        value !== null && 
+        value !== undefined && 
+        value !== "" && 
+        value !== excludedValue &&
+        value !== defaultSort[0].value
+      )
       .reduce((acc, [key, value]) => {
         if (Array.isArray(value) && value.length > 0) {
           acc[key] = value.join(",");
@@ -98,7 +110,7 @@ export default function CardListContainer({
         return acc;
       }, {});
 
-    apiParams.page = Math.min(Math.max(0, Number(apiParams.page) || 0));
+    apiParams.page = Math.min(Math.max(1, Number(apiParams.page) || 1));
     apiParams.size = pageSize;
 
     return apiParams;
@@ -147,6 +159,16 @@ export default function CardListContainer({
       if(setInitFilterParams) {
         returnInitFilterParams(apiParams);
       }
+      if(setInitPage) {
+        setInitPage(apiParams.page || 1);
+      }
+
+      setPage(apiParams.page || 1);
+      const tempFilter = {...defaultFilter, ...apiParams};
+      delete tempFilter.page;
+      delete tempFilter.size;
+      setFilterParams(tempFilter);
+
     } catch (error) {
       console.error("데이터 로딩 에러:", error);
       setItems([]);
@@ -157,11 +179,38 @@ export default function CardListContainer({
     }
   };
 
-  // 초기 데이터 로딩
   useEffect(() => {
-    debounce(() => {
-      fetchData({...filterParams, page});
-    });
+    if (!initFilterParams) { // URL 파라미터 기반 동작
+      const params = Object.fromEntries(searchParams.entries());
+      
+      const element = params.element?.split(",").filter(code => code?.trim());
+      const rarity = params.rarity?.split(",").filter(code => code?.trim());
+      const sort = defaultSort.find(item => item.value === params.sort)?.value || defaultSort[0].value;
+      const newPage = Math.max(1, Number(params.page) || 1);
+
+      const newFilterParams = {
+        nameKo: params.nameKo || "",
+        type: params.type || excludedValue,
+        subtype: params.subtype || excludedValue,
+        packSet: params.packSet || excludedValue,
+        pack: params.pack || excludedValue,
+        element: element || [],
+        rarity: rarity || [],
+        sort: sort,
+      };
+
+      setPage(newPage);
+      setFilterParams(newFilterParams);
+      form.reset(newFilterParams);
+      
+      debounce(() => {
+        fetchData({...newFilterParams, page: newPage});
+      });
+    } else {
+      debounce(() => {
+        fetchData({...filterParams, page});
+      });
+    }
     
     return () => {
       // debounce timeout 정리
@@ -169,7 +218,7 @@ export default function CardListContainer({
         clearTimeout(debounceRef.current);
       }
     };
-  }, []);
+  }, [searchParams.toString()]);
 
   // 폼 제출 핸들러
   const handleSubmit = (data) => {
@@ -183,11 +232,9 @@ export default function CardListContainer({
     debounce(() => {
       const newParams = {
         ...filterParams,
-        page: Math.min(Math.max(0, newPage), totalPage)
+        page: Math.min(Math.max(1, newPage), totalPage)
       };
-      
-      setFilterParams(newParams);
-      setPage(newPage);
+      setPage(newParams.page);
       fetchData(newParams);
     });
   };
@@ -195,9 +242,21 @@ export default function CardListContainer({
   // 리셋 핸들러
   const handleReset = () => {
     debounce(() => {
-      form.reset(defaultFilter);
-      setFilterParams(defaultFilter);
-      fetchData(defaultFilter);
+      form.reset({...defaultFilter});
+      setFilterParams({...defaultFilter});
+      fetchData({...defaultFilter});
+    });
+  };
+
+  // 정렬 핸들러
+  const handleSortChange = (value) => {
+    debounce(() => {
+      const newParams = {
+        ...filterParams,
+        sort: value
+      };
+      setFilterParams(newParams);
+      fetchData(newParams);
     });
   };
 
@@ -233,6 +292,7 @@ export default function CardListContainer({
             props: {
               form,
               totalCount,
+              onChange: handleSortChange,
             },
           }] : []),
         ]}

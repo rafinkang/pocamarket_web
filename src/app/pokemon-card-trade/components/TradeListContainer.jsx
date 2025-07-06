@@ -70,6 +70,7 @@ export default function TradeListContainer() {
   const pageSize = 3;
 
   const [tradeCardListFilter, setTradeCardListFilter] = useState({ ...defaultFilter });
+  const [tradeCardListPage, setTradeCardListPage] = useState(1);
   
   // debounce를 위한 단일 ref
   const debounceRef = useRef(null);
@@ -100,7 +101,7 @@ export default function TradeListContainer() {
       myCard: params.myCardCode ? { ...getMyCardDefault(), code: params.myCardCode } : getMyCardDefault(),
       wantCard,
       status: Number(params.status) || 99,
-      page: Math.max(0, Number(params.page) || 0),
+      page: Math.max(1, Number(params.page) || 1),
       sort: params.sort || defaultSort,
       isMy: params.isMy === 'true' ? true : false,
     };
@@ -114,7 +115,7 @@ export default function TradeListContainer() {
       myCardCode: filterParams.myCard?.code || null,
       wantCardCode: wantCardCode.length > 0 ? wantCardCode : null,
       status: filterParams.status == 99 ? null : filterParams.status,
-      page: Math.min(Math.max(0, Number(filterParams.page) || 0)),
+      page: Math.min(Math.max(1, Number(filterParams.page) || 1)),
       size: pageSize,
       sort: filterParams.sort,
       isMy: filterParams.isMy,
@@ -169,7 +170,13 @@ export default function TradeListContainer() {
     const params = new URLSearchParams();
     
     Object.entries(apiParams).forEach(([key, value]) => {
-      if (key !== "size" && value !== null && value !== undefined && value !== "" && value !== 99 && value !== defaultSort) {
+      if (key !== "size" && 
+          (key !== "page" || value !== 1) &&
+          value !== null && 
+          value !== undefined && 
+          value !== "" && 
+          value !== 99 && 
+          value !== defaultSort) {
         if (key === 'isMy' || value !== false) {
           params.set(key, String(value));
         }
@@ -186,10 +193,31 @@ export default function TradeListContainer() {
     }
   };
 
-  // 초기 데이터 로딩 (debounce 적용)
   useEffect(() => {
+    const params = Object.fromEntries(searchParams.entries());
+
+    const wantCard = getWantCardDefault();
+    const wantCardCode = params.wantCardCode?.split(",").filter(code => code?.trim());
+
+    wantCardCode?.forEach((code, index) => {
+      if(index < wantCard.length) {
+        wantCard[index].code = code;
+      }
+    });
+
+    const newFilterParams = {
+      myCard: params.myCardCode ? { ...getMyCardDefault(), code: params.myCardCode } : getMyCardDefault(),
+      wantCard,
+      status: Number(params.status) || 99,
+      page: Math.max(1, Number(params.page) || 1),
+      sort: params.sort || defaultSort,
+      isMy: params.isMy === 'true' ? true : false,
+    };
+
+    setFilterParams(newFilterParams);
+    
     debounce(() => {
-      fetchData(filterParams);
+      fetchData(newFilterParams);
     });
     
     return () => {
@@ -198,7 +226,7 @@ export default function TradeListContainer() {
         clearTimeout(debounceRef.current);
       }
     };
-  }, []);
+  }, [searchParams.toString(), isLogin]);
 
   // 데이터 로딩
   const fetchData = async (customFilterParams = null) => {
@@ -247,7 +275,7 @@ export default function TradeListContainer() {
     debounce(() => {
       const newFilterParams = {
         ...filterParams,
-        page: Math.min(Math.max(0, newPage), totalPage)
+        page: Math.min(Math.max(1, newPage), totalPage)
       };
 
       setFilterParams(newFilterParams);
@@ -260,7 +288,7 @@ export default function TradeListContainer() {
     debounce(() => {
       const newFilterParams = {
         ...filterParams,
-        page: 0
+        page: 1
       };
       
       setFilterParams(newFilterParams);
@@ -275,7 +303,7 @@ export default function TradeListContainer() {
         myCard: getMyCardDefault(),
         wantCard: getWantCardDefault(),
         status: 99,
-        page: 0,
+        page: 1,
         sort: defaultSort,
         isMy: false,
       };
@@ -377,6 +405,8 @@ export default function TradeListContainer() {
           }}
           initFilterParams={tradeCardListFilter}
           setInitFilterParams={setTradeCardListFilter}
+          initPage={tradeCardListPage}
+          setInitPage={setTradeCardListPage}
           placeholder={"포켓몬 이름 검색"}
           onSelect={onCardClick}
         />
@@ -386,32 +416,27 @@ export default function TradeListContainer() {
         filterCardComponent={(props) => (
           <FilterCardBox {...props}>
             {/* 내 카드 (my) 섹션 */}
-            <div className="flex items-center justify-center w-full">
+            <div className="flex items-center justify-center">
               {filterParams.myCard && (
-                  <FilterCard
-                    key={filterParams.myCard.code}
-                    data={filterParams.myCard}
-                    type={filterParams.myCard.filterCardType}
-                    onCardClick={onFilterCardButton}
-                    onCancelClick={onFilterCardCancel}
-                  />
-                )}
+                <FilterCard
+                  key={filterParams.myCard.code}
+                  data={filterParams.myCard}
+                  type={filterParams.myCard.filterCardType}
+                  onCardClick={onFilterCardButton}
+                  onCancelClick={onFilterCardCancel}
+                />
+              )}
             </div>
 
-            {/* 교환 화살표 */}
-            <div className="flex justify-center items-center">
-              <RiArrowLeftRightFill 
-                size="40px" 
-                className="sm:text-[50px]" 
-              />
+            <div className="flex items-center justify-center self-stretch w-[2px] md:w-[40px]">
+              <div className="text-2xl hidden md:block">
+                <RiArrowLeftRightFill size="40px" className="sm:text-[50px]" />
+              </div>
+              <div className="w-[2px] h-[60%] bg-gray-400 block md:hidden"></div>
             </div>
 
             {/* 원하는 카드들 (want) 섹션 */}
-            <div className="
-              grid items-center justify-items-center w-full
-              grid-rows-3 grid-cols-1 gap-4
-              md:grid-rows-1 md:grid-cols-[1fr_1fr_1fr] md:gap-4"
-            >
+            <div className="flex items-center justify-items-center gap-4">
               {filterParams.wantCard.map((card, index) => (
                 <FilterCard
                   key={index}

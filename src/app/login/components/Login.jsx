@@ -133,12 +133,12 @@ export default function Login({ test = null }) {
             <div className="grid gap-3">
               <div className="flex items-center">
                 <Label htmlFor="pwd">비밀번호</Label>
-                <a
+                {/* <a
                   href="#"
                   className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                 >
                   비밀번호 찾기
-                </a>
+                </a> */}
               </div>
               <Input
                 id="pwd"

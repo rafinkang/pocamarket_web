@@ -1,5 +1,7 @@
 import { Suspense } from 'react';
 import Login from './components/Login';
+import GoogleLogin from './components/GoogleLoginButton';
+import NaverLogin from './components/NaverLoginButton';
 
 /**
  * 로딩 컴포넌트
@@ -31,6 +33,10 @@ export default function LoginPage() {
             <div className="w-full max-w-sm">
                 <Suspense fallback={<LoginLoading />}>
                     <Login test="test!!!" />
+                    <div className="flex flex-col justify-center mt-4 gap-4">
+                        <GoogleLogin />
+                        <NaverLogin />
+                    </div>
                 </Suspense>
             </div>
         </div>

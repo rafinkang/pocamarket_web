@@ -12,8 +12,12 @@ const API_CONFIG = {
 
     // 2. Docker 컨테이너 특유의 환경 변수 체크
     if (process.env.HOSTNAME && process.env.HOSTNAME.includes('docker')) return true;
+    // 3. WATCHPACK_POLLING 환경변수로 Docker 환경 감지 (Docker Compose에서 설정됨)
+    if (process.env.WATCHPACK_POLLING === 'true') return true;
+    // 4. Docker 컨테이너 특유의 환경 변수 체크
+    if (process.env.HOSTNAME && (process.env.HOSTNAME.includes('docker') || process.env.HOSTNAME.includes('dev'))) return true;
 
-    // 3. /.dockerenv 파일 존재 체크 (서버사이드에서만)
+    // 4. /.dockerenv 파일 존재 체크 (서버사이드에서만)
     if (typeof window === 'undefined') {
       try {
         const fs = require('fs');
@@ -30,10 +34,10 @@ const API_CONFIG = {
   LOCAL_API_URL: process.env.NEXT_PUBLIC_LOCAL_API_URL || 'http://localhost:8080',
 
   // Docker 내부 네트워크용 API 서버 주소 (서버사이드에서 사용)
-  INTERNAL_API_URL: process.env.NEXT_PUBLIC_INTERNAL_API_URL || 'http://pocamarket-api:8080',
+  INTERNAL_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://pocamarket-api:8080',
 
   // 프로덕션에서의 API prefix (nginx 프록시 경로)
-  PRODUCTION_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080',
+  PRODUCTION_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://pocamarket-api:8080',
 
   // 환경에 따른 API Base URL 자동 설정
   get BASE_URL() {
@@ -59,10 +63,10 @@ const API_CONFIG = {
     const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
     const finalUrl = `${this.BASE_URL}${cleanEndpoint}`;
 
-    // // 디버깅용 로그 (개발 환경에서만)
-    // if (this.IS_DEVELOPMENT && this.IS_SERVER_SIDE) {
-    //   console.log(`[API_CONFIG] Docker환경: ${this.IS_DOCKER_ENV}, URL: ${finalUrl}`);
-    // }
+    // 디버깅용 로그 (개발 환경에서만)
+    if (this.IS_DEVELOPMENT && this.IS_SERVER_SIDE) {
+      console.log(`[API_CONFIG] Docker환경: ${this.IS_DOCKER_ENV}, URL: ${finalUrl}`);
+    }
 
     return finalUrl;
   }
