@@ -4,7 +4,8 @@ import { deleteMyInfo, getMyInfo, checkNickname, updateMyInfo } from "@/api/user
 import AlertDialog from "@/components/dialog/AlertDialog"
 import {
   Avatar,
-  AvatarImage
+  AvatarImage,
+  AvatarFallback
 } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
@@ -22,14 +23,14 @@ import useAuthStore from "@/store/authStore"
 import { useEffect, useState } from "react"
 import PasswordChangeDialog from "./PasswordChangeDialog"
 import { GoCheck } from "react-icons/go";
-import { 
-  User, 
-  Edit3, 
-  Save, 
-  X, 
-  Shield, 
-  Mail, 
-  Phone, 
+import {
+  User,
+  Edit3,
+  Save,
+  X,
+  Shield,
+  Mail,
+  Phone,
   Calendar,
   UserCheck,
   Settings
@@ -203,15 +204,6 @@ export default function MyInfoPage({ className }) {
                   </CardDescription>
                 </div>
               </div>
-              {!isUpdate && (
-                <Button 
-                  onClick={() => setIsUpdate(true)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
-                >
-                  <Edit3 className="h-4 w-4 mr-2" />
-                  정보 수정
-                </Button>
-              )}
             </div>
           </CardHeader>
 
@@ -230,10 +222,10 @@ export default function MyInfoPage({ className }) {
                         <User className="h-4 w-4 mr-2" />
                         아이디
                       </label>
-                      <Input 
-                        type="text" 
-                        value={myInfo.loginId} 
-                        disabled 
+                      <Input
+                        type="text"
+                        value={myInfo.loginId}
+                        disabled
                         className="bg-gray-50 text-gray-500"
                       />
                     </div>
@@ -245,10 +237,10 @@ export default function MyInfoPage({ className }) {
                         닉네임
                       </label>
                       <div className="flex gap-2">
-                        <Input 
-                          type="text" 
-                          placeholder="닉네임" 
-                          defaultValue={myInfo.nickname} 
+                        <Input
+                          type="text"
+                          placeholder="닉네임"
+                          defaultValue={myInfo.nickname}
                           onChange={(e) => setNewNickname(e.target.value)}
                           className="flex-1"
                         />
@@ -259,8 +251,8 @@ export default function MyInfoPage({ className }) {
                               <span className="text-sm font-medium">확인됨</span>
                             </div>
                           ) : (
-                            <Button 
-                              variant="outline" 
+                            <Button
+                              variant="outline"
                               onClick={checkNicknameHandler}
                               className="whitespace-nowrap"
                             >
@@ -278,10 +270,10 @@ export default function MyInfoPage({ className }) {
                         이메일
                       </label>
                       <div className="flex gap-2">
-                        <Input 
-                          type="email" 
-                          placeholder="이메일" 
-                          defaultValue={myInfo.email} 
+                        <Input
+                          type="email"
+                          placeholder="이메일"
+                          defaultValue={myInfo.email}
                           onChange={(e) => setNewEmail(e.target.value)}
                           className="flex-1"
                         />
@@ -291,8 +283,8 @@ export default function MyInfoPage({ className }) {
                               <GoCheck className="w-5 h-5" />
                             </div>
                           )}
-                          <Button 
-                            variant="outline" 
+                          <Button
+                            variant="outline"
                             onClick={() => alert("준비중입니다.")}
                             className="whitespace-nowrap"
                           >
@@ -309,10 +301,10 @@ export default function MyInfoPage({ className }) {
                         전화번호
                       </label>
                       <div className="flex gap-2">
-                        <Input 
-                          type="tel" 
-                          placeholder="전화번호" 
-                          defaultValue={myInfo.phone} 
+                        <Input
+                          type="tel"
+                          placeholder="전화번호"
+                          defaultValue={myInfo.phone}
                           onChange={(e) => setNewPhone(e.target.value)}
                           className="flex-1"
                         />
@@ -322,8 +314,8 @@ export default function MyInfoPage({ className }) {
                               <GoCheck className="w-5 h-5" />
                             </div>
                           )}
-                          <Button 
-                            variant="outline" 
+                          <Button
+                            variant="outline"
                             onClick={() => alert("준비중입니다.")}
                             className="whitespace-nowrap"
                           >
@@ -335,19 +327,19 @@ export default function MyInfoPage({ className }) {
                   </div>
                 </div>
               </CardContent>
-              <CardFooter className="flex justify-end gap-2 bg-gray-50 border-t">
-                <Button 
-                  variant="outline" 
+              <CardFooter className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
                   onClick={() => setIsUpdate(false)}
                   className="hover:bg-gray-100"
                 >
                   <X className="h-4 w-4 mr-2" />
                   취소
                 </Button>
-                <AlertDialog 
-                  handleOk={updateUserInfo} 
-                  isConfirm={true} 
-                  title="회원 정보 변경" 
+                <AlertDialog
+                  handleOk={updateUserInfo}
+                  isConfirm={true}
+                  title="회원 정보 변경"
                   msg="입력하신 내용으로 회원정보가 변경됩니다."
                 >
                   <Button className="bg-blue-600 hover:bg-blue-700 text-white">
@@ -363,12 +355,20 @@ export default function MyInfoPage({ className }) {
                 {/* 프로필 섹션 */}
                 <div className="flex items-center space-x-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200">
                   <Avatar className="w-16 h-16 ring-4 ring-white shadow-lg">
-                    <AvatarImage src="/images/profile_default.png" alt="프로필이미지" />
+                    {myInfo.profileImageUrl &&
+                      myInfo.profileImageUrl !== null &&
+                      myInfo.profileImageUrl !== '' &&
+                      myInfo.profileImageUrl !== 'null' && (
+                        <AvatarImage src={myInfo.profileImageUrl} alt="프로필이미지" />
+                      )}
+                    <AvatarFallback className="bg-gray-200 text-gray-600">
+                      <User className="h-8 w-8" />
+                    </AvatarFallback>
                   </Avatar>
                   <div className="space-y-2">
                     <h3 className="text-2xl font-bold text-gray-900">{myInfo.nickname}</h3>
                     <div className="flex items-center space-x-2">
-                      {getGradeBadge(myInfo.gradeDesc)}
+                      {getGradeBadge(myInfo.gradeDesc, myInfo.grade)}
                     </div>
                   </div>
                 </div>
@@ -408,17 +408,24 @@ export default function MyInfoPage({ className }) {
                   </div>
                 </div>
               </CardContent>
-              <CardFooter className="flex justify-end gap-2 border-t">
+              <CardFooter className="flex justify-end gap-2">
+                <Button
+                  onClick={() => setIsUpdate(true)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  <Edit3 className="h-4 w-4 mr-2" />
+                  정보 수정
+                </Button>
                 <PasswordChangeDialog>
                   <Button variant="outline" className="hover:bg-gray-100">
                     <Shield className="h-4 w-4 mr-2" />
                     비밀번호 변경
                   </Button>
                 </PasswordChangeDialog>
-                <AlertDialog 
-                  handleOk={withdrawUser} 
-                  isConfirm={true} 
-                  title="회원 탈퇴" 
+                <AlertDialog
+                  handleOk={withdrawUser}
+                  isConfirm={true}
+                  title="회원 탈퇴"
                   msg="정말로 포카마켓을 탈퇴하시겠습니까ㅠㅠ?"
                 >
                   <Button variant="destructive">
