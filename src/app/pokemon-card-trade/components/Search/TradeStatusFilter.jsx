@@ -20,7 +20,7 @@ export default function TradeStatusFilter({
   value = 99,
 }) {
   return (
-    <div className="flex justify-end items-center px-2 lg:px-4">
+    <div className="flex justify-end items-center">
       <Select
         value={String(value)}
         onValueChange={(value) => {

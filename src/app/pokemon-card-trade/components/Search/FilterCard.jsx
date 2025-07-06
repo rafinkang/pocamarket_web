@@ -17,7 +17,7 @@ const FilterCard = memo(function FilterCard({
   return (
     <>
       {data.code ? (
-        <div className="w-[130px] sm:w-[130px] md:w-[110px] lg:w-[180px] xl:w-[200px] min-w-[100px] max-w-[200px] flex justify-center items-center aspect-[366/512] cursor-pointer hover:scale-105 transition-transform">
+        <div className="w-[60px] sm:w-[80px] md:w-[110px] lg:w-[180px] xl:w-[200px] min-w-[60px] max-w-[200px] flex justify-center items-center aspect-[366/512] cursor-pointer hover:scale-105 transition-transform">
           <FlippableCard
             key={data.code}
             cardKey={data.code}
@@ -36,7 +36,7 @@ const FilterCard = memo(function FilterCard({
         <HoverCard>
           <HoverCardTrigger asChild>
             <Card
-              className="w-[130px] sm:w-[130px] md:w-[110px] lg:w-[180px] xl:w-[200px] min-w-[100px] max-w-[200px] flex justify-center items-center aspect-[366/512] cursor-pointer hover:scale-105 transition-transform shadow-lg hover:shadow-xl"
+              className="w-[60px] sm:w-[80px] md:w-[110px] lg:w-[180px] xl:w-[200px] min-w-[60px] max-w-[200px] flex justify-center items-center aspect-[366/512] cursor-pointer hover:scale-105 transition-transform shadow-lg hover:shadow-xl"
               onClick={() => onCardClick(data)}
             >
               <CardContent className="flex justify-center items-center w-full h-full p-0">

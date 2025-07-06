@@ -6,7 +6,7 @@ import { POKEMON_CARD_TRADE } from "@/constants/path";
 
 export default function Buttons({ onSumbmit, onReset }) {
   return (
-    <div className="buttonContainer flex items-center gap-4 justify-end px-4">
+    <div className="flex items-center gap-4 justify-end">
       <Button type="submit" onClick={onSumbmit}>
         검색
       </Button>
