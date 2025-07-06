@@ -1,4 +1,4 @@
-import PortfolioContainer from "./PortfolioContainer";
+import PortfolioContainer from "./components/PortfolioContainer";
 
 export default function Portfolio() {
   return (

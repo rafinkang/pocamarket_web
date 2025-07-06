@@ -30,6 +30,8 @@ import {
   BarChart3,
   Workflow
 } from "lucide-react"
+import SourceTree from "./SourceTree"
+import SpringbootSourceTree from "./SpringbootSourceTree"
 
 export default function PortfolioContainer() {
   const techStack = {
@@ -260,6 +262,7 @@ export default function PortfolioContainer() {
                   <CardTitle className="text-white font-mono">🎯 MAIN FEATURES</CardTitle>
                 </CardHeader>
                 <CardContent className="p-6">
+                  <SourceTree />
                   <ul className="space-y-2 font-mono text-sm">
                     <li className="flex items-start">
                       <span className="w-3 h-3 bg-gray-900 mt-1.5 mr-3 flex-shrink-0"></span>
@@ -346,7 +349,7 @@ export default function PortfolioContainer() {
               <CardContent className="p-6">
                 <div className="bg-gray-900 border-4 border-gray-700 p-6 font-mono text-green-400 text-sm overflow-x-auto" style={{
                   boxShadow: '2px 2px 0px #000000'
-                }}>
+                }}><SpringbootSourceTree />
                   <pre>{`
 ┌─────────────────────────────────────────────────────────────────┐
 │                           CLIENT SIDE                          │
