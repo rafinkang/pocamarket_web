@@ -28,72 +28,43 @@ import {
   RefreshCw,
   Users,
   BarChart3,
-  Workflow
+  Workflow,
+  Github
 } from "lucide-react"
 import SourceTree from "./SourceTree"
 import SpringbootSourceTree from "./SpringbootSourceTree"
+import NextjsSourceTree from "./NextjsSourceTree"
 
 export default function PortfolioContainer() {
   const techStack = {
     "Frontend": [
-      { name: "Next.js 14", description: "React 기반 풀스택 프레임워크", level: "전문가" },
-      { name: "React 18", description: "컴포넌트 기반 UI 라이브러리", level: "전문가" },
-      { name: "TypeScript", description: "정적 타입 체크", level: "고급" },
-      { name: "Tailwind CSS", description: "유틸리티 기반 CSS 프레임워크", level: "고급" },
-      { name: "Shadcn/ui", description: "재사용 가능한 컴포넌트 라이브러리", level: "고급" }
+      { name: "Next.js v15", description: "React 기반 풀스택 프레임워크" },
+      { name: "React v19", description: "컴포넌트 기반 UI 라이브러리" },
+      { name: "Tailwind CSS", description: "유틸리티 기반 CSS 프레임워크" },
+      { name: "Shadcn/ui", description: "재사용 가능한 컴포넌트 라이브러리" },
+      { name: "Zustand", description: "중앙상태관리" }
     ],
     "Backend": [
-      { name: "Next.js API Routes", description: "서버사이드 API 엔드포인트", level: "고급" },
-      { name: "Prisma ORM", description: "타입 안전한 데이터베이스 클라이언트", level: "고급" },
-      { name: "MySQL", description: "관계형 데이터베이스", level: "전문가" },
-      { name: "Node.js", description: "JavaScript 런타임", level: "고급" }
+      { name: "Next.js API Routes", description: "서버사이드 API 엔드포인트" },
+      { name: "Spring Boot v3.4.5", description: "Java 기반 프레임워크" },
+      { name: "Java v17", description: "Java 기반 프레임워크" },
+      { name: "Domain Driven Design + Hexagonal Architecture", description: "도메인 주도 + 계층별 설계" },
+      { name: "JPA, QueryDSL", description: "ORM 프레임워크" },
+      { name: "MariaDB", description: "관계형 데이터베이스" },
     ],
     "DevOps": [
-      { name: "Docker", description: "컨테이너화 플랫폼", level: "고급" },
-      { name: "GitHub Actions", description: "CI/CD 자동화", level: "중급" },
-      { name: "Nginx", description: "웹 서버 및 리버스 프록시", level: "중급" },
-      { name: "AWS", description: "클라우드 인프라", level: "중급" }
+      { name: "AWS", description: "클라우드 인프라" },
+      { name: "Docker", description: "컨테이너화 플랫폼" },
+      { name: "GitHub Actions", description: "CI/CD 자동화" },
+      { name: "Nginx", description: "웹 서버 및 리버스 프록시" },
     ],
-    "도구": [
-      { name: "Git", description: "버전 관리 시스템", level: "전문가" },
-      { name: "VS Code", description: "통합 개발 환경", level: "전문가" },
-      { name: "Figma", description: "UI/UX 디자인 도구", level: "중급" },
-      { name: "Notion", description: "프로젝트 관리", level: "고급" }
+    "Tools": [
+      { name: "Git", description: "버전 관리 시스템" },
+      { name: "Notion", description: "프로젝트 관리" },
+      { name: "Figma", description: "UI/UX 디자인 도구" },
     ]
   }
 
-  const projectStructure = [
-    {
-      name: "src/app/",
-      type: "폴더",
-      description: "Next.js 13+ App Router 구조",
-      children: [
-        { name: "page.js", type: "파일", description: "메인 페이지 컴포넌트" },
-        { name: "layout.js", type: "파일", description: "전체 레이아웃 컴포넌트" },
-        { name: "about-us/", type: "폴더", description: "팀 소개 페이지" },
-        { name: "portfolio/", type: "폴더", description: "포트폴리오 페이지" },
-        { name: "api/", type: "폴더", description: "API 라우트" }
-      ]
-    },
-    {
-      name: "src/components/",
-      type: "폴더", 
-      description: "재사용 가능한 UI 컴포넌트",
-      children: [
-        { name: "ui/", type: "폴더", description: "Shadcn/ui 컴포넌트" },
-        { name: "layout/", type: "폴더", description: "레이아웃 컴포넌트" }
-      ]
-    },
-    {
-      name: "prisma/",
-      type: "폴더",
-      description: "데이터베이스 스키마 및 설정",
-      children: [
-        { name: "schema.prisma", type: "파일", description: "데이터베이스 스키마 정의" },
-        { name: "seed.js", type: "파일", description: "초기 데이터 시드" }
-      ]
-    }
-  ]
 
   const features = [
     {
@@ -246,10 +217,10 @@ export default function PortfolioContainer() {
                       <strong>TYPE:</strong> 포켓몬 카드 거래 플랫폼
                     </div>
                     <div className="bg-gray-300 border-4 border-gray-700 p-4 font-mono" style={{boxShadow: '2px 2px 0px #000000'}}>
-                      <strong>TEAM:</strong> 3명 (Full Stack)
+                      <strong>TEAM:</strong> 강태욱, 박지연, 윤유석 (3명)
                     </div>
                     <div className="bg-gray-300 border-4 border-gray-700 p-4 font-mono" style={{boxShadow: '2px 2px 0px #000000'}}>
-                      <strong>PERIOD:</strong> 2024.01 - 2024.03
+                      <strong>PERIOD:</strong> 2025.05.19 ~ (진행중)
                     </div>
                   </div>
                 </CardContent>
@@ -262,28 +233,44 @@ export default function PortfolioContainer() {
                   <CardTitle className="text-white font-mono">🎯 MAIN FEATURES</CardTitle>
                 </CardHeader>
                 <CardContent className="p-6">
-                  <SourceTree />
                   <ul className="space-y-2 font-mono text-sm">
                     <li className="flex items-start">
                       <span className="w-3 h-3 bg-gray-900 mt-1.5 mr-3 flex-shrink-0"></span>
-                      포켓몬 카드 등록 및 관리
+                      포켓몬 카드 DB
                     </li>
                     <li className="flex items-start">
                       <span className="w-3 h-3 bg-gray-900 mt-1.5 mr-3 flex-shrink-0"></span>
-                      실시간 거래 시스템
+                      카드 교환 시스템
                     </li>
                     <li className="flex items-start">
                       <span className="w-3 h-3 bg-gray-900 mt-1.5 mr-3 flex-shrink-0"></span>
-                      사용자 인증 및 권한 관리
+                      회원정보 관리 및 포인트, 등급 시스템
                     </li>
                     <li className="flex items-start">
                       <span className="w-3 h-3 bg-gray-900 mt-1.5 mr-3 flex-shrink-0"></span>
-                      관리자 대시보드
+                      AWS(EC2, RDS, S3) 프리티어 최적화
                     </li>
                     <li className="flex items-start">
                       <span className="w-3 h-3 bg-gray-900 mt-1.5 mr-3 flex-shrink-0"></span>
-                      반응형 웹 디자인
+                      개발환경 컨테이너화 Docker Hub 배포
                     </li>
+                    <li className="flex items-start">
+                      <span className="w-3 h-3 bg-gray-900 mt-1.5 mr-3 flex-shrink-0"></span>
+                      Github Actions CI/CD
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-3 h-3 bg-gray-900 mt-1.5 mr-3 flex-shrink-0"></span>
+                      Spring Boot - Hexagonal Architecture 적용
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-3 h-3 bg-gray-900 mt-1.5 mr-3 flex-shrink-0"></span>
+                      Next.js SSR을 통한 SEO 관리
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-3 h-3 bg-gray-900 mt-1.5 mr-3 flex-shrink-0"></span>
+                      Next Client - Server - Spring Boot 간 JWT Token 인증
+                    </li>
+
                   </ul>
                 </CardContent>
               </Card>
@@ -329,6 +316,60 @@ export default function PortfolioContainer() {
             </div>
           </section>
 
+          {/* 프로젝트 구조 */}
+          <section>
+            <div className="bg-gray-200 border-8 border-gray-800 p-6 mb-8" style={{
+              boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
+            }}>
+              <h2 className="text-3xl font-bold text-gray-900 font-mono flex items-center">
+                <Network className="h-8 w-8 mr-4" />
+                🏗️ PROJECT STRUCTURE
+              </h2>
+            </div>
+            
+            <Card className="border-8 border-gray-800 bg-gray-200 pt-0" style={{
+              boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
+            }}>
+              <CardHeader className="bg-gray-900 border-b-8 border-gray-800 pt-6">
+                <CardTitle className="text-white font-mono">프로젝트 구조도</CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="bg-gray-900 border-4 border-gray-700 p-6 font-mono text-green-400 text-sm overflow-x-auto flex justify-center" style={{
+                  boxShadow: '2px 2px 0px #000000'
+                }}>
+                  <pre>{`
+┌─────────────────────────────────────────────────────────────────┐
+│                    Container & Repositories                     │
+├─────────────────────────────────────────────────────────────────┤
+│    ┌─────────────┐     ┌─────────┐      ┌───────┐  ┌─────────┐  │
+│    │ Spring boot │     │ Next.js │      │ Nginx │  │ Certbot │  │
+│    └─────────────┘     └─────────┘      └───────┘  └─────────┘  │
+│            │               │                 │         │        │
+│     Api-repository    Web-repository       Infra-repository     │
+└─────────────────────────────────────────────────────────────────┘
+             │               │                      │ 
+┌─────────────────────────────────────────────────────────────────┐
+│                          Github Actions                         │
+└─────────────────────────────────────────────────────────────────┘
+             │               │                      │ 
+┌──────────────────────────────────┐                │
+│            Docker Hub            │                │
+└──────────────────────────────────┘                │
+             │     ┌────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                              AWS                                │
+├─────────────────────────────────────────────────────────────────┤
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  │
+│  │      EC2        │  │       RDS       │  │        S3       │  │
+│  │  Docker Compose │  │     MariaDB     │  │                 │  │
+│  └─────────────────┘  └─────────────────┘  └─────────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
+                  `}</pre>
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+
           {/* 시스템 아키텍처 */}
           <section>
             <div className="bg-gray-200 border-8 border-gray-800 p-6 mb-8" style={{
@@ -347,51 +388,57 @@ export default function PortfolioContainer() {
                 <CardTitle className="text-white font-mono">시스템 구조도</CardTitle>
               </CardHeader>
               <CardContent className="p-6">
-                <div className="bg-gray-900 border-4 border-gray-700 p-6 font-mono text-green-400 text-sm overflow-x-auto" style={{
+                <div className="bg-gray-900 border-4 border-gray-700 p-6 font-mono text-green-400 text-sm overflow-x-auto flex justify-center" style={{
                   boxShadow: '2px 2px 0px #000000'
-                }}><SpringbootSourceTree />
+                }}>
                   <pre>{`
 ┌─────────────────────────────────────────────────────────────────┐
-│                           CLIENT SIDE                          │
+│                           CLIENT SIDE                           │
 ├─────────────────────────────────────────────────────────────────┤
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐            │
-│  │   React     │  │ Tailwind    │  │  Shadcn/ui  │            │
-│  │ Components  │  │    CSS      │  │ Components  │            │
-│  └─────────────┘  └─────────────┘  └─────────────┘            │
+│  ┌────────────┐  ┌──────────┐  ┌────────────┐  ┌───────────┐    │
+│  │   React    │  │ Tailwind │  │  Shadcn/ui │  │  Zustand  │    │
+│  │ Components │  │    CSS   │  │ Components │  │  Store    │    │
+│  └────────────┘  └──────────┘  └────────────┘  └───────────┘    │
 │                                                                 │
 │  ┌─────────────────────────────────────────────────────────────┐│
-│  │                   Next.js 14 App Router                    ││
+│  │                   Next.js 15 App Router                     ││
 │  └─────────────────────────────────────────────────────────────┘│
 └─────────────────────────────────────────────────────────────────┘
                                   │
+                                  │ Request
+                                  │
+┌─────────────────────────────────────────────────────────────────┐
+│                    MIDDLEWARE LAYER                             │
+├─────────────────────────────────────────────────────────────────┤
+│  ┌─────────────────────────────────────────────────────────────┐│
+│  │             Next.js API Routes JWT Middleware               ││
+│  │                                                             ││
+│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐          ││
+│  │  │ JWT Token   │  │ Token       │  │ Request     │          ││
+│  │  │ Validation  │  │ Refresh     │  │ Forwarding  │          ││
+│  │  │             │  │ & Reissue   │  │ to Backend  │          ││
+│  │  └─────────────┘  └─────────────┘  └─────────────┘          ││
+│  └─────────────────────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────────┘
+                                  │
+                                  │ Authenticated Request
                                   │ HTTP/HTTPS
                                   │
 ┌─────────────────────────────────────────────────────────────────┐
-│                          SERVER SIDE                           │
+│                          SERVER SIDE                            │
 ├─────────────────────────────────────────────────────────────────┤
 │  ┌─────────────────────────────────────────────────────────────┐│
-│  │                  Next.js API Routes                        ││
+│  │                    Spring Boot Server                       ││
+│  │                                                             ││
+│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐          ││
+│  │  │   REST      │  │   Security  │  │   Business  │          ││
+│  │  │   API       │  │   Config    │  │   Logic     │          ││
+│  │  └─────────────┘  └─────────────┘  └─────────────┘          ││
 │  └─────────────────────────────────────────────────────────────┘│
 │                                  │                              │
 │  ┌─────────────────────────────────────────────────────────────┐│
-│  │                    Prisma ORM                              ││
+│  │                     RDS MariaDB Database                    ││
 │  └─────────────────────────────────────────────────────────────┘│
-│                                  │                              │
-│  ┌─────────────────────────────────────────────────────────────┐│
-│  │                     MySQL Database                         ││
-│  └─────────────────────────────────────────────────────────────┘│
-└─────────────────────────────────────────────────────────────────┘
-                                  │
-                                  │ Docker
-                                  │
-┌─────────────────────────────────────────────────────────────────┐
-│                         DEPLOYMENT                             │
-├─────────────────────────────────────────────────────────────────┤
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐            │
-│  │   Docker    │  │    Nginx    │  │     AWS     │            │
-│  │ Container   │  │ Reverse     │  │   Cloud     │            │
-│  │             │  │   Proxy     │  │             │            │
-│  └─────────────┘  └─────────────┘  └─────────────┘            │
 └─────────────────────────────────────────────────────────────────┘
                   `}</pre>
                 </div>
@@ -435,66 +482,7 @@ model User {
   
   @@map("users")
 }
-
-model Card {
-  id          String   @id @default(cuid())
-  name        String
-  series      String
-  rarity      String
-  condition   String
-  price       Float
-  description String?
-  imageUrl    String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
-  orderItems  OrderItem[]
-  
-  @@map("cards")
-}
-
-model Order {
-  id          String      @id @default(cuid())
-  status      OrderStatus @default(PENDING)
-  totalPrice  Float
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  
-  userId      String
-  user        User        @relation(fields: [userId], references: [id])
-  orderItems  OrderItem[]
-  
-  @@map("orders")
-}
-
-model OrderItem {
-  id       String @id @default(cuid())
-  quantity Int
-  price    Float
-  
-  orderId  String
-  order    Order  @relation(fields: [orderId], references: [id])
-  cardId   String
-  card     Card   @relation(fields: [cardId], references: [id])
-  
-  @@map("order_items")
-}
-
-enum Role {
-  USER
-  ADMIN
-}
-
-enum OrderStatus {
-  PENDING
-  PROCESSING
-  SHIPPED
-  DELIVERED
-  CANCELLED
-}
-                  `}</pre>
+`}</pre>
                 </div>
               </CardContent>
             </Card>
@@ -519,29 +507,60 @@ enum OrderStatus {
               </CardHeader>
               <CardContent className="p-6">
                 <div className="space-y-4">
-                  {projectStructure.map((item, index) => (
-                    <div key={index} className="bg-gray-300 border-4 border-gray-700 p-4" style={{
-                      boxShadow: '2px 2px 0px #000000'
-                    }}>
-                      <div className="flex items-center mb-2">
-                        <Archive className="h-4 w-4 mr-2 text-gray-900" />
-                        <span className="font-bold text-gray-900 font-mono">{item.name}</span>
-                        <Badge className="ml-2 bg-gray-600 text-gray-200 font-mono">{item.type}</Badge>
-                      </div>
-                      <p className="text-gray-800 text-sm font-mono mb-2">{item.description}</p>
-                      {item.children && (
-                        <div className="ml-4 space-y-1">
-                          {item.children.map((child, childIndex) => (
-                            <div key={childIndex} className="flex items-center text-sm font-mono">
-                              <span className="w-2 h-2 bg-gray-900 mr-2"></span>
-                              <span className="text-gray-700">{child.name}</span>
-                              <span className="ml-2 text-gray-600">- {child.description}</span>
-                            </div>
-                          ))}
-                        </div>
-                      )}
+                  <div className="bg-gray-300 border-4 border-gray-700 p-4" style={{
+                    boxShadow: '2px 2px 0px #000000'
+                  }}>
+                    <div className="flex items-center mb-2">
+                      <Archive className="h-4 w-4 mr-2 text-gray-900" />
+                      <span className="font-bold text-gray-900 font-mono">pocamarket-infra</span>
+                      <a href="https://github.com/rafinkang/pocamarket_infra" target="_blank" rel="noopener noreferrer" className="ml-2">
+                        <Button>
+                          <Github className="h-4 w-4" />
+                          GitHub Link
+                        </Button>
+                      </a>
                     </div>
-                  ))}
+                    <p className="text-gray-800 text-sm font-mono mb-2">Infrastructure 소스 코드 구조</p>
+                    <div className="flex justify-center w-full">
+                      <SourceTree />
+                    </div>
+                  </div>
+                  <div className="bg-gray-300 border-4 border-gray-700 p-4" style={{
+                    boxShadow: '2px 2px 0px #000000'
+                  }}>
+                    <div className="flex items-center mb-2">
+                      <Archive className="h-4 w-4 mr-2 text-gray-900" />
+                      <span className="font-bold text-gray-900 font-mono">pocamarket-api</span>
+                      <a href="https://github.com/rafinkang/pocamarket_api" target="_blank" rel="noopener noreferrer" className="ml-2">
+                        <Button>
+                          <Github className="h-4 w-4" />
+                          GitHub Link
+                        </Button>
+                      </a>
+                    </div>
+                    <p className="text-gray-800 text-sm font-mono mb-2">Spring Boot 프로젝트의 소스 코드 구조</p>
+                    <div className="flex justify-center w-full">
+                      <SpringbootSourceTree />
+                    </div>
+                  </div>
+                  <div className="bg-gray-300 border-4 border-gray-700 p-4" style={{
+                    boxShadow: '2px 2px 0px #000000'
+                  }}>
+                    <div className="flex items-center mb-2">
+                      <Archive className="h-4 w-4 mr-2 text-gray-900" />
+                      <span className="font-bold text-gray-900 font-mono">pocamarket-web</span>
+                      <a href="https://github.com/rafinkang/pocamarket_web" target="_blank" rel="noopener noreferrer" className="ml-2">
+                        <Button>
+                          <Github className="h-4 w-4" />
+                          GitHub Link
+                        </Button>
+                      </a>
+                    </div>
+                    <p className="text-gray-800 text-sm font-mono mb-2">Next.js 프로젝트의 소스 코드 구조</p>
+                    <div className="flex justify-center w-full">
+                      <NextjsSourceTree />
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -641,17 +660,7 @@ npx prisma db seed
                     boxShadow: '2px 2px 0px #000000'
                   }}>
                     <pre>{`
-# .env.local
-DATABASE_URL="mysql://username:password@localhost:3306/pocamarket"
-NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="your-secret-key"
-JWT_SECRET="your-jwt-secret"
-
-# .env.production
-DATABASE_URL="mysql://username:password@production-db:3306/pocamarket"
-NEXTAUTH_URL="https://pocamarket.com"
-NEXTAUTH_SECRET="production-secret"
-JWT_SECRET="production-jwt-secret"
+123132
                     `}</pre>
                   </div>
                 </CardContent>

@@ -7,8 +7,8 @@ export default function SourceTree(variant = "outline") {
   const defaultExpandedIds = ['root', 'src', 'components', 'ui', 'button', 'tree'];
   return (
     <TreeProvider 
-      className="w-full max-w-md" 
-      variant={variant} 
+      className="w-full" 
+      variant="outline" 
       defaultExpandedIds={defaultExpandedIds}
     >
       <Tree>
