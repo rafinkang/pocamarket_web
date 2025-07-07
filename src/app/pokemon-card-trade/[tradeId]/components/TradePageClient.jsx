@@ -6,10 +6,9 @@ import { useEffect, useState } from "react";
 
 import AlertDialog from "@/components/dialog/AlertDialog";
 import TradeHeader from "./TradeHeader";
-import ButtonGroup from "./ButtonGroup";
 import TradeBox from "./TradeBox";
 import TradeList from "./TradeList";
-import PokemonCardDetail from "@/components/pokemon/PokemonCardDetail";
+import TraderInfo from "./TraderInfo";
 
 import { getTcgCodeList, getTradeRequestTcgCode } from "@/api/tcgCode";
 import { getTcgTradeDetail } from "@/api/tcgTrade";
@@ -207,15 +206,11 @@ export default function TradePageClient() {
       />
       {data && 
         <>
-          <TradeHeader data={data} />
-          <div className="flex flex-col gap-2 md:mt-2">
-            {/* 포켓몬 정보 영역 */}
-            <PokemonCardDetail
-              data={data.myCard}
-              className="transition-all duration-300 backdrop-blur-sm bg-opacity-95"
-            />
-            <ButtonGroup tradeId={tradeId} data={data} isMy={true} isLogin={isLogin}/>
+          <TradeHeader tradeId={tradeId} data={data} isMy={isMy} isLogin={isLogin} />
+          {/* <ButtonGroup tradeId={tradeId} data={data} isMy={isMy} isLogin={isLogin}/> */}
+          <div className="flex flex-col gap-10 mt-2">
             <TradeBox checkLogin={checkLogin} data={data} isMy={isMy} tcgCodeList={tcgCodeList} onTradeRequest={handleTradeRequest} />
+            <TraderInfo data={data} tradeId={tradeId} isMy={isMy} isLogin={isLogin} />
             <TradeList isMy={isMy} isLogin={isLogin} requestList={Array.isArray(requestList) ? requestList : requestList.content}
               onRequestAccept={handleRequestAccept}
               onRequestCancel={handleRequestCancel}

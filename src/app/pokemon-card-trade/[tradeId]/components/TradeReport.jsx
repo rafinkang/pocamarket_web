@@ -26,7 +26,7 @@ export default function TradeReport ({data}) {
 
   return (
     <div className="flex justify-end">
-      <Button variant="destructive" onClick={() => setIsReportOpen(true)}>
+      <Button variant="destructive" className="text-xs px-3 h-[30px] font-bold" onClick={() => setIsReportOpen(true)}>
         신고하기
       </Button>
       <TradeReportDialog

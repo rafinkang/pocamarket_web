@@ -46,7 +46,7 @@ export default function TradeList({ isMy, isLogin, requestList, onRequestAccept,
   }, [cards]);
 
   return (
-    <div className="sm:mt-20 mt-10">
+    <div className="">
       <h3 className="text-[1.1rem] font-semibold text-gray-700">요청 목록</h3>
       <ul className="w-full gap-4">
         {cards.map(card => (
@@ -62,6 +62,11 @@ export default function TradeList({ isMy, isLogin, requestList, onRequestAccept,
             disabled={activeCard && activeCard.id !== card.id}
           />
         ))}
+        {cards.length === 0 && (
+          <div className="flex items-center justify-center w-full h-full py-20">
+            <p className="text-gray-500">요청 목록이 없습니다.</p>
+          </div>
+        )}
       </ul>
       <AlertDialog 
         open={openOk}
