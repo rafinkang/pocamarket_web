@@ -11,7 +11,8 @@ export const metadata = {
 export default function PokemonCardPage() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <div id="pokemonCardList" className="w-[100%] flex flex-col gap-6">
+      <div id="pokemonCardList" className="w-[100%] flex flex-col gap-6 p-2 md:p-4">
+        <h2 className="text-lg font-semibold text-gray-800">포켓몬 카드 DB</h2>
         <CardListPage />
       </div>
     </Suspense>

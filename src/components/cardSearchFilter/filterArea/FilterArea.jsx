@@ -64,10 +64,17 @@ export default function FilterArea({ form, open, onReset, isCardType, isCardPack
   }
 
   return (
-    open && (
-      <>
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-wrap gap-6">
+    <div className="space-y-4">
+      {/* 선택 옵션 영역 */}
+      {selectOptions.length > 0 && (
+        <div className="bg-white rounded-lg p-3 border border-gray-200">
+          <h4 className="text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
+            <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
+            </svg>
+            카테고리 선택
+          </h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {selectOptions.map((opt) => (
               <opt.Component
                 key={opt.fieldName}
@@ -76,8 +83,19 @@ export default function FilterArea({ form, open, onReset, isCardType, isCardPack
               />
             ))}
           </div>
+        </div>
+      )}
 
-          <div className="flex flex-col gap-4 w-full">
+      {/* 체크박스 옵션 영역 */}
+      {checkOptions.length > 0 && (
+        <div className="bg-white rounded-lg p-3 border border-gray-200">
+          <h4 className="text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
+            <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            다중 선택
+          </h4>
+          <div className="space-y-3">
             {checkOptions.map((opt) => (
               <opt.Component
                 key={opt.fieldName}
@@ -86,12 +104,14 @@ export default function FilterArea({ form, open, onReset, isCardType, isCardPack
               />
             ))}
           </div>
-          <div className="flex justify-end w-full">
-            <SubmitButton />
-            <ResetButton onReset={onReset} />
-          </div>
         </div>
-      </>
-    )
+      )}
+
+      {/* 버튼 영역 */}
+      <div className="flex justify-end gap-2 pt-3 border-t border-gray-200">
+        <ResetButton onReset={onReset} />
+        <SubmitButton />
+      </div>
+    </div>
   );
 }
