@@ -51,6 +51,29 @@ export default function WriteContainer({ tradeId }) {
 
   // 카드 선택 시 호출되는 함수
   const handleCardSelect = (selectedCard) => {
+
+    // 내 카드와의 레어도 비교
+    if (myCard?.code &&
+      myCard.code.length > 0 &&
+      myCard.rarity !== selectedCard.rarity
+    ) {
+      // wantCard의 모든 카드의 레어도가 선택한 카드와 다를 때
+      toast.error("레어도가 다른 카드는 선택할 수 없습니다.");
+      return;
+    }
+    // 원하는 카드와 레어도 비교
+    if (wantCard.some(
+        card =>
+          card?.code &&
+          card.code.length > 0 &&
+          card?.rarity !== selectedCard.rarity
+      )
+    ) {
+      // wantCard의 모든 카드의 레어도가 선택한 카드와 다를 때
+      toast.error("레어도가 다른 카드는 선택할 수 없습니다.");
+      return;
+    }
+
     if (searchType === "my") {
       setMyCard(selectedCard);
     } else if (searchType === "want") {
