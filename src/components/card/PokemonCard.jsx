@@ -22,9 +22,7 @@ export default function PokemonCard({
 }) {
   return (
     <Card
-      className={`flex flex-col items-center py-0 gap-0 w-full bg-white hover:shadow-md transition-shadow duration-300 ${
-        !showInfo ? "shadow-none border-none" : "shadow-sm border border-gray-200"
-      } ${props.className || ""}`}
+      className={`flex flex-col items-center py-0 gap-0 w-full bg-white shadow-none border-none ${props.className || ""}`}
     >
       <CardHeader className="p-0 gap-0 w-full">
         <PokemonCardImage
@@ -35,22 +33,22 @@ export default function PokemonCard({
         />
       </CardHeader>
       {showInfo && (
-        <CardContent className="w-full flex-1 flex flex-col justify-between p-3 text-center bg-gray-50 border-t border-gray-100">
-          <CardTitle className="text-sm font-semibold text-gray-800 mb-2 line-clamp-1">
+        <CardContent className="w-full flex-1 flex flex-col justify-between p-1 text-center">
+          <CardTitle className="text-sm font-semibold text-gray-800 line-clamp-1">
             {data?.nameKo ? data.nameKo : "포켓몬 이름"}
           </CardTitle>
-          <CardDescription className="flex flex-col gap-2">
+          <CardDescription className="flex flex-col">
             {data?.packSet && (
-              <div className="bg-white rounded-md p-2 border border-gray-200">
+              <div className="">
                 <p className="text-xs text-gray-600 font-medium truncate">
                   {getPokemonPackSetName(data.packSet)}
                   {data?.pack && ` - ${getPokemonPackName(data.pack)}`}
                 </p>
               </div>
             )}
-            <div className="flex items-center justify-center pt-1">
+            <div className="flex items-center justify-center">
               {data?.rarity ? (
-                <div className="bg-white rounded-full p-1.5 border border-gray-200 shadow-sm">
+                <div className="">
                   <RarityIcon rarity={data?.rarity} size={18} />
                 </div>
               ) : (

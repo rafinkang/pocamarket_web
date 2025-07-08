@@ -44,7 +44,7 @@ export default function SelectBoxOption({
           : null;
         return (
           <FormItem>
-            <FormLabel className="text-[17px]">{labelValue}</FormLabel>
+            <FormLabel className="text-[14px]">{labelValue}</FormLabel>
             <Select
               value={field.value}
               onValueChange={(value) => {
@@ -54,7 +54,7 @@ export default function SelectBoxOption({
               }}
               disabled={typeValue === excludedValue}
             >
-              <SelectTrigger className="w-[150px] bg-white">
+              <SelectTrigger className="min-w-[120px]">
                 <SelectValue placeholder="전체" />
               </SelectTrigger>
               <SelectContent>

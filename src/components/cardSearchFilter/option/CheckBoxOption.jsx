@@ -37,13 +37,13 @@ export default function SearchCheckBoxOption({
       name={fieldName}
       render={({ field }) => (
         <FormItem>
-          <FormLabel className="text-[17px]">{labelValue}</FormLabel>
+          <FormLabel className="text-[14px]">{labelValue}</FormLabel>
           <FormControl>
             <div className="flex flex-wrap gap-4">
               {eachList.map((item) => {
                 const id = `${fieldName}-${item.value}`;
                 return (
-                  <div key={item.value} className="flex items-center gap-2">
+                  <div key={item.value} className="flex items-center gap-1">
                     <Checkbox
                       id={id}
                       checked={(field.value || []).includes(item.value)}
@@ -57,7 +57,7 @@ export default function SearchCheckBoxOption({
                         }
                       }}
                     />
-                    <Label htmlFor={id} className="flex items-center gap-2 cursor-pointer">
+                    <Label htmlFor={id} className="flex items-center gap-1 cursor-pointer">
                       {renderItemImages(item)}
                     </Label>
                   </div>

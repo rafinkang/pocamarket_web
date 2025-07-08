@@ -74,7 +74,7 @@ export default function FilterArea({ form, open, onReset, isCardType, isCardPack
             </svg>
             카테고리 선택
           </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {selectOptions.map((opt) => (
               <opt.Component
                 key={opt.fieldName}

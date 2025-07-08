@@ -10,10 +10,7 @@ export default function CardList({ items, ItemComponent, testMode, showInfo }) {
           {items.map((item, index) => (
             <div
               key={item.code || index}
-              className="group relative hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
-              style={{
-                animationDelay: `${index * 50}ms`
-              }}
+              className="group relative"
             >
               {ItemComponent && React.createElement(ItemComponent, {
                 data: item,
