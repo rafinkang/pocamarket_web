@@ -38,6 +38,8 @@ export default function TradeList({ isMy, isLogin, requestList, onRequestAccept,
       status: request.status,
       tradeCount: request.tradeCount,
       reportCount: request.reportCount,
+      exp: request.exp,
+      nickname: request.nickname,
     })));
   }, [requestList]);
 
@@ -53,6 +55,7 @@ export default function TradeList({ isMy, isLogin, requestList, onRequestAccept,
           <TradeListItem
             onRequestAccept={onRequestAccept}
             onRequestCancel={onRequestCancel}
+            onOpenTcgCode={onOpenTcgCode}
             onOpenOkChange={onOpenOkChange}
             isMy={isMy}
             isLogin={isLogin}

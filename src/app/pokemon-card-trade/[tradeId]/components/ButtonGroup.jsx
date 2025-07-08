@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { POKEMON_CARD_TRADE } from "@/constants/path";
 import Link from "next/link";
 import CancelTradeBtn from "./CancelTradeBtn";
-import TradeReport from "./TradeReport";
 import { REQUEST, SELECT, PROCESS, COMPLETE } from "@/constants/tradeStatus";
 
 export default function ButtonGroup({ tradeId, data, isMy, isLogin }) {
@@ -20,10 +19,6 @@ export default function ButtonGroup({ tradeId, data, isMy, isLogin }) {
       {/* 거래 요청, 선택 단계에서만 취소 */}
       {isMy && isLogin && [REQUEST, SELECT].includes(data?.status) && (
         <CancelTradeBtn tradeId={tradeId} />
-      )}
-
-      {!isMy && isLogin && (
-        <TradeReport />
       )}
       
       <Button variant="outline" className="text-xs px-3 h-[30px] font-bold">
