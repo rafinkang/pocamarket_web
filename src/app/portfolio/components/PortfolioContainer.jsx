@@ -35,6 +35,7 @@ import SourceTree from "./SourceTree"
 import SpringbootSourceTree from "./SpringbootSourceTree"
 import NextjsSourceTree from "./NextjsSourceTree"
 import dynamic from "next/dynamic"
+import Image from "next/image"
 const Security = dynamic(() => import("./logic/Security"), { ssr: false })
 
 export default function PortfolioContainer() {
@@ -463,28 +464,13 @@ export default function PortfolioContainer() {
               boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
             }}>
               <CardHeader className="bg-gray-900 border-b-8 border-gray-800 pt-6">
-                <CardTitle className="text-white font-mono">Prisma Schema</CardTitle>
+                <CardTitle className="text-white font-mono">ERD</CardTitle>
               </CardHeader>
               <CardContent className="p-6">
                 <div className="bg-gray-900 border-4 border-gray-700 p-6 font-mono text-blue-400 text-sm overflow-x-auto" style={{
                   boxShadow: '2px 2px 0px #000000'
                 }}>
-                  <pre>{`
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  password  String
-  role      Role     @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
-  cards     Card[]
-  orders    Order[]
-  
-  @@map("users")
-}
-`}</pre>
+                  <Image src="/images/pocamarket_erd.webp" alt="pocamarket_erd" width={1000} height={1000} />
                 </div>
               </CardContent>
             </Card>
