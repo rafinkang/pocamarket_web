@@ -37,6 +37,7 @@ import NextjsSourceTree from "./NextjsSourceTree"
 import dynamic from "next/dynamic"
 import Image from "next/image"
 const Security = dynamic(() => import("./logic/Security"), { ssr: false })
+const Trade = dynamic(() => import("./logic/Trade"), { ssr: false })
 
 export default function PortfolioContainer() {
   const techStack = {
@@ -113,6 +114,17 @@ export default function PortfolioContainer() {
         "시스템 모니터링",
         "컨텐츠 관리"
       ]
+    }
+  ]
+
+  const logic = [
+    {
+      title: "Security",
+      component: <Security />
+    },
+    {
+      title: "Trade",
+      component: <Trade />
     }
   ]
 
@@ -603,20 +615,22 @@ export default function PortfolioContainer() {
             </div>
             
             <div className="grid grid-cols-1 gap-8">
-              <Card className="border-8 border-gray-800 bg-gray-200 pt-0" style={{
-                    boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
-                  }}>
+              {logic.map((item, index) => (
+                <Card key={index} className="border-8 border-gray-800 bg-gray-200 pt-0" style={{
+                  boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
+                }}>
                   <CardHeader className="bg-gray-900 border-b-8 border-gray-800 pt-6">
                     <CardTitle className="text-white font-mono flex items-center">
-                      Spring Security
+                      {item.title}
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="p-6">
                     <div className="space-y-2">
-                      <Security />
+                      {item.component}
                     </div>
                   </CardContent>
                 </Card>
+              ))}
             </div>
           </section>
 
