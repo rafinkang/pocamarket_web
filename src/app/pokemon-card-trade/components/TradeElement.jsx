@@ -10,6 +10,7 @@ import Link from "next/link";
 import TradeStatusBadge from "@/components/badge/TradeStatusBadge";
 import { RiArrowLeftDoubleLine } from "react-icons/ri";
 import '@/styles/pokemonCardTrade/trade-element.css'
+import { DELETED, PROCESS } from "@/constants/tradeStatus";
 
 export default function TradeElement({
   tradeCode = "0",
