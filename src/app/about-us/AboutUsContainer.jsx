@@ -20,7 +20,7 @@ import {
   Settings
 } from "lucide-react"
 import Link from "next/link"
-import { PORTFOLIO } from "@/constants/path"
+import { PORTFOLIO, SWAGGER_UI } from "@/constants/path"
 
 export default function AboutUsContainer() {
   const developers = [
@@ -28,9 +28,9 @@ export default function AboutUsContainer() {
       id: 1,
       name: "강태욱",
       role: "Full Stack Developer",
-      position: "",
+      position: "Project Manager",
       experience: "8년차",
-      location: "서울",
+      location: "서울 금천구",
       introduction: "풀스택 개발 경험을 바탕으로 DevOps와 인프라 관리까지 다 했다. 뭐라고 써야되냐 이거 남사시럽구로",
       skills: {
         "Frontend": [
@@ -88,7 +88,7 @@ export default function AboutUsContainer() {
       role: "Full Stack Developer",
       position: "Frontend Lead",
       experience: "7년차",
-      location: "서울, 대한민국",
+      location: "서울 금천구",
       introduction: "확장 가능한 서버 아키텍처와 데이터베이스 설계에 전문성을 가진 백엔드 개발자입니다. 성능 최적화와 보안을 중시합니다.",
       skills: {
         "Frontend": [
@@ -126,9 +126,9 @@ export default function AboutUsContainer() {
       id: 3,
       name: "윤유석",
       role: "Full Stack Developer",
-      position: "팀원",
+      position: "Backend Lead",
       experience: "4년차",
-      location: "서울, 대한민국",
+      location: "서울 금천구",
       introduction: `백엔드 풀스택 개발자입니다. 프로젝트에서 백엔드와 프론트엔드, 인프라까지 폭넓게 경험했습니다. 협업과 지속적인 성장에 가치를 두고 있습니다.`,
       skills: {
         "Frontend": [
@@ -269,42 +269,45 @@ export default function AboutUsContainer() {
               </h1>
               <div className="w-full h-2 bg-gray-800 mb-4"></div>
               <p className="text-xl md:text-2xl text-gray-700 leading-relaxed font-mono">
-                POKEMON CARD TRADING PLATFORM
+                POKEMON CARD TRADING PORTFOLIO
               </p>
               <p className="text-lg text-gray-600 mt-2 font-mono">
-                ★ PRESS START TO TRADE ★
+                ★ PRESS START TO HIRE ME ★
               </p>
             </div>
 
             {/* 게임보이 스타일 특징 카드들 */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-              <div className="bg-gray-200 border-8 border-gray-800 p-6 transform hover:scale-105 transition-transform shadow-lg" style={{
-                boxShadow: '4px 4px 0px #000000, 8px 8px 0px #374151'
-              }}>
-                <div className="flex items-center justify-center mb-4">
-                  <div className="p-4 bg-gray-800 border-4 border-gray-900">
-                    <Target className="h-8 w-8 text-gray-200" />
+              <Link href={PORTFOLIO} target="_blank">
+                <div className="bg-gray-200 border-8 border-gray-800 p-6 transform hover:scale-105 transition-transform shadow-lg" style={{
+                  boxShadow: '4px 4px 0px #000000, 8px 8px 0px #374151'
+                }}>
+                  <div className="flex items-center justify-center mb-4">
+                    <div className="p-4 bg-gray-800 border-4 border-gray-900">
+                      <Target className="h-8 w-8 text-gray-200" />
+                    </div>
                   </div>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900 font-mono">PORTFOLIO</h3>
+                  <p className="text-gray-700 font-mono text-sm leading-relaxed">
+                    프로젝트 포트폴리오 보러가기
+                  </p>
                 </div>
-                <h3 className="text-xl font-bold mb-3 text-gray-900 font-mono">USER FRIENDLY</h3>
-                <p className="text-gray-700 font-mono text-sm leading-relaxed">
-                  누구나 쉽게 사용할 수 있는<br />직관적인 거래 시스템
-                </p>
-              </div>
-
-              <div className="bg-gray-200 border-8 border-gray-800 p-6 transform hover:scale-105 transition-transform shadow-lg" style={{
-                boxShadow: '4px 4px 0px #000000, 8px 8px 0px #374151'
-              }}>
-                <div className="flex items-center justify-center mb-4">
-                  <div className="p-4 bg-gray-800 border-4 border-gray-900">
-                    <Zap className="h-8 w-8 text-gray-200" />
+              </Link>
+              <Link href={SWAGGER_UI} target="_blank">
+                <div className="bg-gray-200 border-8 border-gray-800 p-6 transform hover:scale-105 transition-transform shadow-lg" style={{
+                  boxShadow: '4px 4px 0px #000000, 8px 8px 0px #374151'
+                }}>
+                  <div className="flex items-center justify-center mb-4">
+                    <div className="p-4 bg-gray-800 border-4 border-gray-900">
+                      <Zap className="h-8 w-8 text-gray-200" />
+                    </div>
                   </div>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900 font-mono">SWAGGER UI</h3>
+                  <p className="text-gray-700 font-mono text-sm leading-relaxed">
+                    API 문서화 보러가기
+                  </p>
                 </div>
-                <h3 className="text-xl font-bold mb-3 text-gray-900 font-mono">HIGH TECH</h3>
-                <p className="text-gray-700 font-mono text-sm leading-relaxed">
-                  최신 웹 기술로 구현된<br />안정적인 플랫폼
-                </p>
-              </div>
+              </Link>
 
               <div className="bg-gray-200 border-8 border-gray-800 p-6 transform hover:scale-105 transition-transform shadow-lg" style={{
                 boxShadow: '4px 4px 0px #000000, 8px 8px 0px #374151'
@@ -316,29 +319,27 @@ export default function AboutUsContainer() {
                 </div>
                 <h3 className="text-xl font-bold mb-3 text-gray-900 font-mono">TEAM WORK</h3>
                 <p className="text-gray-700 font-mono text-sm leading-relaxed">
-                  3명의 개발자가<br />협력하여 완성
+                  개발자 3인 놀아요
                 </p>
               </div>
             </div>
 
             {/* 게임보이 스타일 배지들 */}
             <div className="flex flex-wrap justify-center gap-4">
-              <Link href={PORTFOLIO}>
                 <div className="bg-gray-200 text-gray-900 px-6 py-3 border-4 border-gray-800 font-bold font-mono text-sm shadow-lg" style={{
                   boxShadow: '2px 2px 0px #000000'
                 }}>
-                  🎮 PORTFOLIO
+                  🎮 Docker
                 </div>
-              </Link>
               <div className="bg-gray-200 text-gray-900 px-6 py-3 border-4 border-gray-800 font-bold font-mono text-sm shadow-lg" style={{
                 boxShadow: '2px 2px 0px #000000'
               }}>
-                👥 TEAM PROJECT
+                👥 Spring Boot
               </div>
               <div className="bg-gray-200 text-gray-900 px-6 py-3 border-4 border-gray-800 font-bold font-mono text-sm shadow-lg" style={{
                 boxShadow: '2px 2px 0px #000000'
               }}>
-                💻 FULL STACK
+                💻 Next.js
               </div>
             </div>
           </div>
@@ -399,11 +400,11 @@ export default function AboutUsContainer() {
                     <div className="space-y-2">
                       <div className="flex items-center text-gray-900 font-mono">
                         <Briefcase className="h-5 w-5 mr-2" />
-                        <span className="font-bold">EXPERIENCE: {developer.experience}</span>
+                        <span className="font-bold">경력: {developer.experience}</span>
                       </div>
                       <div className="flex items-center text-gray-900 font-mono">
                         <MapPin className="h-5 w-5 mr-2" />
-                        <span className="font-bold">LOCATION: {developer.location}</span>
+                        <span className="font-bold">지역: {developer.location}</span>
                       </div>
                     </div>
                   </div>
