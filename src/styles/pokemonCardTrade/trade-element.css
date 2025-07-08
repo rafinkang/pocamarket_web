@@ -15,3 +15,9 @@
   opacity: 0.35;
   pointer-events: none;
 }
+/* 모바일(640px 미만)에서는 after 숨김 */
+@media (max-width: 639px) {
+  .tradeGradientCard::after {
+    display: none;
+  }
+}
