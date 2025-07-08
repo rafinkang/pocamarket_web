@@ -55,6 +55,7 @@ export default function PortfolioContainer() {
       { name: "Domain Driven Design + Hexagonal Architecture", description: "도메인 주도 + 계층별 설계" },
       { name: "JPA, QueryDSL", description: "ORM 프레임워크" },
       { name: "MariaDB", description: "관계형 데이터베이스" },
+      { name: "Spring Security", description: "인증 및 권한 관리" },
     ],
     "DevOps": [
       { name: "AWS", description: "클라우드 인프라" },
