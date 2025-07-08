@@ -171,8 +171,8 @@ export default function WriteContainer({ tradeId }) {
           setInitFilterParams={setTradeCardListFilter}
         />
       )}
-      <div id="WriteContainer" className="w-[100%] flex flex-col gap-6">
-        <h1 className="text-2xl font-bold">{mode === "write" ? "포켓몬카드 교환 등록" : "포켓몬카드 교환 수정"}</h1>
+      <div id="WriteContainer" className="w-[100%] flex flex-col gap-6 p-2 md:p-4">
+        <h2 className="text-lg font-semibold text-gray-800">{mode === "write" ? "포켓몬카드 교환 등록" : "포켓몬카드 교환 수정"}</h2>
         <Card>
           <CardContent className="flex justify-center items-center gap-4" >
             <div className="flex flex-col items-center gap-4">

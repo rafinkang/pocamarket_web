@@ -57,11 +57,12 @@ function TradeListLoading() {
 export default function TradePage() {
   return (
     <>
-      <div id="TradeList" className="w-[100%] flex flex-col gap-6">
-        <Suspense fallback={<TradeListLoading />}>
+      <Suspense fallback={<TradeListLoading />}>
+        <div id="TradeList" className="w-[100%] flex flex-col gap-6 p-2 md:p-4">
+          <h2 className="text-lg font-semibold text-gray-800">포켓몬 카드 교환</h2>
           <TradeListContainer />
-        </Suspense>
-      </div>
+        </div>
+      </Suspense>
     </>
   );
 }
