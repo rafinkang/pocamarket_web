@@ -34,6 +34,8 @@ import {
 import SourceTree from "./SourceTree"
 import SpringbootSourceTree from "./SpringbootSourceTree"
 import NextjsSourceTree from "./NextjsSourceTree"
+import dynamic from "next/dynamic"
+const Security = dynamic(() => import("./logic/Security"), { ssr: false })
 
 export default function PortfolioContainer() {
   const techStack = {
@@ -601,6 +603,34 @@ model User {
                   </CardContent>
                 </Card>
               ))}
+            </div>
+          </section>
+
+          <section>
+            <div className="bg-gray-200 border-8 border-gray-800 p-6 mb-8" style={{
+              boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
+            }}>
+              <h2 className="text-3xl font-bold text-gray-900 font-mono flex items-center">
+                <Settings className="h-8 w-8 mr-4" />
+                🔧 시스템 로직
+              </h2>
+            </div>
+            
+            <div className="grid grid-cols-1 gap-8">
+              <Card className="border-8 border-gray-800 bg-gray-200 pt-0" style={{
+                    boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
+                  }}>
+                  <CardHeader className="bg-gray-900 border-b-8 border-gray-800 pt-6">
+                    <CardTitle className="text-white font-mono flex items-center">
+                      Spring Security
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <div className="space-y-2">
+                      <Security />
+                    </div>
+                  </CardContent>
+                </Card>
             </div>
           </section>
 
