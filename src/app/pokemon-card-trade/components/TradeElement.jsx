@@ -73,11 +73,11 @@ export default function TradeElement({
           </p>
           {/* 버튼 영역 */}
           <div className="flex items-center justify-end">
-            {/* {isMyList && (DELETED < status && status < PROCESS) && ( */}
+            {isMyList && (DELETED < status && status < PROCESS) && (
               <Button variant="outline" onClick={handleRefresh} className="text-xs px-3 h-[30px] font-bold border-[#ccd0e0] !bg-[#fff] z-1">
                 끌어올리기
               </Button>
-            {/* )} */}
+            )}
             <p className="text-sm text-gray-600 ml-2">{getTimeDifference(updatedAt)}</p>
           </div>
         </div>
