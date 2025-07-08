@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="800" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 외부 원 -->
+  <circle cx="400" cy="400" r="350" stroke="#919BD6" stroke-width="60" stroke-opacity="0.7"/>
+  
+  <!-- 중앙 가로선 -->
+  <line x1="50" y1="400" x2="750" y2="400" stroke="#919BD6" stroke-width="60" stroke-opacity="0.7"/>
+  
+  <!-- 중앙 원 -->
+  <circle cx="400" cy="400" r="120" stroke="#919BD6" stroke-width="60" stroke-opacity="0.7"/>
+  <circle cx="400" cy="400" r="80" fill="#919BD6"/>
+</svg> 

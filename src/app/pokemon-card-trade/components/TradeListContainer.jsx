@@ -67,7 +67,7 @@ export default function TradeListContainer() {
   // 페이지네이션 상태
   const [totalPage, setTotalPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
-  const pageSize = 3;
+  const pageSize = 10;
 
   const [tradeCardListFilter, setTradeCardListFilter] = useState({ ...defaultFilter });
   const [tradeCardListPage, setTradeCardListPage] = useState(1);

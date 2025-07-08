@@ -16,13 +16,12 @@ export const getTimeDifference = (date) => {
     return `${diffInMinutes}분 전`
   } else if (diffInHours < 24) {
     return `${diffInHours}시간 전`
-  } else if (diffInDays < 30) {
+  } else if (diffInDays < 3) {
     return `${diffInDays}일 전`
   } else {
-    return targetDate.toLocaleDateString("ko-KR", {
-      year: "numeric",
-      month: "long",
-      day: "numeric"
-    })
+    // 3일 이상이면 MM-DD 형식으로 반환
+    const mm = String(targetDate.getMonth() + 1).padStart(2, '0')
+    const dd = String(targetDate.getDate()).padStart(2, '0')
+    return `${mm}월 ${dd}일`
   }
 } 
