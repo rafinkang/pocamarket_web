@@ -16,19 +16,17 @@ export default function SortArea({ form, totalCount, onChange }) {
   ];
 
   return (
-    <section className="w-full flex flex-wrap justify-between items-center px-4 py-2 mb-4 min-w-[300px]">
+    <div className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
       <TotalCount totalCount={totalCount} />
-      <div className="flex flex-col">
-        <div className="selectBox flex flex-wrap gap-6">
-          {selectOptions.map((opt) => (
-            <opt.Component
-              key={opt.fieldName}
-              form={form}
-              {...opt}
-            />
-          ))}
-        </div>
+      <div className="flex-shrink-0">
+        {selectOptions.map((opt) => (
+          <opt.Component
+            key={opt.fieldName}
+            form={form}
+            {...opt}
+          />
+        ))}
       </div>
-    </section>
+    </div>
   );
 }

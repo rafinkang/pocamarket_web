@@ -101,27 +101,7 @@ const cardCategories = [
   // { name: "일반 카드", description: "기본 포켓몬 카드", icon: "🍃", color: "bg-gradient-to-br from-green-300 via-green-400 to-green-500", shadow: "shadow-green-200" },
 ];
 
-/**
- * 프로젝트 소개 데이터 (닌텐도 스타일)
- */
-const projectFeatures = [
-  { 
-    name: "About Us", 
-    description: "개발팀 소개", 
-    icon: "👥", 
-    color: "bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600", 
-    shadow: "shadow-blue-300", 
-    link: "/about-us" 
-  },
-  { 
-    name: "Portfolio", 
-    description: "기술 포트폴리오", 
-    icon: "📁", 
-    color: "bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600", 
-    shadow: "shadow-purple-300", 
-    link: "/portfolio" 
-  },
-];
+
 
 export default function HomeContainer() {
   const router = useRouter();
@@ -136,12 +116,11 @@ export default function HomeContainer() {
   // 각 섹션에 대한 ref
   const heroRef = useRef(null);
   const categoryRef = useRef(null);
-  const aboutRef = useRef(null);
   const ctaRef = useRef(null);
   const containerRef = useRef(null);
 
   // 섹션 배열 메모이제이션
-  const sections = useMemo(() => [heroRef, categoryRef, ctaRef, aboutRef], []);
+  const sections = useMemo(() => [heroRef, categoryRef, ctaRef], []);
 
   // 이미지 셔플링을 한 번만 실행
   const shuffledImages = useMemo(() => {
@@ -291,7 +270,7 @@ export default function HomeContainer() {
         }
       `}</style>
 
-      <div className="h-full overflow-y-scroll scroll-smooth snap-y snap-mandatory scroll-pt-[65px]"
+      <div className="h-full overflow-y-scroll scroll-smooth snap-y snap-mandatory"
         style={{
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
@@ -301,13 +280,13 @@ export default function HomeContainer() {
         <section 
           ref={heroRef}
           id="hero"
-          className={`relative py-4 md:py-8 px-4 snap-start h-[calc(100dvh-65px)] flex flex-col justify-center transition-all duration-1000 ${
+          className={`relative px-4 snap-start h-[100dvh] flex flex-col justify-center transition-all duration-1000 ${
             visibleSections.has('hero') 
               ? 'opacity-100 transform translate-y-0' 
               : 'opacity-0 transform translate-y-10'
           }`}
         >
-          <div className="max-w-7xl mx-auto text-center w-full flex-1 flex flex-col justify-center max-h-[calc(100dvh-65px-2rem)] overflow-hidden">
+          <div className="max-w-7xl mx-auto text-center w-full flex-1 flex flex-col justify-center pt-[65px] max-h-[calc(100dvh-65px)] overflow-hidden">
             {/* 닌텐도 스타일 타이틀 */}
             <div className={`relative flex justify-center mb-4 md:mb-8 transition-all duration-1000 delay-200 ${
               visibleSections.has('hero') 
@@ -374,13 +353,13 @@ export default function HomeContainer() {
         <section 
           ref={categoryRef}
           id="category"
-          className={`relative py-4 md:py-8 px-4 snap-start h-[calc(100dvh-65px)] mt-[65px] flex items-center transition-all duration-1000 ${
+          className={`relative px-4 snap-start h-[100dvh] flex items-center transition-all duration-1000 ${
             visibleSections.has('category') 
               ? 'opacity-100 transform translate-y-0' 
               : 'opacity-0 transform translate-y-10'
           }`}
         >
-          <div className="max-w-6xl mx-auto w-full max-h-[calc(100dvh-65px-2rem)] overflow-y-auto">
+          <div className="max-w-6xl mx-auto w-full pt-[65px] py-4 md:py-8 max-h-[calc(100dvh-65px)] overflow-y-auto">
             <div className={`text-center mb-6 md:mb-12 transition-all duration-1000 delay-200 ${
               visibleSections.has('category') 
                 ? 'opacity-100 transform translate-y-0' 
@@ -396,7 +375,7 @@ export default function HomeContainer() {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+            <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-8">
               {cardCategories.map((category, index) => (
                 <div
                   key={index}
@@ -421,7 +400,7 @@ export default function HomeContainer() {
                     <p className="text-white/90 mb-4 md:mb-6 font-semibold text-sm md:text-lg">
                       {category.description}
                     </p>
-                    <button className="bg-white text-gray-800 font-black px-4 md:px-6 py-2 md:py-3 rounded-full hover:bg-gray-100 transition-colors shadow-lg border-1 md:border-2 border-gray-800 transform hover:scale-105 text-sm md:text-base cursor-pointer">
+                    <button className="hidden md:inline-block bg-white text-gray-800 font-black px-4 md:px-6 py-2 md:py-3 rounded-full hover:bg-gray-100 transition-colors shadow-lg border-1 md:border-2 border-gray-800 transform hover:scale-105 text-sm md:text-base cursor-pointer">
                       START! →
                     </button>
                   </div>
@@ -440,13 +419,13 @@ export default function HomeContainer() {
         <section 
           ref={ctaRef}
           id="cta"
-          className={`relative py-4 md:py-8 px-4 snap-start h-[calc(100dvh-65px)] mt-[65px] flex items-center transition-all duration-1000 ${
+          className={`relative px-4 snap-start h-[100dvh] flex items-center transition-all duration-1000 ${
             visibleSections.has('cta') 
               ? 'opacity-100 transform translate-y-0' 
               : 'opacity-0 transform translate-y-10'
           }`}
         >
-          <div className="max-w-4xl mx-auto text-center w-full max-h-[calc(100dvh-65px-2rem)] overflow-hidden">
+          <div className="max-w-4xl mx-auto text-center w-full pt-[65px] py-4 md:py-8 max-h-[calc(100dvh-65px)] overflow-hidden">
             <div className={`bg-gradient-to-r from-red-100 via-yellow-100 to-blue-100 rounded-2xl md:rounded-3xl p-6 md:p-12 border-2 md:border-4 border-gray-800 shadow-2xl transition-all duration-1000 delay-200 ${
               visibleSections.has('cta') 
                 ? 'opacity-100 transform translate-y-0 scale-100' 
@@ -477,113 +456,10 @@ export default function HomeContainer() {
             </div>
           </div>
           
-          {/* 스크롤 힌트 */}
-          <ScrollHint />
-        </section>
-
-        {/* 프로젝트 소개 섹션 - 게임보이 스타일 */}
-        <section 
-          ref={aboutRef}
-          id="about"
-          className={`relative py-4 md:py-8 px-4 snap-start h-[calc(100dvh-65px)] mt-[65px] flex items-center transition-all duration-1000 ${
-            visibleSections.has('about') 
-              ? 'opacity-100 transform translate-y-0' 
-              : 'opacity-0 transform translate-y-10'
-          }`}
-        >
-          <div className="max-w-6xl mx-auto w-full max-h-[calc(100dvh-65px-2rem)] overflow-y-auto">
-            {/* 프로젝트 소개 헤더 */}
-            <div className={`text-center mb-4 md:mb-8 transition-all duration-1000 delay-200 ${
-              visibleSections.has('about') 
-                ? 'opacity-100 transform translate-y-0' 
-                : 'opacity-0 transform translate-y-10'
-            }`}>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-gray-800 mb-2 md:mb-3">
-                <span className="bg-gradient-to-r from-purple-500 to-pink-600 text-transparent bg-clip-text">
-                  🎯 POCAMARKET PROJECT 🎯
-                </span>
-              </h2>
-              <p className="text-sm md:text-base text-gray-600 font-semibold bg-purple-100 px-3 md:px-4 py-1.5 md:py-2 rounded-full inline-block border-1 md:border-2 border-purple-300">
-                🎮 포켓몬 카드 거래 플랫폼의 개발 스토리 🎮
-              </p>
-            </div>
-
-            {/* 프로젝트 설명 카드 */}
-            <div className={`relative bg-gradient-to-br from-white via-gray-50 to-gray-100 rounded-xl md:rounded-2xl p-4 md:p-6 mb-4 md:mb-6 border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-1000 delay-400 ${
-              visibleSections.has('about') 
-                ? 'opacity-100 transform translate-y-0' 
-                : 'opacity-0 transform translate-y-10'
-            }`}>
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-pink-500/5 to-blue-500/5 rounded-xl md:rounded-2xl"></div>
-              <div className="relative text-center">
-                <div className="text-2xl md:text-3xl mb-2 md:mb-3">🎮</div>
-                <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-2 md:mb-3">
-                  차세대 포켓몬 카드 거래 플랫폼
-                </h3>
-                <p className="text-gray-600 text-sm md:text-base leading-relaxed mb-3 md:mb-4">
-                  Spring Boot와 Next.js를 활용한 풀스택 개발 프로젝트
-                </p>
-                <div className="flex flex-wrap justify-center gap-1.5 md:gap-2">
-                  <span className="bg-blue-500 text-white px-2 md:px-3 py-1 rounded-full text-xs font-semibold shadow-sm">
-                    Next.js
-                  </span>
-                  <span className="bg-green-500 text-white px-2 md:px-3 py-1 rounded-full text-xs font-semibold shadow-sm">
-                    Spring Boot
-                  </span>
-                  <span className="bg-purple-500 text-white px-2 md:px-3 py-1 rounded-full text-xs font-semibold shadow-sm">
-                    Docker
-                  </span>
-                  <span className="bg-red-500 text-white px-2 md:px-3 py-1 rounded-full text-xs font-semibold shadow-sm">
-                    AWS
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* 링크 카드 그리드 */}
-            <div className="grid grid-cols-2 gap-3 md:gap-4 max-w-lg mx-auto">
-              {projectFeatures.map((feature, index) => (
-                <div
-                  key={index}
-                  className={`group relative overflow-hidden rounded-xl md:rounded-2xl ${feature.color} ${feature.shadow} shadow-lg hover:shadow-xl transition-all duration-700 transform hover:-translate-y-1 hover:scale-105 border border-white/20 cursor-pointer ${
-                    visibleSections.has('about') 
-                      ? 'opacity-100 translate-y-0' 
-                      : 'opacity-0 translate-y-10'
-                  }`}
-                  style={{
-                    transitionDelay: `${600 + index * 100}ms`
-                  }}
-                  onClick={() => {
-                    if (feature.link.startsWith('http')) {
-                      window.open(feature.link, '_blank');
-                    } else {
-                      router.push(feature.link);
-                    }
-                  }}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <div className="relative p-3 md:p-4 text-center">
-                    <div className="text-2xl md:text-3xl mb-2 transform group-hover:scale-110 transition-transform duration-300">
-                      {feature.icon}
-                    </div>
-                    <h3 className="text-sm md:text-base font-bold text-white mb-1 drop-shadow-lg">
-                      {feature.name}
-                    </h3>
-                    <p className="text-white/90 mb-2 md:mb-3 font-medium text-xs md:text-sm">
-                      {feature.description}
-                    </p>
-                    <button className="bg-white/90 text-gray-800 font-semibold px-3 md:px-4 py-1.5 md:py-2 rounded-full hover:bg-white transition-colors shadow-md transform hover:scale-105 text-xs md:text-sm cursor-pointer">
-                      바로가기 →
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          
           {/* 마지막 섹션이므로 스크롤 힌트 없음 */}
           <ScrollHint isLastSection={true} />
         </section>
+
       </div>
 
       {/* 맨위로 가기 버튼 */}

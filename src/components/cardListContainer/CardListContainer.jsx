@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
@@ -261,59 +262,74 @@ export default function CardListContainer({
   };
 
   return (
-    <section className="w-full min-w-[300px] flex flex-col gap-4">
-      <SearchList
-        form={form}
-        filterComponents={[
-          {
-            Component: SearchArea,
-            props: {
-              form,
-              setOpenDetail: setOpenDetail,
-              isDetail,
-            },
-          },
-          ...(isDetail ? [{
-            Component: FilterArea,
-            props: {
-              form,
-              open: openDetail,
-              onReset: handleReset,
-              isCardType,
-              isCardPackSet,
-              isRarity,
-              isElement,
-            },
-          }] : []),
-        ]}
-        sortComponents={[
-          ...(isSort ? [{
-            Component: SortArea,
-            props: {
-              form,
-              totalCount,
-              onChange: handleSortChange,
-            },
-          }] : []),
-        ]}
-        onSubmit={handleSubmit}
-      />
+    <div className="w-full min-w-[300px]">
+      {/* 통합 컨테이너 */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        {/* 검색 및 필터 영역 */}
+        <div className="p-4 border-b border-gray-100">
+          <SearchList
+            form={form}
+            filterComponents={[
+              {
+                Component: SearchArea,
+                props: {
+                  form,
+                  setOpenDetail: setOpenDetail,
+                  isDetail,
+                },
+              },
+              ...(isDetail ? [{
+                Component: FilterArea,
+                props: {
+                  form,
+                  open: openDetail,
+                  onReset: handleReset,
+                  isCardType,
+                  isCardPackSet,
+                  isRarity,
+                  isElement,
+                },
+              }] : []),
+            ]}
+            sortComponents={[
+              ...(isSort ? [{
+                Component: SortArea,
+                props: {
+                  form,
+                  totalCount,
+                  onChange: handleSortChange,
+                },
+              }] : []),
+            ]}
+            onSubmit={handleSubmit}
+          />
+        </div>
 
-    {isLoading ? (
-      <div className="flex justify-center items-center py-8">
-        <LoadingSpinner color="#3b82f6" size="lg" />
+        {/* 카드 리스트 영역 */}
+        <div className="p-4">
+          {isLoading ? (
+            <div className="text-center py-12">
+              <LoadingSpinner color="#3b82f6" size="lg" />
+              <p className="mt-3 text-gray-500 text-sm">카드를 불러오는 중...</p>
+            </div>
+          ) : (
+            <CardList items={items} ItemComponent={cardElement} testMode={testMode} />
+          )}
+        </div>
+
+        {/* 페이지네이션 영역 */}
+        {totalPage > 1 && (
+          <div className="px-4 py-3 border-t border-gray-100 bg-gray-50">
+            <CommonPagination
+              page={page}
+              totalPage={totalPage}
+              itemSize={pageSize}
+              mobileItemSize={mobilePageSize}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        )}
       </div>
-    ) : (
-      <CardList items={items} ItemComponent={cardElement} testMode={testMode} />
-    )}
-
-      <CommonPagination
-        page={page}
-        totalPage={totalPage}
-        itemSize={pageSize}
-        mobileItemSize={mobilePageSize}
-        onPageChange={handlePageChange}
-      />
-    </section>
+    </div>
   );
 } 
