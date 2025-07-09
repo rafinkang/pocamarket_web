@@ -112,6 +112,7 @@
   --sidebar-ring: oklch(0.488 0.243 264.376);
 }
 
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -121,7 +122,7 @@
   }
 }
 
-
+/* 
 @theme {
   --radius-ele: var(--radius);
   --radius-card: var(--card-radius);
@@ -150,7 +151,7 @@
   --color-border: hsl(var(--hu-border));
   --color-input: hsl(var(--hu-input));
   --color-ring: hsl(var(--hu-ring));
-}
+} */
 
 :root {
   --hu-font-geist: var(--font-geist);
