@@ -18,7 +18,7 @@ import { defaultFilter } from "@/constants/pokemonCardFilter";
 import SearchContainer from "./Search/SearchContainer";
 
 // - 카드 필터
-import { RiArrowLeftRightFill, RiArrowUpDownFill } from "react-icons/ri";
+import { RiArrowLeftDoubleLine, RiArrowLeftRightFill, RiArrowUpDoubleLine, RiArrowUpDownFill } from "react-icons/ri";
 import FilterCard from "./Search/FilterCard";
 import FilterCardBox from "./Search/FilterCardBox";
 
@@ -427,16 +427,16 @@ export default function TradeListContainer() {
                 />
               )}
               <div className="text-center">
-                <h3 className="text-sm font-semibold text-gray-800 mb-1">내 카드</h3>
-                <p className="text-xs text-gray-500">교환할 카드를 선택하세요</p>
+                <h3 className="text-sm font-semibold text-gray-800 mb-1">교환 카드</h3>
+                <p className="text-xs text-gray-500">검색할 카드를 선택하세요</p>
               </div>
             </div>
 
             {/* 중앙 교환 표시 - 반응형 */}
             <div className="flex items-center justify-center relative lg:top-[-25px]">
               {/* 교환 아이콘 */}
-              <RiArrowUpDownFill className="text-purple-600 text-xl md:text-2xl block lg:hidden" />
-              <RiArrowLeftRightFill className="text-blue-600 text-xl md:text-2xl hidden lg:block" />
+              <RiArrowUpDoubleLine className="text-purple-600 text-2xl md:text-3xl block lg:hidden" />
+              <RiArrowLeftDoubleLine className="text-purple-600 text-2xl md:text-3xl hidden lg:block" />
             </div>
 
             {/* 원하는 카드들 (want) 섹션 */}

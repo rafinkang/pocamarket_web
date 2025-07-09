@@ -20,7 +20,7 @@ import { defaultFilter } from "@/constants/pokemonCardFilter";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { RiArrowLeftRightFill, RiArrowUpDownFill, RiSettings3Line } from "react-icons/ri";
+import { RiArrowLeftDoubleLine, RiArrowLeftRightFill, RiArrowUpDoubleLine, RiArrowUpDownFill, RiSettings3Line } from "react-icons/ri";
 import { toast } from "sonner";
 import PlusCard from "./PlusCard";
 
@@ -184,7 +184,7 @@ export default function WriteContainer({ tradeId }) {
           <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200 !py-3 gap-0">
             <CardTitle className="text-center text-base md:text-lg font-semibold text-gray-800 flex items-center justify-center gap-2 ">
               <RiArrowLeftRightFill className="text-blue-600" />
-              카드 교환 설정
+              교환 카드 선택
             </CardTitle>
           </CardHeader>
           <CardContent className="p-6 md:p-8">
@@ -220,8 +220,8 @@ export default function WriteContainer({ tradeId }) {
               {/* 중앙 교환 표시 - 반응형 */}
               <div className="flex items-center justify-center relative lg:top-[-25px]">
                 {/* 교환 아이콘 */}
-                <RiArrowUpDownFill className="text-purple-600 text-xl md:text-2xl block lg:hidden" />
-                <RiArrowLeftRightFill className="text-blue-600 text-xl md:text-2xl hidden lg:block" />
+                <RiArrowUpDoubleLine className="text-purple-600 text-2xl md:text-3xl block lg:hidden" />
+                <RiArrowLeftDoubleLine className="text-purple-600 text-2xl md:text-3xl hidden lg:block" />
               </div>
 
               {/* 원하는 카드 영역 */}
