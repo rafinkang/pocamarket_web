@@ -68,6 +68,11 @@ export default function TradeItem({ isLogin, isMy, id, card, isActiveCard, onReq
           교환 수락
         </Button>
       )}
+      {card.status === REQUEST_PROCESS && (
+        <Button onClick={() => onRequestAccept(card.id, card.status)} className="text-xs px-3 h-[30px] font-bold">
+          교환 완료
+        </Button>
+      )}
       {card.status === REQUEST_COMPLETE && (
         <span className="text-gray-500 text-sx">교환 완료</span>
       )}
@@ -78,7 +83,7 @@ export default function TradeItem({ isLogin, isMy, id, card, isActiveCard, onReq
    * 친구코드 안내/출력 블록 변수
    */
   const tcgCodeBlock = 
-  isLogin && ([REQUEST_PROCESS, REQUEST_COMPLETE].includes(card.status)) && isMy && (
+  isLogin && ([REQUEST_PROCESS, REQUEST_COMPLETE].includes(card.status)) && (isMy || card.isMy) && (
     <>
       {(!card.tcgCode || card.tcgCode === '') ? (
         <Button
