@@ -89,7 +89,7 @@ export default function TradeElement({
           <div className="flex-1 flex items-stretch justify-start gap-4">
             {/* 내 카드 섹션 */}
             <div className="flex items-center">
-              <CardInfo card={myCard} testMode={false} isMine={true} />
+              <CardInfo card={myCard} testMode={testMode} isMine={true} />
             </div>
             {/* 교환 구분선 */}
             <div className="flex items-center justify-center self-stretch">
@@ -99,7 +99,7 @@ export default function TradeElement({
             <div className="flex gap-4 flex-wrap md:flex-nowrap">
               {wantedCards.map((card, index) => (
                 <div key={index} className="flex-shrink-0">
-                  <CardInfo card={card} testMode={false} isMine={false} />
+                  <CardInfo card={card} testMode={testMode} isMine={false} />
                 </div>
               ))}
             </div>
