@@ -1,26 +1,25 @@
 'use client'
+import { SIGNUP } from '@/constants/path';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import PropTypes from 'prop-types'; // components property 정의하기 위해 import
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { SIGNUP } from '@/constants/path';
-import { toast } from "sonner"
-import { useRouter } from 'next/navigation';
+import { toast } from "sonner";
 
 //api
 import { postLogin } from '@/api/login';
 
 // components
-import { Input } from '@/components/ui/input';
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
+import { Input } from '@/components/ui/input';
+import { Label } from "@/components/ui/label";
 
 // store
 import useAuthStore from '@/store/authStore';
@@ -38,15 +37,6 @@ export default function Login({ test = null }) {
   const currentUser = useAuthStore((state) => state.user);
   const router = useRouter()
   const searchParams = useSearchParams();
-
-  useEffect(() => {
-    // TODO 로그인 성공 후 프로세스 정의
-    if (currentIsLogin && currentUser) {
-      // 이전 페이지로 리다이렉트하거나 기본값으로 마이페이지
-      const redirectTo = searchParams.get('redirect') || '/';
-      router.push(redirectTo);
-    }
-  }, [test, currentIsLogin, currentUser, searchParams, router])
 
   const handleLoginSuccess = async (userData) => {
     try {
@@ -101,6 +91,26 @@ export default function Login({ test = null }) {
     }
   }
 
+  useEffect(() => {
+    // 미들웨어에서 리디렉션된 경우 로그인 상태 초기화
+    const reason = searchParams.get('reason');
+    if (reason === 'auth_required') {
+      console.log('미들웨어에서 리디렉션: 로그인 상태 초기화');
+      useAuthStore.getState().clear();
+      setMsg('로그인이 필요합니다. 다시 로그인해주세요.');
+    }
+  }, []);
+
+  useEffect(() => {
+    // TODO 로그인 성공 후 프로세스 정의
+    if (currentIsLogin && currentUser) {
+      // 이전 페이지로 리다이렉트하거나 기본값으로 마이페이지
+      const redirectTo = searchParams.get('redirect') || '/';
+      router.push(redirectTo);
+    }
+  }, [test, currentIsLogin, currentUser, searchParams, router])
+
+
   return (
     <div className="flex flex-col gap-6">
       {currentIsLogin && currentUser && (
@@ -152,8 +162,8 @@ export default function Login({ test = null }) {
             {/* 메시지 표시 영역 */}
             {msg && (
               <div className={`p-3 rounded text-sm ${msg.includes('성공')
-                  ? 'bg-green-100 text-green-800'
-                  : 'bg-red-100 text-red-800'
+                ? 'bg-green-100 text-green-800'
+                : 'bg-red-100 text-red-800'
                 }`}>
                 {msg}
               </div>

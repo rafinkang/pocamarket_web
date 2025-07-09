@@ -34,9 +34,13 @@ export default async function callApi({ method, url, params, data, headers }) {
     if (isBrowser) {
       switch (ERROR_CODE) {
         case UN_AUTHORIZED:
-          alert('로그인 후 사용 가능합니다.');
-          useAuthStore.getState().clear();
-          window.location.href = LOGIN;
+           // 이미 리다이렉트 중이면 아무것도 하지 않음
+          if (!window.isRedirecting) {
+            window.isRedirecting = true
+            alert('로그인 후 사용 가능합니다.')
+            useAuthStore.getState().clear()
+            window.location.href = LOGIN
+          }
           break;
         case FORBIDDEN:
           alert('권한이 없습니다.');
