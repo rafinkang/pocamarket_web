@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 
 import AlertDialog from "@/components/dialog/AlertDialog";
-import { REQUEST } from "@/constants/tradeStatus";
 import TradeListItem from "./TradeListItem";
 
 /**
@@ -12,7 +11,6 @@ import TradeListItem from "./TradeListItem";
  */
 export default function TradeList({ isMy, isLogin, requestList, onRequestAccept, onRequestCancel, onOpenTcgCode }) {
   const [cards, setCards] = useState([]);
-  const [activeCard, setActiveCard] = useState(null);
   const [openOk, onOpenOkChange] = useState(false);
 
   // 상태별 설명 반환 함수
@@ -43,10 +41,6 @@ export default function TradeList({ isMy, isLogin, requestList, onRequestAccept,
     })));
   }, [requestList]);
 
-  useEffect(() => {
-    setActiveCard(cards.find(card => card.status === REQUEST));
-  }, [cards]);
-
   return (
     <div className="">
       <h3 className="text-[1.1rem] font-semibold text-gray-700">요청 목록</h3>
@@ -61,8 +55,6 @@ export default function TradeList({ isMy, isLogin, requestList, onRequestAccept,
             isLogin={isLogin}
             key={card.id}
             card={card}
-            isActiveCard={activeCard && activeCard.id === card.id}
-            disabled={activeCard && activeCard.id !== card.id}
           />
         ))}
         {cards.length === 0 && (

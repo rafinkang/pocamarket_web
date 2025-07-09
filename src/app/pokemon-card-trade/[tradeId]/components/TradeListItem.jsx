@@ -15,7 +15,7 @@ const testMode = process.env.NODE_ENV === "development"
  * TradeListItem 컴포넌트
  * - 교환 요청 카드 리스트의 각 아이템
  */
-export default function TradeItem({ isLogin, isMy, id, card, isActiveCard, onRequestCancel, onRequestAccept, onOpenOkChange, onOpenTcgCode }) {
+export default function TradeItem({ isLogin, isMy, id, card, onRequestCancel, onRequestAccept, onOpenOkChange, onOpenTcgCode }) {
   const activeClass = "bg-blue-500 text-white"
   const [isReportOpen, setIsReportOpen] = useState(false)
 
@@ -147,7 +147,7 @@ export default function TradeItem({ isLogin, isMy, id, card, isActiveCard, onReq
             <PokemonCard data={{ code: card.code }} showInfo={false} className="relative w-full h-full" testMode={testMode} />
           </div>
           <div>
-            <Badge variant="secondary" className={cn(isActiveCard && activeClass)}>
+            <Badge variant="secondary" className={cn(card.status >= REQUEST_PROCESS && activeClass)}>
               {getTradeRequestStatusName(card.status)}
             </Badge>
             <p className="text-neutral-600 font-medium mt-1 text-[0.95rem]">
