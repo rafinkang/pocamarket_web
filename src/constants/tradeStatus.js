@@ -12,6 +12,18 @@ export const SELECT = 2;
 export const PROCESS = 3;
 export const COMPLETE = 4;
 
+export const statusColorMap = {
+  [DELETED]: "#fb2c36",   // 삭제(레드)
+  [REQUEST]: "#ad46ff",   // 요청(민트)
+  [SELECT]: "#ad46ff",   // 선택(민트)
+  [PROCESS]: "#2b7fff",   // 진행(파랑)
+  [COMPLETE]: "#00c951",  // 완료(초록)
+}
+
+export const getStatusColor = (status) => {
+  return statusColorMap[status];
+}
+
 export function getTradeStatusName(key) {
   return status[key];
 }

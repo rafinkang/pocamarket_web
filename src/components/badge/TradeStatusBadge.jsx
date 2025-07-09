@@ -1,12 +1,5 @@
-import { getTradeStatusName, REQUEST, PROCESS, COMPLETE } from "@/constants/tradeStatus"
+import { getTradeStatusName, REQUEST, PROCESS, COMPLETE, DELETED, statusColorMap } from "@/constants/tradeStatus"
 import { useMemo } from "react"
-
-// 상태별 색상 매핑 (HEX)
-const statusColorMap = {
-  [REQUEST]: "#28afa4",   // 요청(민트)
-  [PROCESS]: "#267bdc",   // 진행(파랑)
-  [COMPLETE]: "#4CAF50",  // 완료(초록)
-}
 
 export default function TradeStatusBadge({ status, className }) {
   // 데이터에서 필요한 값 가공
@@ -20,11 +13,13 @@ export default function TradeStatusBadge({ status, className }) {
   }, [status])
 
   return (
-    <span className={`flex items-center ${className}`}>
+    <div className={`flex items-center ${className ? className : ""}`}>
       <span
-        className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold shadow-sm border border-[${statusColor}] bg-[#fff]`}
+        className={`flex items-center justify-center gap-1 px-2 py-0.5 rounded-md text-xs font-bold shadow-sm bg-[#fff]`}
         style={{
+          minWidth: '92px',
           color: statusColor,
+          border: `2px solid ${statusColor}`,
           textShadow: '0 1px 2px rgba(0,0,0,0.08)'
         }}
       >
@@ -38,6 +33,6 @@ export default function TradeStatusBadge({ status, className }) {
         </svg>
         {statusName}
       </span>
-    </span>
+    </div>
   )
 }

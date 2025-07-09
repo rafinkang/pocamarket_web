@@ -10,7 +10,7 @@ import Link from "next/link";
 import TradeStatusBadge from "@/components/badge/TradeStatusBadge";
 import { RiArrowLeftDoubleLine } from "react-icons/ri";
 import '@/styles/pokemonCardTrade/trade-element.css'
-import { DELETED, PROCESS } from "@/constants/tradeStatus";
+import { DELETED, getStatusColor, PROCESS } from "@/constants/tradeStatus";
 
 export default function TradeElement({
   tradeCode = "0",
@@ -68,10 +68,12 @@ export default function TradeElement({
       <div className="flex flex-col items-center gap-4 p-4 shadow-sm shadow-[#cfd0d8] border border-[#e6e6ff] rounded-sm w-full mx-auto bg-[#FCFCFC] tradeGradientCard">
         {/* 헤드 영역: 교환 상태, 닉네임, 시간 */}
         <div className="flex items-center justify-between gap-2 w-full">
-          <p className="flex items-center gap-2 text-black-800 truncate font-bold">
-            {tradeUserNickname}님의 교환 신청
+          <div className="flex items-center gap-2">
             <TradeStatusBadge status={status} />
-          </p>
+            <p className="flex items-center gap-2 text-black-800 truncate font-bold">
+              {tradeUserNickname} 님의 교환
+            </p>
+          </div>
           {/* 버튼 영역 */}
           <div className="flex items-center justify-end">
             {isMyList && (DELETED < status && status < PROCESS) && (
@@ -87,18 +89,17 @@ export default function TradeElement({
           <div className="flex-1 flex items-stretch justify-start gap-4">
             {/* 내 카드 섹션 */}
             <div className="flex items-center">
-              <CardInfo card={myCard} testMode={testMode} isMine={true} />
+              <CardInfo card={myCard} testMode={false} isMine={true} />
             </div>
             {/* 교환 구분선 */}
-            <div className="flex items-center justify-center self-stretch w-[2px] md:w-[40px]">
-              <div className="w-[1px] h-[100%] bg-gray-400 lg:hidden" />
-              <RiArrowLeftDoubleLine className="relative top-[-20px] w-20 h-20 md:w-30 md:h-30 text-[#919bd6] hidden lg:block" />
+            <div className="flex items-center justify-center self-stretch">
+              <RiArrowLeftDoubleLine className="relative top-[-20px] text-purple-600 text-2xl md:text-3xl" style={{ color: getStatusColor(status) }} />
             </div>
             {/* 원하는 카드들 */}
             <div className="flex gap-4 flex-wrap md:flex-nowrap">
               {wantedCards.map((card, index) => (
                 <div key={index} className="flex-shrink-0">
-                  <CardInfo card={card} testMode={testMode} isMine={false} />
+                  <CardInfo card={card} testMode={false} isMine={false} />
                 </div>
               ))}
             </div>
