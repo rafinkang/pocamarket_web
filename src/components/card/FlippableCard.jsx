@@ -97,7 +97,7 @@ export default function FlippableCard ({ data, cardKey, rotateY = 360, duration 
           <img
             src="/images/cardback.webp"
             alt="Card Back"
-            className="w-full h-full object-cover rounded-xl [backface-visibility:hidden]"
+            className="w-full h-full object-cover [backface-visibility:hidden]"
           />
         </motion.div>
       </motion.div>
