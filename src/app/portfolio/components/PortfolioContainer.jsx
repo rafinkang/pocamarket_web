@@ -38,6 +38,7 @@ import dynamic from "next/dynamic"
 import Image from "next/image"
 const Security = dynamic(() => import("./logic/Security"), { ssr: false })
 const Trade = dynamic(() => import("./logic/Trade"), { ssr: false })
+const Deploy = dynamic(() => import("./deploy/Deploy"), { ssr: false })
 
 export default function PortfolioContainer() {
   const techStack = {
@@ -84,36 +85,35 @@ export default function PortfolioContainer() {
       ]
     },
     {
-      title: "포켓몬 카드 거래 시스템",
-      description: "실시간 카드 거래 및 관리",
+      title: "포켓몬 카드 교환 시스템",
+      description: "실시간 카드 교환 및 관리",
       icon: <Package className="h-6 w-6" />,
       details: [
-        "카드 등록 및 관리",
-        "실시간 거래 시스템",
-        "가격 추천 알고리즘",
-        "거래 내역 관리"
+        "교환글 검색 시스템",
+        "교환 카드 등록 및 관리",
+        "교환 상태에 따른 카드 교환 관리",
+        "교환 내역 관리",
       ]
     },
     {
-      title: "실시간 알림 시스템",
-      description: "WebSocket 기반 실시간 통신",
-      icon: <Zap className="h-6 w-6" />,
+      title: "포켓몬 카드 DB 시스템",
+      description: "포켓몬 카드 검색 및 조회",
+      icon: <Database className="h-6 w-6" />,
       details: [
-        "거래 알림",
-        "가격 변동 알림",
-        "시스템 공지사항",
-        "실시간 채팅"
+        "포켓몬 카드 검색 기능",
+        "카드 필터링 시스템",
+        "카드 상세 정보 조회",
       ]
     },
     {
-      title: "관리자 대시보드",
-      description: "시스템 모니터링 및 관리",
-      icon: <BarChart3 className="h-6 w-6" />,
+      title: "마이페이지 시스템",
+      description: "개인정보 및 교환 관리",
+      icon: <Users className="h-6 w-6" />,
       details: [
-        "사용자 관리",
-        "거래 통계",
-        "시스템 모니터링",
-        "컨텐츠 관리"
+        "개인정보 관리",
+        "교환 내역 조회",
+        "친구 코드 관리",
+        "신고 내역 및 비밀번호 변경"
       ]
     }
   ]
@@ -230,7 +230,7 @@ export default function PortfolioContainer() {
                       <strong>NAME:</strong> 포카마켓 (POCAMARKET)
                     </div>
                     <div className="bg-gray-300 border-4 border-gray-700 p-4 font-mono" style={{boxShadow: '2px 2px 0px #000000'}}>
-                      <strong>TYPE:</strong> 포켓몬 카드 거래 플랫폼
+                      <strong>TYPE:</strong> 포켓몬 카드 교환 플랫폼
                     </div>
                     <div className="bg-gray-300 border-4 border-gray-700 p-4 font-mono" style={{boxShadow: '2px 2px 0px #000000'}}>
                       <strong>TEAM:</strong> 강태욱, 박지연, 윤유석 (3명)
@@ -636,7 +636,7 @@ export default function PortfolioContainer() {
           </section>
 
           {/* 개발 환경 설정 */}
-          <section>
+          {/* <section>
             <div className="bg-gray-200 border-8 border-gray-800 p-6 mb-8" style={{
               boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
             }}>
@@ -697,7 +697,7 @@ npx prisma db seed
                 </CardContent>
               </Card>
             </div>
-          </section>
+          </section> */}
 
           {/* 배포 및 DevOps */}
           <section>
@@ -710,66 +710,22 @@ npx prisma db seed
               </h2>
             </div>
             
-            <Card className="border-8 border-gray-800 bg-gray-200 pt-0" style={{
-              boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
-            }}>
-              <CardHeader className="bg-gray-900 border-b-8 border-gray-800 pt-6">
-                <CardTitle className="text-white font-mono">Docker 설정</CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="bg-gray-900 border-4 border-gray-700 p-4 font-mono text-blue-400 text-sm overflow-x-auto" style={{
-                  boxShadow: '2px 2px 0px #000000'
+            <div className="grid grid-cols-1 gap-8">
+                <Card className="border-8 border-gray-800 bg-gray-200 pt-0" style={{
+                  boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
                 }}>
-                  <pre>{`
-# Dockerfile
-FROM node:18-alpine
-
-WORKDIR /app
-
-# 의존성 설치
-COPY package*.json ./
-RUN npm ci --only=production
-
-# 소스 복사
-COPY . .
-
-# 빌드
-RUN npm run build
-
-# 포트 노출
-EXPOSE 3000
-
-# 실행
-CMD ["npm", "start"]
-
-# docker-compose.yml
-version: '3.8'
-services:
-  app:
-    build: .
-    ports:
-      - "3000:3000"
-    environment:
-      - DATABASE_URL=mysql://root:password@db:3306/pocamarket
-    depends_on:
-      - db
-      
-  db:
-    image: mysql:8.0
-    environment:
-      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_DATABASE=pocamarket
-    ports:
-      - "3306:3306"
-    volumes:
-      - db_data:/var/lib/mysql
-      
-volumes:
-  db_data:
-                  `}</pre>
-                </div>
-              </CardContent>
-            </Card>
+                  <CardHeader className="bg-gray-900 border-b-8 border-gray-800 pt-6">
+                    <CardTitle className="text-white font-mono flex items-center">
+                      CI/CD 파이프라인
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <div className="space-y-2">
+                      <Deploy />
+                    </div>
+                  </CardContent>
+                </Card>
+            </div>
           </section>
 
         </div>
