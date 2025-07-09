@@ -7,17 +7,45 @@ import {
   HoverCardTrigger
 } from "@/components/ui/hover-card";
 import { memo } from "react";
-import { RiAddLine } from "react-icons/ri";
+import { RiAddLine, RiSearchLine } from "react-icons/ri";
 
 const FilterCard = memo(function FilterCard({
   data,
+  type,
   onCardClick,
   onCancelClick,
 }) {
+  const cardSize = { width: '160px', aspectRatio: '366/512' };
+  
+  // 카드 타입에 따른 스타일 구분
+  const getCardStyle = () => {
+    if (type === "my") {
+      return {
+        bgColor: "bg-blue-50",
+        borderColor: "border-blue-200",
+        hoverBg: "hover:bg-blue-100",
+        hoverBorder: "hover:border-blue-300",
+        iconColor: "text-blue-500",
+        title: "내 카드"
+      };
+    } else {
+      return {
+        bgColor: "bg-purple-50",
+        borderColor: "border-purple-200",
+        hoverBg: "hover:bg-purple-100",
+        hoverBorder: "hover:border-purple-300",
+        iconColor: "text-purple-500",
+        title: "원하는 카드"
+      };
+    }
+  };
+
+  const cardStyle = getCardStyle();
+
   return (
     <>
       {data.code ? (
-        <div className="w-[60px] sm:w-[80px] md:w-[110px] lg:w-[180px] xl:w-[200px] min-w-[60px] max-w-[200px] flex justify-center items-center aspect-[366/512] cursor-pointer hover:scale-105 transition-transform">
+        <div className="relative group" style={cardSize}>
           <FlippableCard
             key={data.code}
             cardKey={data.code}
@@ -28,19 +56,47 @@ const FilterCard = memo(function FilterCard({
             btnName="선택 취소"
             rotateY={180}
             duration={0.3}
-            width="100%"
-            maxWidth="100%"
+            width={cardSize.width}
+            maxWidth={cardSize.width}
           />
         </div>
       ) : (
         <HoverCard>
           <HoverCardTrigger asChild>
             <Card
-              className="w-[60px] sm:w-[80px] md:w-[110px] lg:w-[180px] xl:w-[200px] min-w-[60px] max-w-[200px] flex justify-center items-center aspect-[366/512] cursor-pointer hover:scale-105 transition-transform shadow-lg hover:shadow-xl"
+              className={`
+                cursor-pointer transition-all duration-300 ease-in-out
+                ${cardStyle.bgColor} ${cardStyle.borderColor} ${cardStyle.hoverBg} ${cardStyle.hoverBorder}
+                border-2 border-dashed hover:shadow-lg hover:scale-105 active:scale-95
+                flex flex-col items-center justify-center rounded-lg
+              `}
               onClick={() => onCardClick(data)}
+              style={cardSize}
             >
-              <CardContent className="flex justify-center items-center w-full h-full p-0">
-                <RiAddLine size="40px" className="sm:text-[50px]" />
+              <CardContent className="p-4 flex flex-col items-center justify-center h-full text-center space-y-4">
+                {/* 메인 아이콘 */}
+                <div className="relative">
+                  <RiSearchLine className={cardStyle.iconColor} size={24} />
+                </div>
+
+                {/* 텍스트 */}
+                <div className="space-y-1">
+                  <p className="text-sm font-semibold text-gray-800 leading-tight">
+                    {cardStyle.title}
+                  </p>
+                </div>
+
+                {/* 플러스 아이콘 */}
+                <div className="">
+                  <RiAddLine className="text-gray-600" size={12} />
+                </div>
+
+                {/* 액션 힌트 */}
+                <div className="mt-auto">
+                  <div className="px-2 py-1 bg-white/70 backdrop-blur-sm rounded-full border border-white/50">
+                    <span className="text-xs font-medium text-gray-700">클릭하여 선택</span>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </HoverCardTrigger>
