@@ -15,7 +15,7 @@ export default function PlusCard({ type = "my", onMyCardClick, onWantCardClick }
   const getCardContent = () => {
     if (type === "my") {
       return {
-        icon: <RiImage2Line className="text-blue-500" size={24} />,
+        icon: <RiSearchLine className="text-blue-500" size={24} />,
         title: "내 카드",
         bgColor: "bg-blue-50",
         borderColor: "border-blue-200",

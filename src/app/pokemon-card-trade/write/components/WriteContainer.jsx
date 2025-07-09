@@ -192,37 +192,36 @@ export default function WriteContainer({ tradeId }) {
 
               {/* 내 카드 영역 */}
               <div className="flex flex-col items-center space-y-3 relative md:top-[-8px]">
-                  {myCard ? (
-                    <div style={cardSize}>
-                      <FlippableCard
-                        handleClick={onMyCardDeleteClick}
-                        key={myCard.code}
-                        cardKey={myCard.code}
-                        data={myCard}
-                        btnName="선택 취소"
-                        rotateY={180}
-                        duration={0.3}
-                        width={cardSize.width}
-                        maxWidth={cardSize.width}
-                      />
-                    </div>
-                  ) : (
-                    <div style={cardSize}>
-                      <PlusCard type="my" onMyCardClick={onMyCardClick} />
-                    </div>
-                  )}
+                {myCard ? (
+                  <div style={cardSize}>
+                    <FlippableCard
+                      handleClick={onMyCardDeleteClick}
+                      key={myCard.code}
+                      cardKey={myCard.code}
+                      data={myCard}
+                      btnName="선택 취소"
+                      rotateY={180}
+                      duration={0.3}
+                      width={cardSize.width}
+                      maxWidth={cardSize.width}
+                    />
+                  </div>
+                ) : (
+                  <div style={cardSize}>
+                    <PlusCard type="my" onMyCardClick={onMyCardClick} />
+                  </div>
+                )}
                 <div className="text-center">
                   <h3 className="text-sm font-semibold text-gray-800 mb-1">내 카드</h3>
                   <p className="text-xs text-gray-500">교환할 카드를 선택하세요</p>
                 </div>
               </div>
 
-              {/* 중앙 화살표 - 반응형 */}
-              <div className="flex items-center justify-center">
-                <div className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-full p-2 md:p-3 shadow-lg">
-                  <RiArrowUpDownFill className="text-white text-xl md:text-2xl block lg:hidden" />
-                  <RiArrowLeftRightFill className="text-white text-xl md:text-2xl hidden lg:block" />
-                </div>
+              {/* 중앙 교환 표시 - 반응형 */}
+              <div className="flex items-center justify-center relative lg:top-[-25px]">
+                {/* 교환 아이콘 */}
+                <RiArrowUpDownFill className="text-purple-600 text-xl md:text-2xl block lg:hidden" />
+                <RiArrowLeftRightFill className="text-blue-600 text-xl md:text-2xl hidden lg:block" />
               </div>
 
               {/* 원하는 카드 영역 */}
