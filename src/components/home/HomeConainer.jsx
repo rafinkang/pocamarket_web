@@ -306,7 +306,7 @@ export default function HomeContainer() {
                 ? 'opacity-100 transform translate-y-0' 
                 : 'opacity-0 transform translate-y-10'
             }`}>
-              🎮 포켓몬 카드의 모든 것, 게임처럼 재미있는 거래 플랫폼 🎮
+              🎮 포켓몬 카드의 모든 것, 게임처럼 재미있는 교환 플랫폼 🎮
             </p>
             
             {/* 닌텐도 스타일 검색바 */}
@@ -435,7 +435,7 @@ export default function HomeContainer() {
                 🎮 게임 시작! 🎮
               </h2>
               <p className="text-base md:text-xl text-gray-700 mb-6 md:mb-8 font-semibold px-2">
-                ⭐ 포켓몬 카드 거래의 새로운 모험을 시작하세요! ⭐
+                ⭐ 포켓몬 카드 교환의 새로운 모험을 시작하세요! ⭐
               </p>
               <div className={`flex flex-col sm:flex-row gap-4 md:gap-6 justify-center transition-all duration-1000 delay-400 ${
                 visibleSections.has('cta') 
@@ -445,7 +445,7 @@ export default function HomeContainer() {
                 <button 
                   onClick={() => router.push('/pokemon-card-trade')}
                   className="bg-gradient-to-r from-red-400 to-pink-500 text-white px-6 md:px-10 py-3 md:py-5 rounded-full font-black text-sm md:text-lg hover:from-red-500 hover:to-pink-600 transition-all duration-300 shadow-xl border-2 md:border-4 border-white transform hover:scale-105 cursor-pointer">
-                  🎯 카드 판매하기
+                  🎯 카드 교환하기
                 </button>
                 <button 
                   onClick={() => router.push('/pokemon-card')}
