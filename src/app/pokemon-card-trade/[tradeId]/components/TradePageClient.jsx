@@ -11,9 +11,9 @@ import TradeList from "./TradeList";
 import TraderInfo from "./TraderInfo";
 
 import { getTcgCodeList, getTradeRequestTcgCode } from "@/api/tcgCode";
-import { getTcgTradeDetail } from "@/api/tcgTrade";
 import { postTcgTradeRequest, getTcgTradeRequestList, updateTcgTradeRequestStatus, deleteTcgTradeRequest } from "@/api/tcgTradeRequest";
 import { LOGIN } from "@/constants/path";
+import { REQUEST_PROCESS } from "@/constants/tradeRequestStatus";
 
 export default function TradePageClient({ tradeId, tradeDetail }) {
 
@@ -28,6 +28,7 @@ export default function TradePageClient({ tradeId, tradeDetail }) {
   const [backRouter, setBackRouter] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [openTcgCode, setOpenTcgCode] = useState(false);
 
   const isLogin = useAuthStore((state) => state.isLogin);
 
@@ -127,18 +128,22 @@ export default function TradePageClient({ tradeId, tradeDetail }) {
     }
   }
 
-  const handleOpenTcgCode = async (tradeRequestId) => {
+  const getOpenTcgCode = async (tradeRequestId, isMy, isRequestMy) => {
     try {
       const response = await getTradeRequestTcgCode(tradeId, tradeRequestId);
       
       if (response.success === true) {
-        setRequestList(prevList => {
-          return prevList.map(request => 
-            request.tradeRequestId === tradeRequestId 
-              ? { ...request, tcgCode: response.data }
-              : request
-          );
-        });
+        if(isMy) {
+          setRequestList(prevList => {
+            return prevList.map(request => 
+              request.tradeRequestId === tradeRequestId 
+                ? { ...request, tcgCode: response.data }
+                : request
+            );
+          });
+        } else if(isRequestMy) {
+          setOpenTcgCode(response.data);
+        }
       }
 
     } catch (error) {
@@ -158,7 +163,6 @@ export default function TradePageClient({ tradeId, tradeDetail }) {
   const getDetail = async () => {
     try {
       const requestListResponse = await getTcgTradeRequestList(tradeId);
-      console.log(tradeDetail.data);
       setData(tradeDetail.data);
       setIsMy(tradeDetail.data.isMy);
       setRequestList(requestListResponse.data);
@@ -166,6 +170,11 @@ export default function TradePageClient({ tradeId, tradeDetail }) {
       if (isLogin) {
         const tcgCodeList = await getTcgCodeList();
         setTcgCodeList(tcgCodeList.data);
+
+        const processRequest = requestListResponse.data?.filter(request => request.status >= REQUEST_PROCESS)[0];
+        if(processRequest && isLogin && (tradeDetail.data.isMy || processRequest.isMy)) {
+          getOpenTcgCode(processRequest.tradeRequestId, tradeDetail.data.isMy, processRequest.isMy);
+        }
       }
     } catch (error) {
       console.error(error);
@@ -207,12 +216,11 @@ export default function TradePageClient({ tradeId, tradeDetail }) {
           <TradeHeader tradeId={tradeId} data={data} isMy={isMy} isLogin={isLogin} />
           {/* <ButtonGroup tradeId={tradeId} data={data} isMy={isMy} isLogin={isLogin}/> */}
           <div className="flex flex-col gap-10 mt-2">
-            <TradeBox checkLogin={checkLogin} data={data} isMy={isMy} tcgCodeList={tcgCodeList} onTradeRequest={handleTradeRequest} />
-            <TraderInfo data={data} tradeId={tradeId} isMy={isMy} isLogin={isLogin} />
+            <TradeBox checkLogin={checkLogin} data={data} isMy={isMy} tcgCodeList={tcgCodeList} />
+            <TraderInfo data={data} tradeId={tradeId} isMy={isMy} isLogin={isLogin} openTcgCode={openTcgCode} />
             <TradeList isMy={isMy} isLogin={isLogin} requestList={Array.isArray(requestList) ? requestList : requestList.content}
               onRequestAccept={handleRequestAccept}
               onRequestCancel={handleRequestCancel}
-              onOpenTcgCode={handleOpenTcgCode}
             />
           </div>
         </>

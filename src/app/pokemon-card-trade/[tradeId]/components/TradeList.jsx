@@ -9,7 +9,7 @@ import TradeListItem from "./TradeListItem";
  * TradeList 컴포넌트
  * - 요청 목록을 보여줌
  */
-export default function TradeList({ isMy, isLogin, requestList, onRequestAccept, onRequestCancel, onOpenTcgCode }) {
+export default function TradeList({ isMy, isLogin, requestList, onRequestAccept, onRequestCancel }) {
   const [cards, setCards] = useState([]);
   const [openOk, onOpenOkChange] = useState(false);
 
@@ -49,7 +49,6 @@ export default function TradeList({ isMy, isLogin, requestList, onRequestAccept,
           <TradeListItem
             onRequestAccept={onRequestAccept}
             onRequestCancel={onRequestCancel}
-            onOpenTcgCode={onOpenTcgCode}
             onOpenOkChange={onOpenOkChange}
             isMy={isMy}
             isLogin={isLogin}

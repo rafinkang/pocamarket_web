@@ -10,7 +10,7 @@ import TradeReport from "./TradeReport"
  * @param {boolean} isMy - 본인 여부
  * @param {boolean} isLogin - 로그인 여부
  */
-export default function TraderInfo({ data, isMy, isLogin }) {
+export default function TraderInfo({ data, isMy, isLogin, openTcgCode }) {
   // 데이터에서 필요한 값 가공
   const { nickname, userInfo } = useMemo(() => {
     if (!data) return { userInfo: {} }
@@ -19,6 +19,7 @@ export default function TraderInfo({ data, isMy, isLogin }) {
       userInfo: data.userInfo || {},
     }
   }, [data])
+
 
   // userInfo에서 각 값 추출
   const { tradeCount = 0, reportCount = 0, exp = 0 } = userInfo || {}
@@ -36,7 +37,7 @@ export default function TraderInfo({ data, isMy, isLogin }) {
           {!isMy && isLogin && <TradeReport />}
         </div>
         {/* 유저 정보 영역 */}
-        <div className="flex flex-row gap-2 sm:gap-4 mt-2">
+        <div className="flex flex-row flex-wrap gap-2 sm:gap-4 mt-2">
           {/* 교환 횟수 */}
           <div className="flex items-center gap-1 bg-white/10 rounded px-2 py-1 min-w-[80px]">
             <span className="text-white text-[1rem]">🔄</span>
@@ -55,6 +56,13 @@ export default function TraderInfo({ data, isMy, isLogin }) {
             <span className="text-white text-xs">경험치</span>
             <span className="text-white text-sm font-bold ml-1">{exp}</span>
           </div>
+          {openTcgCode && (
+            <div className="flex items-center gap-1 bg-white/10 rounded px-2 py-1 min-w-[80px]">
+              <span className="text-white text-[1rem]">🔑</span>
+              <span className="text-white text-xs">친구코드</span>
+              <span className="text-white text-sm font-bold ml-1">{openTcgCode}</span>
+            </div>
+          )}
         </div>
       </div>
     </div>
