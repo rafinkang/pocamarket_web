@@ -367,7 +367,7 @@ export default function HomeContainer() {
             }`}>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-gray-800 mb-2 md:mb-4">
                 <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text">
-                  🎮 카드 카테고리 🎮
+                  🎮 포켓몬 카드 DB 🎮
                 </span>
               </h2>
               <p className="text-sm md:text-lg text-gray-600 font-semibold bg-blue-100 px-4 md:px-6 py-2 md:py-3 rounded-full inline-block border-1 md:border-2 border-blue-300">
