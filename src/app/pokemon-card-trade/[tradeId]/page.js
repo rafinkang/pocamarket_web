@@ -1,11 +1,25 @@
 import TradePageClient from "./components/TradePageClient";
+import { createMetadata } from "@/lib/metadata";
 
-import { siteConfig } from "@/config/siteConfig";
+export async function generateMetadata({ params }) {
+  try {
+    const { tradeId } = await params;
+    console.log("generateMetadata 실행 - tradeId:", tradeId);
 
-export const metadata = {
-  title: '포켓몬 카드 교환',
-  description: '포켓몬 카드를 교환 할 수 있습니다.',
-  keywords: ["포켓몬 카드 교환", "포켓몬 카드 거래", ...siteConfig.keywords],
+    return createMetadata({
+      title: '포켓몬 카드 교환글 상세',
+      description: '작성한 포켓몬 카드 교환글을 상세 조회합니다.',
+      path: `/pokemon-card-trade/${tradeId}`,
+      keywords: ["포켓몬 카드 교환", "포켓몬 카드 교환글 상세"]
+    });
+
+  } catch (error) {
+    console.error("generateMetadata 오류:", error);
+    return {
+      title: '포켓몬 카드 교환글 상세',
+      description: '작성한 포켓몬 카드 교환글을 상세 조회합니다.',
+    };
+  }
 }
 
 export default function PokemonCardTrade() {

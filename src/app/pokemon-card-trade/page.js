@@ -1,12 +1,13 @@
 import { Suspense } from 'react';
 import TradeListContainer from "./components/TradeListContainer"
-import { siteConfig } from "@/config/siteConfig";
+import { createMetadata } from "@/lib/metadata";
 
-export const metadata = {
+export const metadata = createMetadata({
   title: '포켓몬 카드 교환',
   description: '포켓몬 카드를 교환 할 수 있습니다.',
-  keywords: ["포켓몬 카드 교환", "포켓몬 카드 거래", ...siteConfig.keywords],
-}
+  path: '/pokemon-card-trade',
+  keywords: ["포켓몬 카드 교환", "포켓몬 카드 교환 목록", "포켓몬 카드 교환 검색"]
+});
 
 /**
  * 거래 목록 로딩 컴포넌트
