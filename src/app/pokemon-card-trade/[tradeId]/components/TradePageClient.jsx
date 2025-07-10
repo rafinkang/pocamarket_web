@@ -216,7 +216,7 @@ export default function TradePageClient({ tradeId, tradeDetail }) {
           <TradeHeader tradeId={tradeId} data={data} isMy={isMy} isLogin={isLogin} />
           {/* <ButtonGroup tradeId={tradeId} data={data} isMy={isMy} isLogin={isLogin}/> */}
           <div className="flex flex-col gap-10 mt-2">
-            <TradeBox checkLogin={checkLogin} data={data} isMy={isMy} tcgCodeList={tcgCodeList} />
+            <TradeBox checkLogin={checkLogin} data={data} isMy={isMy} tcgCodeList={tcgCodeList} onTradeRequest={handleTradeRequest} />
             <TraderInfo data={data} tradeId={tradeId} isMy={isMy} isLogin={isLogin} openTcgCode={openTcgCode} />
             <TradeList isMy={isMy} isLogin={isLogin} requestList={Array.isArray(requestList) ? requestList : requestList.content}
               onRequestAccept={handleRequestAccept}
