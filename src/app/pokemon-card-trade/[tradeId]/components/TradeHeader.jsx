@@ -4,14 +4,7 @@ import { useMemo } from "react";
 import ButtonGroup from "./ButtonGroup";
 import TradeStatusBadge from "@/components/badge/TradeStatusBadge";
 import moment from "moment"
-import { getTradeStatusName, REQUEST, PROCESS, COMPLETE } from "@/constants/tradeStatus"
-
-// 상태별 색상 매핑 (HEX)
-const statusColorMap = {
-  [REQUEST]: "#28afa4",   // 요청(민트)
-  [PROCESS]: "#267bdc",   // 진행(파랑)
-  [COMPLETE]: "#4CAF50",  // 완료(초록)
-}
+import { getStatusColor, REQUEST, SELECT, PROCESS, COMPLETE } from "@/constants/tradeStatus"
 
 /**
  * TradeHeader 컴포넌트
@@ -21,10 +14,10 @@ export default function TradeHeader({ data, tradeId, isMy, isLogin }) {
   // 데이터에서 필요한 값 가공
   const { status, statusColor, createdAt } = useMemo(() => {
     if (!data) return {}
-    const dataStatus = [PROCESS, COMPLETE].includes(data.status) ? data.status : REQUEST
+    const dataStatus = [SELECT, PROCESS, COMPLETE].includes(data.status) ? data.status : REQUEST
     return {
       status: dataStatus,
-      statusColor: statusColorMap[dataStatus] || "#7B6FAD",
+      statusColor: getStatusColor(dataStatus) || "#7B6FAD",
       createdAt: moment(data.createdAt).format('YYYY년 MM월 DD일 HH:mm'),
     }
   }, [data])

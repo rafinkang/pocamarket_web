@@ -4,7 +4,9 @@ import { cache } from "react";
 import TradePageClient from "./components/TradePageClient";
 
 const getCachedTcgTradeDetail = cache(async (tradeId) => {
-  return await getTcgTradeDetail(tradeId);
+  const tradeDetail = await getTcgTradeDetail(tradeId);
+  console.log("tradeDetail", tradeDetail);
+  return tradeDetail;
 });
 
 export async function generateMetadata({ params }) {

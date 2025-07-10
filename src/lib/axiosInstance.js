@@ -29,7 +29,22 @@ const axiosInstance = axios.create({
 
 // 요청 인터셉터: 모든 요청 전에 특정 작업 수행
 axiosInstance.interceptors.request.use(
-  (config) => {
+  async (config) => {
+    // 서버 사이드에서 실행될 때 쿠키에서 토큰 가져오기
+    if (typeof window === 'undefined') {
+      try {
+        const { cookies } = await import('next/headers');
+        const cookieStore = await cookies();
+        const accessToken = cookieStore.get("accessToken")?.value;
+
+        if (accessToken) {
+          config.headers.Authorization = `Bearer ${accessToken}`;
+        }
+      } catch (error) {
+        console.error('서버 사이드에서 쿠키 가져오기 실패:', error);
+      }
+    }
+
     return config;
   },
   (error) => {

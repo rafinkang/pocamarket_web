@@ -14,10 +14,10 @@ export const COMPLETE = 4;
 
 export const statusColorMap = {
   [DELETED]: "#fb2c36",   // 삭제(레드)
-  [REQUEST]: "#ad46ff",   // 요청(민트)
-  [SELECT]: "#ad46ff",   // 선택(민트)
+  [REQUEST]: "#ad46ff",   // 요청(보라)
+  [SELECT]: "#1e3a8a",   // 선택(남색)
   [PROCESS]: "#2b7fff",   // 진행(파랑)
-  [COMPLETE]: "#00c951",  // 완료(초록)
+  [COMPLETE]: "#059669",  // 완료(초록)
 }
 
 export const getStatusColor = (status) => {

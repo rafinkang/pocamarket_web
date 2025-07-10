@@ -63,17 +63,17 @@ export default function TradeItem({ isLogin, isMy, id, card, onRequestCancel, on
    */
   const myActionButtons = isMy && (
     <>
-      {card.status === REQUEST_SUBMITTED && (
+      {card.status == REQUEST_SUBMITTED && (
         <Button onClick={() => onRequestAccept(card.id, card.status)} className="text-xs px-3 h-[30px] font-bold">
           교환 수락
         </Button>
       )}
-      {card.status === REQUEST_PROCESS && (
+      {card.status == REQUEST_PROCESS && (
         <Button onClick={() => onRequestAccept(card.id, card.status)} className="text-xs px-3 h-[30px] font-bold">
           교환 완료
         </Button>
       )}
-      {card.status === REQUEST_COMPLETE && (
+      {card.status == REQUEST_COMPLETE && (
         <span className="text-gray-500 text-sx">교환 완료</span>
       )}
     </>
@@ -95,7 +95,7 @@ export default function TradeItem({ isLogin, isMy, id, card, onRequestCancel, on
           친구코드를 확인하세요
         </Button>
       ) : (
-        <p className="font-semibold text-blue-600">친구코드 : {card.tcgCode}</p>
+        <p className="font-semibold text-[12px] text-blue-600">친구코드 : {card.tcgCode}</p>
       )}
     </>
   )
@@ -162,7 +162,6 @@ export default function TradeItem({ isLogin, isMy, id, card, onRequestCancel, on
               {/* 여기에 유저정보 */}
               {/* 버튼 영역 */}
               <div className="flex items-center gap-2 justify-end w-full sm:w-auto">
-                {reportButton}
                 {tcgCodeBlock}
                 {cancelButton}
                 {myActionButtons}

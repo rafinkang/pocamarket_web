@@ -158,6 +158,7 @@ export default function TradePageClient({ tradeId, tradeDetail }) {
   const getDetail = async () => {
     try {
       const requestListResponse = await getTcgTradeRequestList(tradeId);
+      console.log(tradeDetail.data);
       setData(tradeDetail.data);
       setIsMy(tradeDetail.data.isMy);
       setRequestList(requestListResponse.data);
