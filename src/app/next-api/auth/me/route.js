@@ -22,9 +22,10 @@ export async function POST(request) {
   
   const body = await request.json();
   const user = body.user;
-  // console.log("POST 실행", user, refreshToken);
+  console.log("POST 실행", user, refreshToken);
 
-  if (refreshToken && user !== null) {
+  // if (refreshToken && user !== null) {
+  if (refreshToken) {
     // 로그인 처리
     return NextResponse.json({ isLogin: true, user: user });
   } else {

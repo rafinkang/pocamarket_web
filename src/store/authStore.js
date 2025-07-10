@@ -9,6 +9,7 @@ const useAuthStore = create(
       // 상태값
       isLogin: false, // 로그인 여부
       user: null, // 사용자 정보
+      hasHydrated: false, // localStorage에서 데이터 복원 완료 여부
 
       // 액션
       // 로그인 후
@@ -42,12 +43,20 @@ const useAuthStore = create(
         isLogin: false,
         user: null
       }),
+
+      // hydration 상태 설정
+      setHasHydrated: (state) => set({ hasHydrated: state }),
     }),
     {
       name: 'auth-storage', // localStorage에 저장될 고유 키 이름
       storage: createJSONStorage(() => localStorage), // localStorage 사용
-      // 특정 상태만 저장
-      // partialize: (state) => ({ isLogin: state.isLogin, user: state.user }),
+      // 특정 상태만 저장 (hasHydrated는 저장하지 않음)
+      partialize: (state) => ({ isLogin: state.isLogin, user: state.user }),
+      // hydration 완료 시 실행할 콜백
+      onRehydrateStorage: () => (state) => {
+        console.log('localStorage에서 데이터 복원 완료:', state);
+        state?.setHasHydrated(true);
+      },
     }
   )
 );
