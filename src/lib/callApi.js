@@ -56,6 +56,9 @@ export default async function callApi({ method, url, params, data, headers }) {
           // ... 기타 서버 에러 케이스
           alertMessage(`서버에 문제가 발생했습니다. 잠시 후 다시 시도해주세요. (코드: ${ERROR_CODE})`);
           break;
+        default:
+          alertMessage(`잘못된 요청입니다. (에러코드: ${ERROR_CODE} - ${error.response?.data?.errorCode})`);
+          break;
       }
     } else {
       // --- 서버 환경일 때 실행 ---
