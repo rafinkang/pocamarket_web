@@ -1,0 +1,23 @@
+/* TradeElement.module.css */
+.tradeGradientCard {
+  position: relative;
+  overflow: hidden;
+}
+.tradeGradientCard::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 400px;
+  height: 400px;
+  background: url('/images/pokeball-pattern-color.svg') no-repeat center/contain;
+  transform: rotate(-25deg);
+  opacity: 0.35;
+  pointer-events: none;
+}
+/* 모바일(640px 미만)에서는 after 숨김 */
+@media (max-width: 639px) {
+  .tradeGradientCard::after {
+    display: none;
+  }
+}

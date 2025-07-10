@@ -1,34 +1,42 @@
 "use client";
 
-export default function CardList({ items, ItemComponent, testMode, showInfo }) {
+import React from "react";
 
+export default function CardList({ items, ItemComponent, testMode, showInfo }) {
   return (
-    <section className="flex flex-col items-center w-full">
-      <div className="contentList w-full px-[20px]">
-        {items && items.length > 0 ? (
-          <ul className="grid items-start justify-items-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {items.map((item, index) => (
-              <li
-                className="flex items-center justify-center w-full max-w-[300px]"
-                key={item.code || index}
-              >
-                {ItemComponent && (
-                  <ItemComponent 
-                    data={item} 
-                    priority={index < 15} 
-                    testMode={testMode} 
-                    showInfo={showInfo}
-                    />
-                )}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div className="py-10 text-gray-400 text-lg text-center">
-            검색 결과가 없습니다.
+    <>
+      {items && items.length > 0 ? (
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          {items.map((item, index) => (
+            <div
+              key={item.code || index}
+              className="group relative"
+            >
+              {ItemComponent && React.createElement(ItemComponent, {
+                data: item,
+                priority: index < 15,
+                testMode: testMode,
+                showInfo: true
+              })}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-12">
+          <div className="text-gray-400 mb-3">
+            <svg className="w-12 h-12 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
           </div>
-        )}
-      </div>
-    </section>
+          <h3 className="text-lg font-semibold text-gray-600 mb-2">
+            검색 결과가 없습니다
+          </h3>
+          <p className="text-gray-500 text-sm">
+            다른 검색 조건을 시도해보세요
+          </p>
+        </div>
+      )}
+    </>
   );
-} 
+}
+

@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 
 import AlertDialog from "@/components/dialog/AlertDialog";
-import { REQUEST } from "@/constants/tradeStatus";
 import TradeListItem from "./TradeListItem";
 
 /**
@@ -12,7 +11,6 @@ import TradeListItem from "./TradeListItem";
  */
 export default function TradeList({ isMy, isLogin, requestList, onRequestAccept, onRequestCancel, onOpenTcgCode }) {
   const [cards, setCards] = useState([]);
-  const [activeCard, setActiveCard] = useState(null);
   const [openOk, onOpenOkChange] = useState(false);
 
   // 상태별 설명 반환 함수
@@ -38,30 +36,32 @@ export default function TradeList({ isMy, isLogin, requestList, onRequestAccept,
       status: request.status,
       tradeCount: request.tradeCount,
       reportCount: request.reportCount,
+      exp: request.exp,
+      nickname: request.nickname,
     })));
   }, [requestList]);
 
-  useEffect(() => {
-    setActiveCard(cards.find(card => card.status === REQUEST));
-  }, [cards]);
-
   return (
-    <div className="sm:mt-20 mt-10">
+    <div className="">
       <h3 className="text-[1.1rem] font-semibold text-gray-700">요청 목록</h3>
       <ul className="w-full gap-4">
         {cards.map(card => (
           <TradeListItem
             onRequestAccept={onRequestAccept}
             onRequestCancel={onRequestCancel}
+            onOpenTcgCode={onOpenTcgCode}
             onOpenOkChange={onOpenOkChange}
             isMy={isMy}
             isLogin={isLogin}
             key={card.id}
             card={card}
-            isActiveCard={activeCard && activeCard.id === card.id}
-            disabled={activeCard && activeCard.id !== card.id}
           />
         ))}
+        {cards.length === 0 && (
+          <div className="flex items-center justify-center w-full h-full py-20">
+            <p className="text-gray-500">요청 목록이 없습니다.</p>
+          </div>
+        )}
       </ul>
       <AlertDialog 
         open={openOk}

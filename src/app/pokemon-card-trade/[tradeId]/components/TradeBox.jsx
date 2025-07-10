@@ -1,14 +1,19 @@
 "use client";
 
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
+
+import PokemonCardDetail from "@/components/pokemon/PokemonCardDetail";
 import FlippableCard from "@/components/card/FlippableCard";
 import AlertDialog from "@/components/dialog/AlertDialog";
 import PokemonCard from "@/components/card/PokemonCard";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 import useAuthStore from "@/store/authStore";
 import Link from "next/link";
 import { MYPAGE } from "@/constants/path"
+import { RiArrowUpDoubleLine } from "react-icons/ri";
+import { getTextColorClass, TYPE_TEXT_COLORS } from "@/constants/pokemonColor"
 
 const testMode = process.env.NODE_ENV === "development";
 
@@ -26,9 +31,8 @@ const TRADE_CONSTANTS = {
  */
 const styles = {
   // 교환 희망 카드 목록
-  tradeSection: "mt-8",
-  tradeTitle: "mb-4 text-[1.1rem] font-semibold text-gray-700",
-  tradeCardContainer: "flex flex-col sm:flex-row flex-wrap justify-center items-center gap-4 sm:gap-6 md:gap-8",
+  tradeTitle: "text-[0.9rem] md:text-[1rem] font-semibold text-gray-600",
+  tradeCardContainer: "flex flex-row flex-wrap justify-center items-center gap-4 sm:gap-6 md:gap-8 container mx-auto rounded-lg shadow-md py-8 px-2 border-1 border-solid",
 
   // 교환 신청 다이얼로그
   dialogContent: "flex flex-col gap-4 items-center justify-center",
@@ -140,14 +144,8 @@ const TradeCardItem = ({ card, isMy, handleClick, isAnyHover, setIsAnyHover, ele
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* 입체감 있는 바닥 그림자 - 모바일에서 숨김 */}
-      <div
-        className="absolute left-1/2 top-[97%] -translate-x-1/2 mt-6 w-[70%] h-8 z-0 pointer-events-none animate-blue-shadow hidden sm:block"
-        style={shadowStyle}
-      />
-
       {/* 카드와 그림자 등 기존 내용 */}
-      <div className="relative z-10 max-w-[280px] sm:w-full sm:max-w-[210px] mx-auto aspect-[366/512] min-h-[200px] min-w-[100px]"
+      <div className="relative z-10 max-w-[22vw] sm:w-full sm:max-w-[210px] mx-auto aspect-[366/512] min-w-[100px]"
         style={{ perspective: '1000px', width: "70vw" }}
       >
         <div
@@ -193,6 +191,11 @@ const TradeCardItem = ({ card, isMy, handleClick, isAnyHover, setIsAnyHover, ele
           </div>
         </div>
       </div>
+      {/* 입체감 있는 바닥 그림자 - 모바일에서 숨김 */}
+      <div
+        className="mt-1 sm:mt-3 w-[70%] h-5 z-0 pointer-events-none animate-blue-shadow"
+        style={shadowStyle}
+      />
     </div>
   )
 }
@@ -206,14 +209,29 @@ export default function TradeBox({checkLogin, data, isMy, tcgCodeList, onTradeRe
   const [isAnyHover, setIsAnyHover] = useState(false)
   const user = useAuthStore((state) => state.user)
   const [tcgCode, setTcgCode] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   const { wantCards = [] } = data || {}
+  const textColorClass = getTextColorClass(data.myCard.element)
 
   useEffect(() => {
     if (tcgCodeList && tcgCodeList.length > 0) {
       setTcgCode(tcgCodeList[0].tcgCode)
     }
   }, [tcgCodeList])
+
+  // 모바일 여부 감지 useEffect
+  useEffect(() => {
+    /**
+     * 모바일 화면 여부를 판단하여 상태를 업데이트합니다.
+     */
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   /**
    * 교환 신청 처리 함수
@@ -285,7 +303,7 @@ export default function TradeBox({checkLogin, data, isMy, tcgCodeList, onTradeRe
   if (!data) return null
 
   return (
-    <>
+    <div>
       {!isMy && 
         <AlertDialog
           open={openDialog}
@@ -299,26 +317,47 @@ export default function TradeBox({checkLogin, data, isMy, tcgCodeList, onTradeRe
           title="카드 교환 신청"
         />
       }
-
-      {/* 원하는 카드 목록 */}
-      <div className={styles.tradeSection}>
-        <h3 className={styles.tradeTitle}>이런 카드를 원해요!</h3>
-        <div className={styles.tradeCardContainer}>
-          {useMemo(() => 
-            wantCards.map((card, idx) => (
-              <TradeCardItem
-                key={card.id || idx}
-                card={card}
-                isMy={isMy}
-                handleClick={handleClick}
-                isAnyHover={isAnyHover}
-                setIsAnyHover={setIsAnyHover}
-                element={card.element}
-              />
-            )), [wantCards, isMy, handleClick, isAnyHover, setIsAnyHover]
-          )}
-        </div>
+      {/* 내 카드 상세 - 모바일일 때만 hideInfo true */}
+      <PokemonCardDetail data={data.myCard} hideInfo={isMobile} />
+      <div className="flex flex-col justify-center items-center w-full">
+        <RiArrowUpDoubleLine className={`w-20 h-20 md:w-30 md:h-30 ${textColorClass}`} />
+        <h3 className={`${styles.tradeTitle} mb-2`}>이런 카드를 원해요!</h3>
       </div>
-    </>
+      <div
+        className={styles.tradeCardContainer}
+        style={{ borderColor: getBorderColorByElement(data?.myCard?.element) }}
+      >
+        {useMemo(() => 
+          wantCards.map((card, idx) => (
+            <TradeCardItem
+              key={card.id || idx}
+              card={card}
+              isMy={isMy}
+              handleClick={handleClick}
+              isAnyHover={isAnyHover}
+              setIsAnyHover={setIsAnyHover}
+              element={card.element}
+            />
+          )), [wantCards, isMy, handleClick, isAnyHover, setIsAnyHover]
+        )}
+      </div>
+    </div>
   )
+}
+
+function getBorderColorByElement(element) {
+  switch (element?.toLowerCase()) {
+    case 'grass': return '#A7DB8D' // 연한 초록
+    case 'fire': return '#FFD1C1' // 연한 빨강/주황
+    case 'water': return '#B8E6FE' // 연한 파랑
+    case 'lightning': return '#FFF6B7' // 연한 노랑
+    case 'fighting': return '#FFD6A5' // 연한 주황
+    case 'psychic': return '#FBC2EB' // 연한 보라/핑크
+    case 'colorless': return '#E0E0E0' // 연한 회색
+    case 'darkness': return '#B5B5B5' // 연한 어두운 회색
+    case 'metal': return '#D3D3D3' // 연한 금속색
+    case 'dragon': return '#C3B8FF' // 연한 보라
+    case 'fairy': return '#FFD6F5' // 연한 핑크
+    default: return '#5670FF' // 기본 파랑(화살표와 동일)
+  }
 }

@@ -4,7 +4,7 @@ import Image from "next/image";
 import ImageCarousel from "@/components/carousel/ImageCarousel.jsx";
 import { PokemonThreeDMarquee } from "@/components/ui/pokemon-3d-marquee.jsx";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
-import { Search, TrendingUp, Users, Package, Star, ArrowUp } from "lucide-react";
+import { Search, Users, ArrowUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 /**
@@ -101,15 +101,7 @@ const cardCategories = [
   // { name: "일반 카드", description: "기본 포켓몬 카드", icon: "🍃", color: "bg-gradient-to-br from-green-300 via-green-400 to-green-500", shadow: "shadow-green-200" },
 ];
 
-/**
- * 거래 통계 데이터 (닌텐도 스타일)
- */
-const tradeStats = [
-  { label: "총 거래량", value: "2,847", icon: TrendingUp, color: "text-green-600", bgColor: "bg-green-100", borderColor: "border-green-300" },
-  { label: "활성 사용자", value: "1,234", icon: Users, color: "text-blue-600", bgColor: "bg-blue-100", borderColor: "border-blue-300" },
-  { label: "등록 상품", value: "5,672", icon: Package, color: "text-purple-600", bgColor: "bg-purple-100", borderColor: "border-purple-300" },
-  { label: "평균 평점", value: "4.8", icon: Star, color: "text-yellow-600", bgColor: "bg-yellow-100", borderColor: "border-yellow-300" },
-];
+
 
 export default function HomeContainer() {
   const router = useRouter();
@@ -124,12 +116,11 @@ export default function HomeContainer() {
   // 각 섹션에 대한 ref
   const heroRef = useRef(null);
   const categoryRef = useRef(null);
-  const statsRef = useRef(null);
   const ctaRef = useRef(null);
   const containerRef = useRef(null);
 
   // 섹션 배열 메모이제이션
-  const sections = useMemo(() => [heroRef, categoryRef, statsRef, ctaRef], []);
+  const sections = useMemo(() => [heroRef, categoryRef, ctaRef], []);
 
   // 이미지 셔플링을 한 번만 실행
   const shuffledImages = useMemo(() => {
@@ -253,7 +244,7 @@ export default function HomeContainer() {
     if (isLastSection) return null;
 
     return (
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 transition-all duration-1000 delay-800 opacity-70 hover:opacity-100">
+      <div className="absolute bottom-4 md:bottom-6 left-1/2 transform -translate-x-1/2 transition-all duration-1000 delay-800 opacity-70 hover:opacity-100">
         <div className="animate-bounce">
           <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center">
             <div className="w-1 h-3 bg-gray-400 rounded-full mt-2 animate-pulse"></div>
@@ -266,7 +257,7 @@ export default function HomeContainer() {
   return (
     <div
       ref={containerRef}
-      className="w-full h-screen bg-white overflow-hidden"
+      className="w-full h-[100dvh] bg-white overflow-hidden"
       style={{
         scrollbarWidth: 'none', // Firefox
         msOverflowStyle: 'none', // IE/Edge
@@ -289,13 +280,13 @@ export default function HomeContainer() {
         <section 
           ref={heroRef}
           id="hero"
-          className={`relative py-8 md:py-16 px-4 snap-start min-h-screen flex flex-col justify-center transition-all duration-1000 ${
+          className={`relative px-4 snap-start h-[100dvh] flex flex-col justify-center transition-all duration-1000 ${
             visibleSections.has('hero') 
               ? 'opacity-100 transform translate-y-0' 
               : 'opacity-0 transform translate-y-10'
           }`}
         >
-          <div className="max-w-7xl mx-auto text-center w-full flex-1 flex flex-col justify-center">
+          <div className="max-w-7xl mx-auto text-center w-full flex-1 flex flex-col justify-center pt-[65px] max-h-[calc(100dvh-65px)] overflow-hidden">
             {/* 닌텐도 스타일 타이틀 */}
             <div className={`relative flex justify-center mb-4 md:mb-8 transition-all duration-1000 delay-200 ${
               visibleSections.has('hero') 
@@ -315,7 +306,7 @@ export default function HomeContainer() {
                 ? 'opacity-100 transform translate-y-0' 
                 : 'opacity-0 transform translate-y-10'
             }`}>
-              🎮 포켓몬 카드의 모든 것, 게임처럼 재미있는 거래 플랫폼 🎮
+              🎮 포켓몬 카드의 모든 것, 게임처럼 재미있는 교환 플랫폼 🎮
             </p>
             
             {/* 닌텐도 스타일 검색바 */}
@@ -362,13 +353,13 @@ export default function HomeContainer() {
         <section 
           ref={categoryRef}
           id="category"
-          className={`relative py-8 md:py-16 px-4 snap-start min-h-screen flex items-center transition-all duration-1000 ${
+          className={`relative px-4 snap-start h-[100dvh] flex items-center transition-all duration-1000 ${
             visibleSections.has('category') 
               ? 'opacity-100 transform translate-y-0' 
               : 'opacity-0 transform translate-y-10'
           }`}
         >
-          <div className="max-w-6xl mx-auto w-full">
+          <div className="max-w-6xl mx-auto w-full pt-[65px] py-4 md:py-8 max-h-[calc(100dvh-65px)] overflow-y-auto">
             <div className={`text-center mb-6 md:mb-12 transition-all duration-1000 delay-200 ${
               visibleSections.has('category') 
                 ? 'opacity-100 transform translate-y-0' 
@@ -376,7 +367,7 @@ export default function HomeContainer() {
             }`}>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-gray-800 mb-2 md:mb-4">
                 <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text">
-                  🎮 카드 카테고리 🎮
+                  🎮 포켓몬 카드 DB 🎮
                 </span>
               </h2>
               <p className="text-sm md:text-lg text-gray-600 font-semibold bg-blue-100 px-4 md:px-6 py-2 md:py-3 rounded-full inline-block border-1 md:border-2 border-blue-300">
@@ -384,7 +375,7 @@ export default function HomeContainer() {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+            <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-8">
               {cardCategories.map((category, index) => (
                 <div
                   key={index}
@@ -409,7 +400,7 @@ export default function HomeContainer() {
                     <p className="text-white/90 mb-4 md:mb-6 font-semibold text-sm md:text-lg">
                       {category.description}
                     </p>
-                    <button className="bg-white text-gray-800 font-black px-4 md:px-6 py-2 md:py-3 rounded-full hover:bg-gray-100 transition-colors shadow-lg border-1 md:border-2 border-gray-800 transform hover:scale-105 text-sm md:text-base cursor-pointer">
+                    <button className="hidden md:inline-block bg-white text-gray-800 font-black px-4 md:px-6 py-2 md:py-3 rounded-full hover:bg-gray-100 transition-colors shadow-lg border-1 md:border-2 border-gray-800 transform hover:scale-105 text-sm md:text-base cursor-pointer">
                       START! →
                     </button>
                   </div>
@@ -422,76 +413,19 @@ export default function HomeContainer() {
           <ScrollHint />
         </section>
 
-        {/* 거래 통계 섹션 - 게임기 스타일 */}
-        <section 
-          ref={statsRef}
-          id="stats"
-          className={`relative py-8 md:py-16 px-4 snap-start min-h-screen flex items-center transition-all duration-1000 ${
-            visibleSections.has('stats') 
-              ? 'opacity-100 transform translate-y-0' 
-              : 'opacity-0 transform translate-y-10'
-          }`}
-        >
-          <div className="max-w-6xl mx-auto w-full">
-            <div className={`text-center mb-6 md:mb-12 transition-all duration-1000 delay-200 ${
-              visibleSections.has('stats') 
-                ? 'opacity-100 transform translate-y-0' 
-                : 'opacity-0 transform translate-y-10'
-            }`}>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-gray-800 mb-2 md:mb-4">
-                <span className="bg-gradient-to-r from-green-500 to-blue-600 text-transparent bg-clip-text">
-                  📊 실시간 게임 현황 📊
-                </span>
-              </h2>
-              <p className="text-sm md:text-lg text-gray-600 font-semibold bg-green-100 px-4 md:px-6 py-2 md:py-3 rounded-full inline-block border-1 md:border-2 border-green-300">
-                🎮 포카마켓의 생생한 현황! 🎮
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
-              {tradeStats.map((stat, index) => (
-                <div
-                  key={index}
-                  className={`${stat.bgColor} ${stat.borderColor} rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-xl hover:shadow-2xl transition-all duration-1000 transform hover:-translate-y-1 border-2 md:border-4 group ${
-                    visibleSections.has('stats') 
-                      ? 'opacity-100 translate-y-0 scale-100' 
-                      : 'opacity-0 translate-y-10 scale-95'
-                  }`}
-                  style={{
-                    transitionDelay: `${400 + index * 100}ms`
-                  }}
-                >
-                  <div className="text-center">
-                    <div className={`inline-flex items-center justify-center w-10 h-10 md:w-16 md:h-16 rounded-full bg-white ${stat.borderColor} border-2 md:border-4 mb-2 md:mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                      <stat.icon className={`w-5 h-5 md:w-8 md:h-8 ${stat.color}`} />
-                    </div>
-                    <div className="text-xl md:text-3xl font-black text-gray-800 mb-1 md:mb-2">
-                      {stat.value}
-                    </div>
-                    <p className="text-gray-700 font-bold text-xs md:text-sm uppercase tracking-wide">
-                      {stat.label}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          
-          {/* 스크롤 힌트 */}
-          <ScrollHint />
-        </section>
+        
 
         {/* CTA 섹션 - 닌텐도 게임 스타일 */}
         <section 
           ref={ctaRef}
           id="cta"
-          className={`relative py-8 md:py-20 px-4 snap-start min-h-screen flex items-center transition-all duration-1000 ${
+          className={`relative px-4 snap-start h-[100dvh] flex items-center transition-all duration-1000 ${
             visibleSections.has('cta') 
               ? 'opacity-100 transform translate-y-0' 
               : 'opacity-0 transform translate-y-10'
           }`}
         >
-          <div className="max-w-4xl mx-auto text-center w-full">
+          <div className="max-w-4xl mx-auto text-center w-full pt-[65px] py-4 md:py-8 max-h-[calc(100dvh-65px)] overflow-hidden">
             <div className={`bg-gradient-to-r from-red-100 via-yellow-100 to-blue-100 rounded-2xl md:rounded-3xl p-6 md:p-12 border-2 md:border-4 border-gray-800 shadow-2xl transition-all duration-1000 delay-200 ${
               visibleSections.has('cta') 
                 ? 'opacity-100 transform translate-y-0 scale-100' 
@@ -501,7 +435,7 @@ export default function HomeContainer() {
                 🎮 게임 시작! 🎮
               </h2>
               <p className="text-base md:text-xl text-gray-700 mb-6 md:mb-8 font-semibold px-2">
-                ⭐ 포켓몬 카드 거래의 새로운 모험을 시작하세요! ⭐
+                ⭐ 포켓몬 카드 교환의 새로운 모험을 시작하세요! ⭐
               </p>
               <div className={`flex flex-col sm:flex-row gap-4 md:gap-6 justify-center transition-all duration-1000 delay-400 ${
                 visibleSections.has('cta') 
@@ -511,7 +445,7 @@ export default function HomeContainer() {
                 <button 
                   onClick={() => router.push('/pokemon-card-trade')}
                   className="bg-gradient-to-r from-red-400 to-pink-500 text-white px-6 md:px-10 py-3 md:py-5 rounded-full font-black text-sm md:text-lg hover:from-red-500 hover:to-pink-600 transition-all duration-300 shadow-xl border-2 md:border-4 border-white transform hover:scale-105 cursor-pointer">
-                  🎯 카드 판매하기
+                  🎯 카드 교환하기
                 </button>
                 <button 
                   onClick={() => router.push('/pokemon-card')}
@@ -525,6 +459,7 @@ export default function HomeContainer() {
           {/* 마지막 섹션이므로 스크롤 힌트 없음 */}
           <ScrollHint isLastSection={true} />
         </section>
+
       </div>
 
       {/* 맨위로 가기 버튼 */}

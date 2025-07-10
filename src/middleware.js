@@ -4,22 +4,60 @@ import { LOGIN } from './constants/path';
 
 /** @param {import('next/server').NextRequest} request */
 export function middleware(request) {
-  // 1. 로그인 상태 확인 (오직 쿠키에서만 토큰을 가져옴.)
   const refreshToken = request.cookies.get('refreshToken')?.value;
-  console.log('미들웨어에서 확인한 refreshToken:', refreshToken);
+  const accessToken = request.cookies.get('accessToken')?.value;
+  
+  console.log('미들웨어에서 확인한 refreshToken:', refreshToken ? '존재' : '없음');
+  console.log('미들웨어에서 확인한 accessToken:', accessToken ? '존재' : '없음');
 
-  // 2. 로그인이 필요한 페이지에 접근하는데, 토큰이 없는 경우
-  // isLogin 대신 refreshToken의 존재 여부로 판단.
+  // 1. 토큰 유효성 기본 검사 (형태 검증)
+  if (refreshToken && !isValidTokenFormat(refreshToken)) {
+    console.log('미들웨어::유효하지 않은 refreshToken 형태, 쿠키 삭제');
+    const response = NextResponse.redirect(new URL(LOGIN, request.url));
+    response.cookies.delete('refreshToken');
+    response.cookies.delete('accessToken');
+    return response;
+  }
+
+  // 2. 보호된 페이지 접근 제어
   if (!refreshToken) {
+    console.log('미들웨어::로그인이 필요한 페이지 접근, 로그인 페이지로 리디렉션');
     const loginUrl = new URL(LOGIN, request.url);
     loginUrl.searchParams.set('redirect', request.nextUrl.pathname);
+    loginUrl.searchParams.set('reason', 'auth_required'); // 클라이언트에서 로그아웃 처리 유도
     
-    console.log('로그인이 필요하여 로그인 페이지로 리디렉션합니다.');
-    return NextResponse.redirect(loginUrl);
+    const response = NextResponse.redirect(loginUrl);
+    // 만료된 쿠키가 있다면 정리
+    response.cookies.delete('refreshToken');
+    response.cookies.delete('accessToken');
+    return response;
   }
 
   // 3. 토큰이 있는 경우, 요청을 그대로 진행
   return NextResponse.next();
+}
+
+/**
+ * 토큰 형태 검증 (JWT 기본 형태 확인)
+ */
+function isValidTokenFormat(token) {
+  if (!token || typeof token !== 'string') return false;
+  
+  // JWT는 base64로 인코딩된 3개 부분이 '.'으로 구분됨
+  const parts = token.split('.');
+  if (parts.length !== 3) return false;
+  
+  // 각 부분이 base64로 디코딩 가능한지 확인
+  try {
+    parts.forEach(part => {
+      if (!part) throw new Error('Empty part');
+      // base64 디코딩 시도
+      atob(part.replace(/-/g, '+').replace(/_/g, '/'));
+    });
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 export const config = {

@@ -61,12 +61,35 @@ async function refreshTokenAndCookies() {
     throw new Error(errorBody.message || "Token refresh request failed.");
   }
 
-  const refreshData = await refreshRes.json();
-  const newAccessToken = refreshData.accessToken;
   const newCookies = refreshRes.headers.getSetCookie();
   
+  // Set-Cookie 헤더에서 accessToken 추출
+  let newAccessToken = null;
+  if (newCookies && newCookies.length > 0) {
+    for (const cookie of newCookies) {
+      if (cookie.includes('accessToken=')) {
+        // accessToken=토큰값; 형태에서 토큰값만 추출
+        const match = cookie.match(/accessToken=([^;]+)/);
+        if (match) {
+          newAccessToken = match[1];
+          break;
+        }
+      }
+    }
+  }
+
+  // 만약 쿠키에서 토큰을 찾지 못하면 응답 body에서 찾아보기
   if (!newAccessToken) {
-    throw new Error("New access token was not found in the refresh response body.");
+    try {
+      const refreshData = await refreshRes.json();
+      newAccessToken = refreshData.accessToken;
+    } catch (error) {
+      console.log("JSON 파싱 실패, 쿠키에서만 토큰 찾기 시도");
+    }
+  }
+  
+  if (!newAccessToken) {
+    throw new Error("New access token was not found in the refresh response.");
   }
 
   return { newAccessToken, newCookies };
@@ -74,7 +97,7 @@ async function refreshTokenAndCookies() {
 
 // 모든 http 메소드 처리
 async function handler(request, { params }) {
-  console.log('route http 메소드 처리 시작');
+  console.log('route http 메소드 처리 시작=================================================');
   // 클라이언트가 요청한 경로 조합 (ex: /api/proxy/tcg-trade/1 -> /api/tcg-trade/1)
   const tempParams = await params;
   const slug = await tempParams.slug.join("/");
@@ -84,23 +107,24 @@ async function handler(request, { params }) {
   const isRefreshTokenOnly = !accessToken && refreshToken
   const queryString = request.nextUrl.search;
   let initialRes = null
-  
+  console.log('slug >>>>>>>>>>>>>>>>>>>>>> ', slug);
   console.log('refreshToken >>>>>>>>>>>>>>>>>>>>>> ', refreshToken);
   console.log("accessToken >>>>>>>>>>>>>>>>>>>>>> ", accessToken);
 
   // refreshToken만 있는 경우
   if (!isRefreshTokenOnly) {
+    console.log('isRefreshTokenOnly::원래 요청 >>>>>>>>>>>>>>>>>>>>>> ', slug, queryString);
     // 원래 요청
     initialRes = await apiRequest(slug, queryString, request, accessToken);
-
     // 401에러(토큰 만료)가 아닌 경우 요청 반환
     if (initialRes.status !== UN_AUTHORIZED) return initialRes;
   }
 
+  
   console.log('accessToken 재발급 시작');
-
   // 현재 다른 요청이 토큰 재발급을 진행하고 있는지 확인
   if (!refreshPromise) {
+    console.log('accessToken 재발급 시작 refreshPromise 없음으로 들어옴');
     // 아무도 재발급을 진행하고 있지 않다면, 토큰 재발급을 시작하고 Promise를 공유 변수에 저장.
     refreshPromise = refreshTokenAndCookies().finally(() => {
       // 성공하든 실패하든, 작업이 끝나면 다음 요청이 재발급을 시도할 수 있도록 잠금을 해제.
@@ -116,7 +140,7 @@ async function handler(request, { params }) {
     console.log('accessToken 재발급 완료');
 
     // 재발급 성공 후, 원래 실패했던 API를 새로운 토큰으로 재시도.
-    console.log("Token refreshed. Retrying original request...");
+    console.log("재발급 성공 후, 원래 실패했던 API를 새로운 토큰으로 재시도.");
     const retryResponse = await apiRequest(slug, queryString, request, newAccessToken);
 
     // 최종 응답에 새로운 쿠키를 담아 클라이언트에게 전달.
@@ -131,7 +155,7 @@ async function handler(request, { params }) {
     });
   } catch (error) {
     // 재발급 자체가 실패한 경우 (예: 리프레시 토큰 만료)
-    console.error("Could not refresh token:", error.message);
+    console.error("handler에서 에러남 catch 문으로 들어옴 Could not refresh token:", error.message, error);
     const response = NextResponse.json({ message: "Session expired. Please log in again." }, { status: UN_AUTHORIZED });
     response.cookies.delete('accessToken');
     response.cookies.delete('refreshToken');

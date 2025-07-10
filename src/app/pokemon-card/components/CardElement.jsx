@@ -13,7 +13,7 @@ export default function CardElement({
   return (
     <Link
       href={`/pokemon-card/${cardCode}`}
-      className="no-underline w-full h-full block hover:scale-105 transition-transform"
+      className="no-underline w-full h-full block"
     >
       <PokemonCard data={data} priority={priority} testMode={testMode} />
     </Link>

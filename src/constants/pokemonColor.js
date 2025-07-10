@@ -17,9 +17,35 @@ export const TYPE_GRADIENTS = {
 }
 
 /**
+ * 타입별 텍스트 스타일 매핑
+ */
+export const TYPE_TEXT_COLORS = {
+  grass:"text-green-200",
+  fire:"text-rose-200",
+  water:"text-sky-200",
+  lightning:"text-amber-200",
+  fighting:"text-orange-200",
+  psychic:"text-fuchsia-200",
+  colorless:"text-slate-200",
+  darkness:"text-slate-300",
+  metal:"text-zinc-300",
+  dragon:"text-indigo-200",
+  dark:"text-neutral-300",
+  fairy:"text-pink-200",
+}
+
+/**
  * 타입에 따른 그라데이션 클래스를 반환하는 함수
  */
 export function getGradientClass(type) {
   if (!type) return TYPE_GRADIENTS.colorless
   return TYPE_GRADIENTS[type.toLowerCase()] || TYPE_GRADIENTS.colorless
-} 
+}
+
+/**
+ * 타입에 따른 텍스트 클래스를 반환하는 함수
+ */
+export function getTextColorClass(type) {
+  if (!type) return TYPE_TEXT_COLORS.colorless
+  return TYPE_TEXT_COLORS[type.toLowerCase()] || TYPE_TEXT_COLORS.colorless
+}

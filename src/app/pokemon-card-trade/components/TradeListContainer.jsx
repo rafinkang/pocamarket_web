@@ -18,7 +18,7 @@ import { defaultFilter } from "@/constants/pokemonCardFilter";
 import SearchContainer from "./Search/SearchContainer";
 
 // - 카드 필터
-import { RiArrowLeftRightFill } from "react-icons/ri";
+import { RiArrowLeftDoubleLine, RiArrowLeftRightFill, RiArrowUpDoubleLine, RiArrowUpDownFill } from "react-icons/ri";
 import FilterCard from "./Search/FilterCard";
 import FilterCardBox from "./Search/FilterCardBox";
 
@@ -67,7 +67,7 @@ export default function TradeListContainer() {
   // 페이지네이션 상태
   const [totalPage, setTotalPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
-  const pageSize = 3;
+  const pageSize = 10;
 
   const [tradeCardListFilter, setTradeCardListFilter] = useState({ ...defaultFilter });
   const [tradeCardListPage, setTradeCardListPage] = useState(1);
@@ -416,7 +416,7 @@ export default function TradeListContainer() {
         filterCardComponent={(props) => (
           <FilterCardBox {...props}>
             {/* 내 카드 (my) 섹션 */}
-            <div className="flex items-center justify-center">
+            <div className="flex flex-col items-center space-y-3">
               {filterParams.myCard && (
                 <FilterCard
                   key={filterParams.myCard.code}
@@ -426,26 +426,38 @@ export default function TradeListContainer() {
                   onCancelClick={onFilterCardCancel}
                 />
               )}
+              <div className="text-center">
+                <h3 className="text-sm font-semibold text-gray-800 mb-1">교환 카드</h3>
+                <p className="text-xs text-gray-500">검색할 카드를 선택하세요</p>
+              </div>
             </div>
 
-            <div className="flex items-center justify-center self-stretch w-[2px] md:w-[40px]">
-              <div className="text-2xl hidden md:block">
-                <RiArrowLeftRightFill size="40px" className="sm:text-[50px]" />
-              </div>
-              <div className="w-[2px] h-[60%] bg-gray-400 block md:hidden"></div>
+            {/* 중앙 교환 표시 - 반응형 */}
+            <div className="flex items-center justify-center relative lg:top-[-25px]">
+              {/* 교환 아이콘 */}
+              <RiArrowUpDoubleLine className="text-purple-600 text-2xl md:text-3xl block lg:hidden" />
+              <RiArrowLeftDoubleLine className="text-purple-600 text-2xl md:text-3xl hidden lg:block" />
             </div>
 
             {/* 원하는 카드들 (want) 섹션 */}
-            <div className="flex items-center justify-items-center gap-4">
-              {filterParams.wantCard.map((card, index) => (
-                <FilterCard
-                  key={index}
-                    data={card}
-                    type={card.filterCardType}
-                    onCardClick={onFilterCardButton}
-                    onCancelClick={onFilterCardCancel}
-                  />
-                ))}
+            <div className="flex flex-col items-center space-y-3">
+              <div className="w-full" style={{ maxWidth: '600px' }}>
+                <div className="flex justify-center items-center gap-3 flex-wrap min-h-[180px]">
+                  {filterParams.wantCard.map((card, index) => (
+                    <FilterCard
+                      key={index}
+                      data={card}
+                      type={card.filterCardType}
+                      onCardClick={onFilterCardButton}
+                      onCancelClick={onFilterCardCancel}
+                    />
+                  ))}
+                </div>
+              </div>
+              <div className="text-center">
+                <h3 className="text-sm font-semibold text-gray-800 mb-1">원하는 카드</h3>
+                <p className="text-xs text-gray-500">검색할 카드를 선택하세요</p>
+              </div>
             </div>
           </FilterCardBox>
         )}

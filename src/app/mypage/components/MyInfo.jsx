@@ -196,7 +196,7 @@ export default function MyInfoPage({ className }) {
                 </div>
                 <div>
                   <CardTitle className="text-xl font-bold text-gray-900">
-                    {myInfo.nickname} 님의 정보
+                    {myInfo.name} 님의 정보
                   </CardTitle>
                   <CardDescription className="text-gray-600 flex items-center space-x-2">
                     <span>개인정보 보호를 위해 정보를 수정할 수 있습니다.</span>
