@@ -1,41 +1,27 @@
 "use client"
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { 
-  Code, 
-  Database, 
-  Server, 
-  Settings, 
-  GitBranch,
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Archive,
+  Code,
+  Database,
+  FileText,
+  Github,
   Layers,
   Monitor,
-  Smartphone,
-  Globe,
-  Shield,
-  Zap,
-  Package,
-  Terminal,
-  FileText,
-  Archive,
-  Cpu,
-  HardDrive,
   Network,
-  Container,
-  Cloud,
-  Lock,
-  RefreshCw,
-  Users,
-  BarChart3,
-  Workflow,
-  Github
+  Package,
+  Settings,
+  Shield,
+  Users
 } from "lucide-react"
-import SourceTree from "./SourceTree"
-import SpringbootSourceTree from "./SpringbootSourceTree"
-import NextjsSourceTree from "./NextjsSourceTree"
 import dynamic from "next/dynamic"
 import Image from "next/image"
+import NextjsSourceTree from "./NextjsSourceTree"
+import SourceTree from "./SourceTree"
+import SpringbootSourceTree from "./SpringbootSourceTree"
 const Security = dynamic(() => import("./logic/Security"), { ssr: false })
 const Trade = dynamic(() => import("./logic/Trade"), { ssr: false })
 const Deploy = dynamic(() => import("./deploy/Deploy"), { ssr: false })
@@ -53,7 +39,8 @@ export default function PortfolioContainer() {
       { name: "Next.js API Routes", description: "서버사이드 API 엔드포인트" },
       { name: "Spring Boot v3.4.5", description: "Java 기반 프레임워크" },
       { name: "Java v17", description: "Java 기반 프레임워크" },
-      { name: "Domain Driven Design + Hexagonal Architecture", description: "도메인 주도 + 계층별 설계" },
+      { name: "Domain Driven Design", description: "도메인 주도 설계" },
+      { name: "Hexagonal Architecture", description: "계층별 설계" },
       { name: "JPA, QueryDSL", description: "ORM 프레임워크" },
       { name: "MariaDB", description: "관계형 데이터베이스" },
       { name: "Spring Security", description: "인증 및 권한 관리" },
@@ -120,10 +107,6 @@ export default function PortfolioContainer() {
 
   const logic = [
     {
-      title: "Security",
-      component: <Security />
-    },
-    {
       title: "Trade",
       component: <Trade />
     }
@@ -131,27 +114,27 @@ export default function PortfolioContainer() {
 
   const getLevelBadge = (level) => {
     const levelConfig = {
-      "입문": { 
-        badge: <Badge className="bg-gray-600 text-gray-200 border-2 border-gray-900 font-mono hover:bg-gray-600" style={{boxShadow: '2px 2px 0px #000000'}}>입문</Badge>
+      "입문": {
+        badge: <Badge className="bg-gray-600 text-gray-200 border-2 border-gray-900 font-mono hover:bg-gray-600" style={{ boxShadow: '2px 2px 0px #000000' }}>입문</Badge>
       },
-      "초급": { 
-        badge: <Badge className="bg-blue-600 text-blue-100 border-2 border-blue-900 font-mono hover:bg-blue-600" style={{boxShadow: '2px 2px 0px #000000'}}>초급</Badge>
+      "초급": {
+        badge: <Badge className="bg-blue-600 text-blue-100 border-2 border-blue-900 font-mono hover:bg-blue-600" style={{ boxShadow: '2px 2px 0px #000000' }}>초급</Badge>
       },
-      "중급": { 
-        badge: <Badge className="bg-yellow-500 text-yellow-900 border-2 border-yellow-700 font-mono hover:bg-yellow-500" style={{boxShadow: '2px 2px 0px #000000'}}>중급</Badge>
+      "중급": {
+        badge: <Badge className="bg-yellow-500 text-yellow-900 border-2 border-yellow-700 font-mono hover:bg-yellow-500" style={{ boxShadow: '2px 2px 0px #000000' }}>중급</Badge>
       },
-      "고급": { 
-        badge: <Badge className="bg-red-600 text-red-100 border-2 border-red-900 font-mono hover:bg-red-600" style={{boxShadow: '2px 2px 0px #000000'}}>고급</Badge>
+      "고급": {
+        badge: <Badge className="bg-red-600 text-red-100 border-2 border-red-900 font-mono hover:bg-red-600" style={{ boxShadow: '2px 2px 0px #000000' }}>고급</Badge>
       },
-      "전문가": { 
-        badge: <Badge className="bg-green-600 text-green-100 border-2 border-green-900 font-mono hover:bg-green-600" style={{boxShadow: '2px 2px 0px #000000'}}>전문가</Badge>
+      "전문가": {
+        badge: <Badge className="bg-green-600 text-green-100 border-2 border-green-900 font-mono hover:bg-green-600" style={{ boxShadow: '2px 2px 0px #000000' }}>전문가</Badge>
       }
     };
     return levelConfig[level] || { badge: <Badge variant="outline">{level}</Badge> };
   };
 
   return (
-    <div className="min-h-screen bg-gray-300" style={{ 
+    <div className="min-h-screen bg-gray-300" style={{
       backgroundImage: `
         radial-gradient(circle at 2px 2px, #374151 1px, transparent 0),
         radial-gradient(circle at 6px 6px, #6b7280 1px, transparent 0)
@@ -178,7 +161,7 @@ export default function PortfolioContainer() {
                 <Code className="h-16 w-16 text-gray-900" />
               </div>
             </div>
-            
+
             <div className="bg-gray-200 border-8 border-gray-800 p-8 mb-8 max-w-4xl mx-auto shadow-2xl" style={{
               boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
             }}>
@@ -198,7 +181,7 @@ export default function PortfolioContainer() {
       </div>
 
       {/* 메인 컨텐츠 */}
-      <div className="py-20 bg-gray-300" style={{ 
+      <div className="py-20 bg-gray-300" style={{
         backgroundImage: `
           radial-gradient(circle at 2px 2px, #374151 1px, transparent 0),
           radial-gradient(circle at 6px 6px, #6b7280 1px, transparent 0)
@@ -206,7 +189,7 @@ export default function PortfolioContainer() {
         backgroundSize: '8px 8px'
       }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-          
+
           {/* 프로젝트 개요 */}
           <section>
             <div className="bg-gray-200 border-8 border-gray-800 p-6 mb-8" style={{
@@ -226,22 +209,22 @@ export default function PortfolioContainer() {
                 </CardHeader>
                 <CardContent className="p-6">
                   <div className="space-y-4">
-                    <div className="bg-gray-300 border-4 border-gray-700 p-4 font-mono" style={{boxShadow: '2px 2px 0px #000000'}}>
+                    <div className="bg-gray-300 border-4 border-gray-700 p-4 font-mono" style={{ boxShadow: '2px 2px 0px #000000' }}>
                       <strong>NAME:</strong> 포카마켓 (POCAMARKET)
                     </div>
-                    <div className="bg-gray-300 border-4 border-gray-700 p-4 font-mono" style={{boxShadow: '2px 2px 0px #000000'}}>
+                    <div className="bg-gray-300 border-4 border-gray-700 p-4 font-mono" style={{ boxShadow: '2px 2px 0px #000000' }}>
                       <strong>TYPE:</strong> 포켓몬 카드 교환 플랫폼
                     </div>
-                    <div className="bg-gray-300 border-4 border-gray-700 p-4 font-mono" style={{boxShadow: '2px 2px 0px #000000'}}>
+                    <div className="bg-gray-300 border-4 border-gray-700 p-4 font-mono" style={{ boxShadow: '2px 2px 0px #000000' }}>
                       <strong>TEAM:</strong> 강태욱, 박지연, 윤유석 (3명)
                     </div>
-                    <div className="bg-gray-300 border-4 border-gray-700 p-4 font-mono" style={{boxShadow: '2px 2px 0px #000000'}}>
+                    <div className="bg-gray-300 border-4 border-gray-700 p-4 font-mono" style={{ boxShadow: '2px 2px 0px #000000' }}>
                       <strong>PERIOD:</strong> 2025.05.19 ~ (진행중)
                     </div>
                   </div>
                 </CardContent>
               </Card>
-              
+
               <Card className="border-8 border-gray-800 bg-gray-200 pt-0" style={{
                 boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
               }}>
@@ -286,6 +269,10 @@ export default function PortfolioContainer() {
                       <span className="w-3 h-3 bg-gray-900 mt-1.5 mr-3 flex-shrink-0"></span>
                       Next Client - Server - Spring Boot 간 JWT Token 인증
                     </li>
+                    <li className="flex items-start">
+                      <span className="w-3 h-3 bg-gray-900 mt-1.5 mr-3 flex-shrink-0"></span>
+                      OAuth2.0 소셜로그인 기능 (Google, Naver)
+                    </li>
 
                   </ul>
                 </CardContent>
@@ -303,7 +290,7 @@ export default function PortfolioContainer() {
                 ⚙️ TECH STACK
               </h2>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {Object.entries(techStack).map(([category, technologies]) => (
                 <Card key={category} className="border-8 border-gray-800 bg-gray-200 pt-0" style={{
@@ -318,11 +305,10 @@ export default function PortfolioContainer() {
                         <div key={index} className="bg-gray-300 border-4 border-gray-700 p-4" style={{
                           boxShadow: '2px 2px 0px #000000'
                         }}>
-                          <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center justify-between">
                             <h4 className="font-bold text-gray-900 font-mono">{tech.name}</h4>
-                            {getLevelBadge(tech.level).badge}
                           </div>
-                          <p className="text-gray-800 text-sm font-mono">{tech.description}</p>
+                          {/* <p className="text-gray-800 text-sm font-mono">{tech.description}</p> */}
                         </div>
                       ))}
                     </div>
@@ -332,17 +318,17 @@ export default function PortfolioContainer() {
             </div>
           </section>
 
-          {/* 프로젝트 구조 */}
+          {/* 시스템 아키텍처 */}
           <section>
             <div className="bg-gray-200 border-8 border-gray-800 p-6 mb-8" style={{
               boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
             }}>
               <h2 className="text-3xl font-bold text-gray-900 font-mono flex items-center">
                 <Network className="h-8 w-8 mr-4" />
-                🏗️ PROJECT STRUCTURE
+                🏗️ SYSTEM ARCHITECTURE
               </h2>
             </div>
-            
+
             <Card className="border-8 border-gray-800 bg-gray-200 pt-0" style={{
               boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
             }}>
@@ -384,20 +370,24 @@ export default function PortfolioContainer() {
                 </div>
               </CardContent>
             </Card>
-          </section>
 
-          {/* 시스템 아키텍처 */}
-          <section>
-            <div className="bg-gray-200 border-8 border-gray-800 p-6 mb-8" style={{
+            {/* 시스템 구조도 카드 */}
+            <Card className="border-8 border-gray-800 bg-gray-200 pt-0 mt-8" style={{
               boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
             }}>
-              <h2 className="text-3xl font-bold text-gray-900 font-mono flex items-center">
-                <Network className="h-8 w-8 mr-4" />
-                🏗️ SYSTEM ARCHITECTURE
-              </h2>
-            </div>
-            
-            <Card className="border-8 border-gray-800 bg-gray-200 pt-0" style={{
+              <CardHeader className="bg-gray-900 border-b-8 border-gray-800 pt-6">
+                <CardTitle className="text-white font-mono flex items-center">
+                  CI/CD 파이프라인
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="space-y-2">
+                  <Deploy />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-8 border-gray-800 bg-gray-200 pt-0 mt-8" style={{
               boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
             }}>
               <CardHeader className="bg-gray-900 border-b-8 border-gray-800 pt-6">
@@ -460,108 +450,18 @@ export default function PortfolioContainer() {
                 </div>
               </CardContent>
             </Card>
-          </section>
-
-          {/* 데이터베이스 구조 */}
-          <section>
-            <div className="bg-gray-200 border-8 border-gray-800 p-6 mb-8" style={{
-              boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
-            }}>
-              <h2 className="text-3xl font-bold text-gray-900 font-mono flex items-center">
-                <Database className="h-8 w-8 mr-4" />
-                🗄️ DATABASE STRUCTURE
-              </h2>
-            </div>
-            
-            <Card className="border-8 border-gray-800 bg-gray-200 pt-0" style={{
+            {/* 시스템 구조도 카드 */}
+            <Card className="border-8 border-gray-800 bg-gray-200 pt-0 mt-8" style={{
               boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
             }}>
               <CardHeader className="bg-gray-900 border-b-8 border-gray-800 pt-6">
-                <CardTitle className="text-white font-mono">ERD</CardTitle>
+                <CardTitle className="text-white font-mono flex items-center">
+                  Security
+                </CardTitle>
               </CardHeader>
               <CardContent className="p-6">
-                <div className="bg-gray-900 border-4 border-gray-700 p-6 font-mono text-blue-400 text-sm overflow-x-auto" style={{
-                  boxShadow: '2px 2px 0px #000000'
-                }}>
-                  <Image src="/images/pocamarket_erd.webp" alt="pocamarket_erd" width={1000} height={1000} />
-                </div>
-              </CardContent>
-            </Card>
-          </section>
-
-          {/* 프로젝트 구조 */}
-          <section>
-            <div className="bg-gray-200 border-8 border-gray-800 p-6 mb-8" style={{
-              boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
-            }}>
-              <h2 className="text-3xl font-bold text-gray-900 font-mono flex items-center">
-                <FileText className="h-8 w-8 mr-4" />
-                📁 PROJECT STRUCTURE
-              </h2>
-            </div>
-            
-            <Card className="border-8 border-gray-800 bg-gray-200 pt-0" style={{
-              boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
-            }}>
-              <CardHeader className="bg-gray-900 border-b-8 border-gray-800 pt-6">
-                <CardTitle className="text-white font-mono">폴더 구조</CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="space-y-4">
-                  <div className="bg-gray-300 border-4 border-gray-700 p-4" style={{
-                    boxShadow: '2px 2px 0px #000000'
-                  }}>
-                    <div className="flex items-center mb-2">
-                      <Archive className="h-4 w-4 mr-2 text-gray-900" />
-                      <span className="font-bold text-gray-900 font-mono">pocamarket-infra</span>
-                      <a href="https://github.com/rafinkang/pocamarket_infra" target="_blank" rel="noopener noreferrer" className="ml-2">
-                        <Button>
-                          <Github className="h-4 w-4" />
-                          GitHub Link
-                        </Button>
-                      </a>
-                    </div>
-                    <p className="text-gray-800 text-sm font-mono mb-2">Infrastructure 소스 코드 구조</p>
-                    <div className="flex justify-center w-full">
-                      <SourceTree />
-                    </div>
-                  </div>
-                  <div className="bg-gray-300 border-4 border-gray-700 p-4" style={{
-                    boxShadow: '2px 2px 0px #000000'
-                  }}>
-                    <div className="flex items-center mb-2">
-                      <Archive className="h-4 w-4 mr-2 text-gray-900" />
-                      <span className="font-bold text-gray-900 font-mono">pocamarket-api</span>
-                      <a href="https://github.com/rafinkang/pocamarket_api" target="_blank" rel="noopener noreferrer" className="ml-2">
-                        <Button>
-                          <Github className="h-4 w-4" />
-                          GitHub Link
-                        </Button>
-                      </a>
-                    </div>
-                    <p className="text-gray-800 text-sm font-mono mb-2">Spring Boot 프로젝트의 소스 코드 구조</p>
-                    <div className="flex justify-center w-full">
-                      <SpringbootSourceTree />
-                    </div>
-                  </div>
-                  <div className="bg-gray-300 border-4 border-gray-700 p-4" style={{
-                    boxShadow: '2px 2px 0px #000000'
-                  }}>
-                    <div className="flex items-center mb-2">
-                      <Archive className="h-4 w-4 mr-2 text-gray-900" />
-                      <span className="font-bold text-gray-900 font-mono">pocamarket-web</span>
-                      <a href="https://github.com/rafinkang/pocamarket_web" target="_blank" rel="noopener noreferrer" className="ml-2">
-                        <Button>
-                          <Github className="h-4 w-4" />
-                          GitHub Link
-                        </Button>
-                      </a>
-                    </div>
-                    <p className="text-gray-800 text-sm font-mono mb-2">Next.js 프로젝트의 소스 코드 구조</p>
-                    <div className="flex justify-center w-full">
-                      <NextjsSourceTree />
-                    </div>
-                  </div>
+                <div className="space-y-2">
+                  <Security />
                 </div>
               </CardContent>
             </Card>
@@ -577,10 +477,10 @@ export default function PortfolioContainer() {
                 🔧 KEY FEATURES
               </h2>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {features.map((feature, index) => (
-                <Card key={index} className="border-8 border-gray-800 bg-gray-200 pt-0" style={{
+                <Card key={index} className="border-8 border-gray-800 bg-gray-200 py-0 !gap-0" style={{
                   boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
                 }}>
                   <CardHeader className="bg-gray-900 border-b-8 border-gray-800 pt-6">
@@ -611,10 +511,10 @@ export default function PortfolioContainer() {
             }}>
               <h2 className="text-3xl font-bold text-gray-900 font-mono flex items-center">
                 <Settings className="h-8 w-8 mr-4" />
-                🔧 시스템 로직
+                🔧 비즈니스 로직
               </h2>
             </div>
-            
+
             <div className="grid grid-cols-1 gap-8">
               {logic.map((item, index) => (
                 <Card key={index} className="border-8 border-gray-800 bg-gray-200 pt-0" style={{
@@ -633,6 +533,119 @@ export default function PortfolioContainer() {
                 </Card>
               ))}
             </div>
+          </section>
+
+          {/* 프로젝트 구조 */}
+          <section>
+            <div className="bg-gray-200 border-8 border-gray-800 p-6 mb-8" style={{
+              boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
+            }}>
+              <h2 className="text-3xl font-bold text-gray-900 font-mono flex items-center">
+                <FileText className="h-8 w-8 mr-4" />
+                📁 PROJECT STRUCTURE
+              </h2>
+            </div>
+
+            <Card className="border-8 border-gray-800 bg-gray-200 pt-0" style={{
+              boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
+            }}>
+              <CardHeader className="bg-gray-900 border-b-8 border-gray-800 pt-6">
+                <CardTitle className="text-white font-mono">폴더 구조</CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="space-y-4">
+                  <div className="bg-gray-300 border-4 border-gray-700 p-4" style={{
+                    boxShadow: '2px 2px 0px #000000'
+                  }}>
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="flex items-center">
+                        <Archive className="h-4 w-4 mr-2 text-gray-900" />
+                        <span className="font-bold text-gray-900 font-mono">pocamarket-infra</span>
+                      </div>
+                      <a href="https://github.com/rafinkang/pocamarket_infra" target="_blank" rel="noopener noreferrer" className="ml-2">
+                        <Button>
+                          <Github className="h-4 w-4" />
+                          GitHub Link
+                        </Button>
+                      </a>
+                    </div>
+                    <p className="text-gray-800 text-sm font-mono mb-2">Infrastructure 소스 코드 구조</p>
+                    <div className="flex justify-center w-full">
+                      <SourceTree />
+                    </div>
+                  </div>
+
+                  <div className="bg-gray-300 border-4 border-gray-700 p-4" style={{
+                    boxShadow: '2px 2px 0px #000000'
+                  }}>
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="flex items-center">
+                        <Archive className="h-4 w-4 mr-2 text-gray-900" />
+                        <span className="font-bold text-gray-900 font-mono">pocamarket-api</span>
+                      </div>
+                      <a href="https://github.com/rafinkang/pocamarket_api" target="_blank" rel="noopener noreferrer" className="ml-2">
+                        <Button>
+                          <Github className="h-4 w-4" />
+                          GitHub Link
+                        </Button>
+                      </a>
+                    </div>
+                    <p className="text-gray-800 text-sm font-mono mb-2">Spring Boot 프로젝트의 소스 코드 구조</p>
+                    <div className="flex justify-center w-full">
+                      <SpringbootSourceTree />
+                    </div>
+                  </div>
+
+                  <div className="bg-gray-300 border-4 border-gray-700 p-4" style={{
+                    boxShadow: '2px 2px 0px #000000'
+                  }}>
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="flex items-center">
+                        <Archive className="h-4 w-4 mr-2 text-gray-900" />
+                        <span className="font-bold text-gray-900 font-mono">pocamarket-web</span>
+                      </div>
+                      <a href="https://github.com/rafinkang/pocamarket_web" target="_blank" rel="noopener noreferrer" className="ml-2">
+                        <Button>
+                          <Github className="h-4 w-4" />
+                          GitHub Link
+                        </Button>
+                      </a>
+                    </div>
+                    <p className="text-gray-800 text-sm font-mono mb-2">Next.js 프로젝트의 소스 코드 구조</p>
+                    <div className="flex justify-center w-full">
+                      <NextjsSourceTree />
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* 데이터베이스 구조 */}
+          <section>
+            <div className="bg-gray-200 border-8 border-gray-800 p-6 mb-8" style={{
+              boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
+            }}>
+              <h2 className="text-3xl font-bold text-gray-900 font-mono flex items-center">
+                <Database className="h-8 w-8 mr-4" />
+                🗄️ DATABASE STRUCTURE
+              </h2>
+            </div>
+
+            <Card className="border-8 border-gray-800 bg-gray-200 pt-0" style={{
+              boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
+            }}>
+              <CardHeader className="bg-gray-900 border-b-8 border-gray-800 pt-6">
+                <CardTitle className="text-white font-mono">ERD</CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="bg-gray-900 border-4 border-gray-700 p-6 font-mono text-blue-400 text-sm overflow-x-auto" style={{
+                  boxShadow: '2px 2px 0px #000000'
+                }}>
+                  <Image src="/images/pocamarket_erd.webp" alt="pocamarket_erd" width={1000} height={1000} />
+                </div>
+              </CardContent>
+            </Card>
           </section>
 
           {/* 개발 환경 설정 */}
@@ -700,7 +713,7 @@ npx prisma db seed
           </section> */}
 
           {/* 배포 및 DevOps */}
-          <section>
+          {/* <section>
             <div className="bg-gray-200 border-8 border-gray-800 p-6 mb-8" style={{
               boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
             }}>
@@ -709,24 +722,24 @@ npx prisma db seed
                 🚀 DEPLOYMENT & DEVOPS
               </h2>
             </div>
-            
+
             <div className="grid grid-cols-1 gap-8">
-                <Card className="border-8 border-gray-800 bg-gray-200 pt-0" style={{
-                  boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
-                }}>
-                  <CardHeader className="bg-gray-900 border-b-8 border-gray-800 pt-6">
-                    <CardTitle className="text-white font-mono flex items-center">
-                      CI/CD 파이프라인
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-6">
-                    <div className="space-y-2">
-                      <Deploy />
-                    </div>
-                  </CardContent>
-                </Card>
+              <Card className="border-8 border-gray-800 bg-gray-200 pt-0" style={{
+                boxShadow: '8px 8px 0px #000000, 16px 16px 0px #374151'
+              }}>
+                <CardHeader className="bg-gray-900 border-b-8 border-gray-800 pt-6">
+                  <CardTitle className="text-white font-mono flex items-center">
+                    CI/CD 파이프라인
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="space-y-2">
+                    <Deploy />
+                  </div>
+                </CardContent>
+              </Card>
             </div>
-          </section>
+          </section> */}
 
         </div>
       </div>

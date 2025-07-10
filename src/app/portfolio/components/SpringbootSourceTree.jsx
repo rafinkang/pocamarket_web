@@ -3,7 +3,7 @@ import { Folder, FileText } from "lucide-react";
 
 export default function SpringbootSourceTree() {
   // 기본으로 열려있는 상태로 노출될 폴더 아이디
-  const defaultExpandedIds = ['root', 'pocamarket', 'service', 'infrastructure', 'user', 'user-api', 'user-application', 'user-domain'];
+  const defaultExpandedIds = ['root', 'pocamarket', 'service', 'infrastructure', 'user'];
 
   return (
     <TreeProvider
