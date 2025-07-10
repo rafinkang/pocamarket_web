@@ -15,10 +15,9 @@ import { getTcgTradeDetail } from "@/api/tcgTrade";
 import { postTcgTradeRequest, getTcgTradeRequestList, updateTcgTradeRequestStatus, deleteTcgTradeRequest } from "@/api/tcgTradeRequest";
 import { LOGIN } from "@/constants/path";
 
-export default function TradePageClient() {
+export default function TradePageClient({ tradeId, tradeDetail }) {
 
   const router = useRouter();
-  const { tradeId } = useParams();
 
   const [data, setData] = useState(null);
   const [isMy, setIsMy] = useState(false);
@@ -158,11 +157,9 @@ export default function TradePageClient() {
 
   const getDetail = async () => {
     try {
-      const response = await getTcgTradeDetail(tradeId);
       const requestListResponse = await getTcgTradeRequestList(tradeId);
-
-      setData(response.data);
-      setIsMy(response.data.isMy);
+      setData(tradeDetail.data);
+      setIsMy(tradeDetail.data.isMy);
       setRequestList(requestListResponse.data);
 
       if (isLogin) {
