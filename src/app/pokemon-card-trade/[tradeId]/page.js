@@ -13,8 +13,8 @@ export async function generateMetadata({ params }) {
     const tradeDetail = await getCachedTcgTradeDetail(tradeId);
 
     return createMetadata({
-      title: `카드 교환 - ${tradeDetail.data.myCard.nameKo}`,
-      description: `포켓몬 카드 - ${tradeDetail.data.myCard.nameKo} 의 교환 페이지입니다.`,
+      title: `${tradeDetail.data.myCard.nameKo} 카드 교환`,
+      description: `포켓몬 ${tradeDetail.data.myCard.nameKo} 카드 교환 페이지입니다.`,
       path: `/pokemon-card-trade/${tradeId}`,
       keywords: ["포켓몬 카드 교환", `${tradeDetail.data.myCard.nameKo} 교환`, `${tradeDetail.data.myCard.nameKo} 교환 상세`]
     });
