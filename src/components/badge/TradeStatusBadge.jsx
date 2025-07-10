@@ -1,11 +1,11 @@
-import { getTradeStatusName, REQUEST, PROCESS, COMPLETE, DELETED, statusColorMap } from "@/constants/tradeStatus"
+import { getTradeStatusName, DELETED, REQUEST, SELECT, PROCESS, COMPLETE, statusColorMap } from "@/constants/tradeStatus"
 import { useMemo } from "react"
 
 export default function TradeStatusBadge({ status, className }) {
   // 데이터에서 필요한 값 가공
   const { statusName, statusColor } = useMemo(() => {
-    if (!status) return {}
-    const tempStatus = [PROCESS, COMPLETE].includes(status) ? status : REQUEST
+    if (status === undefined || status === null || status === false) return {}
+    const tempStatus = [DELETED, SELECT, PROCESS, COMPLETE].includes(status) ? status : REQUEST
     return {
       statusName: getTradeStatusName(tempStatus),
       statusColor: statusColorMap[tempStatus] || "#7B6FAD",

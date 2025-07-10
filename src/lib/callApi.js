@@ -25,30 +25,39 @@ export default async function callApi({ method, url, params, data, headers }) {
     return response.data; // 응답 데이터 반환
 
   } catch (error) {
-    
     // 1. 실행 환경 확인 
     const isBrowser = typeof window !== 'undefined';
     const ERROR_CODE = error.response ? error.response.status : null;
+    const alertMessage = (defaultMessage) => {
+      let message = error.response?.data?.message;
+      if (!message) {
+        message = defaultMessage;
+      }
+      alert(message);
+    }
 
     // 2. 환경에 따른 에러 처리 분기 
     if (isBrowser) {
       switch (ERROR_CODE) {
         case UN_AUTHORIZED:
-           // 이미 리다이렉트 중이면 아무것도 하지 않음
+          // 이미 리다이렉트 중이면 아무것도 하지 않음
           if (!window.isRedirecting) {
             window.isRedirecting = true
-            alert('로그인 후 사용 가능합니다.')
+            alertMessage('로그인 후 이용 가능합니다.')
             useAuthStore.getState().clear()
             window.location.href = LOGIN
           }
           break;
         case FORBIDDEN:
-          alert('권한이 없습니다.');
+          alertMessage('권한이 없습니다.')
           window.history.back();
           break;
         case INTERNAL_SERVER_ERROR:
           // ... 기타 서버 에러 케이스
-          alert(`서버에 문제가 발생했습니다. 잠시 후 다시 시도해주세요. (코드: ${ERROR_CODE})`);
+          alertMessage(`서버에 문제가 발생했습니다. 잠시 후 다시 시도해주세요. (코드: ${ERROR_CODE})`);
+          break;
+        default:
+          alertMessage(`잘못된 요청입니다. (에러코드: ${ERROR_CODE} - ${error.response?.data?.errorCode})`);
           break;
       }
     } else {
