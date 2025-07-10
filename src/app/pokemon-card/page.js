@@ -1,33 +1,13 @@
-import CardListPage from "./components/CardListPage"
-import { siteConfig } from "@/config/siteConfig";
-import { Suspense } from 'react'
+import { createMetadata } from "@/lib/metadata";
+import { Suspense } from 'react';
+import CardListPage from "./components/CardListPage";
 
-export const metadata = {
+export const metadata = createMetadata({
   title: '포켓몬 카드 목록',
   description: '포켓몬 카드를 검색 할 수 있습니다.',
-  keywords: ["포켓몬 목록", "포켓몬 검색", ...siteConfig.keywords],
-  openGraph: {
-    title: '포켓몬 카드 목록',
-    description: '포켓몬 카드를 검색 할 수 있습니다.',
-    url: siteConfig.url + '/pokemon-card',
-    siteName: siteConfig.title,
-    images: [
-      {
-        url: siteConfig.ogImage,
-        width: siteConfig.ogImageWidth,
-        height: siteConfig.ogImageHeight,
-        alt: siteConfig.ogImageAlt,
-      },
-    ],
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: '포켓몬 카드 목록',
-    description: '포켓몬 카드를 검색 할 수 있습니다.',
-    images: [siteConfig.ogImage],
-  },
-}
+  path: '/pokemon-card',
+  keywords: ["포켓몬 목록", "포켓몬 검색"]
+});
 
 export default function PokemonCardPage() {
   return (
