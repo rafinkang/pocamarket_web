@@ -72,7 +72,7 @@ export const defaultMetadata = {
   // title.template을 사용하면 각 페이지의 제목을 손쉽게 커스텀할 수 있습니다.
   title: {
     default: siteConfig.title, // 기본 제목 (홈페이지 등)
-    template: `%s | ${siteConfig.title}`, // 각 페이지 제목 형식. %s에 페이지 제목이 들어감
+    template: `%s - ${siteConfig.title}`, // 각 페이지 제목 형식. %s에 페이지 제목이 들어감
   },
   description: siteConfig.description,
   keywords: siteConfig.keywords,
