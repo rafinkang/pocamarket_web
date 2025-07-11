@@ -52,8 +52,8 @@ jobs:
             NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
             NEXT_PUBLIC_SERVER_URL=${{ secrets.NEXT_PUBLIC_SERVER_URL }}
             NEXT_PUBLIC_LOCAL_API_URL=${{ secrets.NEXT_PUBLIC_LOCAL_API_URL }}
-            NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
-            NEXT_PUBLIC_GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+            NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
+            NEXT_PUBLIC_GOOGLE_CLIENT_SECRET=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET }}
 
       # 5. EC2에 SSH로 접속하여 배포 스크립트 실행
       - name: Deploy WEB to EC2
@@ -64,26 +64,15 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             # EC2 서버에서 실행될 스크립트
-            # pocamarket_web/.env 파일 생성
-            cd /var/www/pocamarket/pocamarket_web
-            # .env 파일 생성
-            echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .env
-            echo "NEXT_PUBLIC_DEBUG=${{ secrets.NEXT_PUBLIC_DEBUG }}" >> .env
-            echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}" >> .env
-            echo "NEXT_PUBLIC_SERVER_URL=${{ secrets.NEXT_PUBLIC_SERVER_URL }}" >> .env
-            echo "NEXT_PUBLIC_LOCAL_API_URL=${{ secrets.NEXT_PUBLIC_LOCAL_API_URL }}" >> .env
-            echo "NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
-            echo "NEXT_PUBLIC_GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
-            echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
-            echo "CHOKIDAR_USEPOLLING=${{ secrets.CHOKIDAR_USEPOLLING }}" >> .env
-
             # docker-compose.yml이 있는 프로젝트 루트 디렉토리로 이동
             cd /var/www/pocamarket/ 
 
             # Docker Hub에서 최신 이미지 pull
             docker pull ${{ env.DOCKER_IMAGE }}:latest
             
-            # Docker Compose로 'pocamarket-web' 서비스만 재시작
+            # 환경변수 설정하여 Docker Compose로 'pocamarket-web' 서비스만 재시작
+            DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+            CHOKIDAR_USEPOLLING="${{ secrets.CHOKIDAR_USEPOLLING }}" \
             docker-compose up -d --no-deps pocamarket-web
             
             # 모든 도커 이미지, 컨테이너, 네트워크, 빌드캐시 정리
