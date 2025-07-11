@@ -4,8 +4,8 @@ import NaverIcon from "@/components/icon/NaverIcon";
 
 const NaverLoginButton = ({theme = 'white'}) => {
   const handleNaverLogin = async () => {
-    const successRedirectUrl = `${process.env.NEXT_PUBLIC_APP_BASE_URL || 'http://localhost:3000'}/login/success`;
-    const backendUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'}/oauth2/authorization/naver?redirect_uri=${encodeURIComponent(successRedirectUrl)}`;
+    const successRedirectUrl = `${process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'}/login/success`;
+    const backendUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/oauth2/authorization/naver?redirect_uri=${encodeURIComponent(successRedirectUrl)}`;
 
     window.location.href = backendUrl;
   };
