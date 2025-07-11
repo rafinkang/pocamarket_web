@@ -16,7 +16,7 @@ export default function TradeList({ tradeList, testMode }) {
                     tradeUserNickname={trade.nickname}
                     myCard={trade.myCardInfo}
                     wantedCards={trade.wantCardInfo}
-                    updatedAt={trade.updated_at}
+                    sortedAt={trade.sorted_at}
                     status={trade.status}
                     isMyList={trade.isMyList}
                     testMode={testMode}
