@@ -54,6 +54,7 @@ const GoogleLoginButton = () => {
           <GoogleLogin
             onSuccess={handleLoginSuccess}
             onFailure={handleLoginFailure}
+            className="w-full"
           />
         </GoogleOAuthProvider>
       )}
