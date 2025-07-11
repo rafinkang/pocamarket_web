@@ -8,7 +8,7 @@ on:
 
 # 워크플로우 내에서 사용할 환경 변수 정의
 env:
-  CONTAINER_NAME: pocamarket-web # EC2에서 실행될 컨테이너 이름
+  IMAGE_NAME: pocamarket-web # EC2에서 실행될 컨테이너 이름
   DOCKER_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/pocamarket-web
 
 jobs:
@@ -31,29 +31,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Create .env file
-        run: |
-          echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .tempenv
-          echo "NEXT_PUBLIC_DEBUG=${{ secrets.NEXT_PUBLIC_DEBUG }}" >> .tempenv
-          echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}" >> .tempenv
-          echo "NEXT_PUBLIC_SERVER_URL=${{ secrets.NEXT_PUBLIC_SERVER_URL }}" >> .tempenv
-          echo "NEXT_PUBLIC_LOCAL_API_URL=${{ secrets.NEXT_PUBLIC_LOCAL_API_URL }}" >> .tempenv
-          echo "NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .tempenv
-          echo "NEXT_PUBLIC_GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .tempenv
-          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .tempenv
-          echo "CHOKIDAR_USEPOLLING=${{ secrets.CHOKIDAR_USEPOLLING }}" >> .tempenv
-
-      - name: Verify .env file
-        run: |
-          echo "--- Verifying .env file ---"
-          # 현재 폴더의 파일 목록을 자세히 출력 (파일 존재 여부, 권한, 크기 확인)
-          ls -la
-          
-          echo "--- .env file content ---"
-          # .env 파일의 실제 내용을 출력 (secrets 값이 비어있는지 확인)
-          cat .tempenv
-          echo "---------------------------"
-
       # 4. Docker 이미지 빌드 및 Docker Hub에 푸시
       #    - latest: 항상 최신 버전을 가리키는 태그
       #    - ${github.sha}: 각 커밋별 고유 버전을 가리키는 태그
@@ -68,16 +45,6 @@ jobs:
             ${{ env.DOCKER_IMAGE }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          # build-args: |
-          #   NODE_ENV=${{ secrets.NODE_ENV }}
-          #   NEXT_PUBLIC_DEBUG=${{ secrets.NEXT_PUBLIC_DEBUG }}
-          #   NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
-          #   NEXT_PUBLIC_SERVER_URL=${{ secrets.NEXT_PUBLIC_SERVER_URL }}
-          #   NEXT_PUBLIC_LOCAL_API_URL=${{ secrets.NEXT_PUBLIC_LOCAL_API_URL }}
-          #   NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
-          #   NEXT_PUBLIC_GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
-          #   DATABASE_URL=${{ secrets.DATABASE_URL }}
-          #   CHOKIDAR_USEPOLLING=${{ secrets.CHOKIDAR_USEPOLLING }}
 
       # 5. EC2에 SSH로 접속하여 배포 스크립트 실행
       - name: Deploy WEB to EC2
@@ -88,6 +55,19 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             # EC2 서버에서 실행될 스크립트
+            # pocamarket-web/.env 파일 생성
+            cd /var/www/pocamarket/pocamarket-web
+            # .env 파일 생성
+            echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .env
+            echo "NEXT_PUBLIC_DEBUG=${{ secrets.NEXT_PUBLIC_DEBUG }}" >> .env
+            echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}" >> .env
+            echo "NEXT_PUBLIC_SERVER_URL=${{ secrets.NEXT_PUBLIC_SERVER_URL }}" >> .env
+            echo "NEXT_PUBLIC_LOCAL_API_URL=${{ secrets.NEXT_PUBLIC_LOCAL_API_URL }}" >> .env
+            echo "NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
+            echo "NEXT_PUBLIC_GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
+            echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
+            echo "CHOKIDAR_USEPOLLING=${{ secrets.CHOKIDAR_USEPOLLING }}" >> .env
+
             # docker-compose.yml이 있는 프로젝트 루트 디렉토리로 이동
             cd /var/www/pocamarket/ 
 
