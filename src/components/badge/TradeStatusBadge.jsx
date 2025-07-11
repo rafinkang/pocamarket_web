@@ -17,7 +17,7 @@ export default function TradeStatusBadge({ status, className }) {
       <span
         className={`flex items-center justify-center gap-1 px-2 py-0.5 rounded-md text-xs font-bold shadow-sm bg-[#fff]`}
         style={{
-          minWidth: '92px',
+          minWidth: '94px',
           color: statusColor,
           border: `2px solid ${statusColor}`,
           textShadow: '0 1px 2px rgba(0,0,0,0.08)'
