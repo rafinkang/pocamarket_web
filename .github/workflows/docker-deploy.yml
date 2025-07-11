@@ -33,15 +33,15 @@ jobs:
 
       - name: Create .env file
         run: |
-          echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .env
-          echo "NEXT_PUBLIC_DEBUG=${{ secrets.NEXT_PUBLIC_DEBUG }}" >> .env
-          echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}" >> .env
-          echo "NEXT_PUBLIC_SERVER_URL=${{ secrets.NEXT_PUBLIC_SERVER_URL }}" >> .env
-          echo "NEXT_PUBLIC_LOCAL_API_URL=${{ secrets.NEXT_PUBLIC_LOCAL_API_URL }}" >> .env
-          echo "NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
-          echo "NEXT_PUBLIC_GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
-          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
-          echo "CHOKIDAR_USEPOLLING=${{ secrets.CHOKIDAR_USEPOLLING }}" >> .env
+          echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .tempenv
+          echo "NEXT_PUBLIC_DEBUG=${{ secrets.NEXT_PUBLIC_DEBUG }}" >> .tempenv
+          echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}" >> .tempenv
+          echo "NEXT_PUBLIC_SERVER_URL=${{ secrets.NEXT_PUBLIC_SERVER_URL }}" >> .tempenv
+          echo "NEXT_PUBLIC_LOCAL_API_URL=${{ secrets.NEXT_PUBLIC_LOCAL_API_URL }}" >> .tempenv
+          echo "NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .tempenv
+          echo "NEXT_PUBLIC_GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .tempenv
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .tempenv
+          echo "CHOKIDAR_USEPOLLING=${{ secrets.CHOKIDAR_USEPOLLING }}" >> .tempenv
 
       - name: Verify .env file
         run: |
@@ -51,7 +51,7 @@ jobs:
           
           echo "--- .env file content ---"
           # .env 파일의 실제 내용을 출력 (secrets 값이 비어있는지 확인)
-          cat .env
+          cat .tempenv
           echo "---------------------------"
 
       # 4. Docker 이미지 빌드 및 Docker Hub에 푸시
