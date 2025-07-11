@@ -49,9 +49,8 @@ const GoogleLoginButton = () => {
 
   return (
     <>
-      <p>clientId: {clientId}</p>
       {clientId && (
-        <GoogleOAuthProvider clientId={clientId} onScriptLoadSuccess={() => console.log('Google OAuth script loaded successfully')} onScriptLoadError={(err) => console.error('Google OAuth script failed to load', err)}>
+        <GoogleOAuthProvider clientId={clientId}>
           <GoogleLogin
             onSuccess={handleLoginSuccess}
             onFailure={handleLoginFailure}
