@@ -24,13 +24,9 @@ export default function TraderInfo({ data, isMy, isLogin, openTcgCode }) {
 
   const handleCopyTcgCode = (openTcgCode) => {
     copyToClipboard(openTcgCode, () => {
-      toast("🎉 친구코드가 복사되었습니다.", {
-        position: "top-center",
-      });
+      toast.success("친구코드가 복사되었습니다.");
     }, () => {
-      toast("❌ 친구코드 복사에 실패했습니다.", {
-        position: "top-center",
-      });
+      toast.error("친구코드 복사에 실패했습니다.");
     });
   }
 
