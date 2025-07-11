@@ -55,8 +55,8 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             # EC2 서버에서 실행될 스크립트
-            # pocamarket-web/.env 파일 생성
-            cd /var/www/pocamarket/pocamarket-web
+            # pocamarket_web/.env 파일 생성
+            cd /var/www/pocamarket/pocamarket_web
             # .env 파일 생성
             echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .env
             echo "NEXT_PUBLIC_DEBUG=${{ secrets.NEXT_PUBLIC_DEBUG }}" >> .env
