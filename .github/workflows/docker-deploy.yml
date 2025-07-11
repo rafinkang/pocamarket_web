@@ -43,6 +43,17 @@ jobs:
           echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
           echo "CHOKIDAR_USEPOLLING=${{ secrets.CHOKIDAR_USEPOLLING }}" >> .env
 
+      - name: Verify .env file
+        run: |
+          echo "--- Verifying .env file ---"
+          # 현재 폴더의 파일 목록을 자세히 출력 (파일 존재 여부, 권한, 크기 확인)
+          ls -la
+          
+          echo "--- .env file content ---"
+          # .env 파일의 실제 내용을 출력 (secrets 값이 비어있는지 확인)
+          cat .env
+          echo "---------------------------"
+
       # 4. Docker 이미지 빌드 및 Docker Hub에 푸시
       #    - latest: 항상 최신 버전을 가리키는 태그
       #    - ${github.sha}: 각 커밋별 고유 버전을 가리키는 태그
