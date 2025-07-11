@@ -45,6 +45,15 @@ jobs:
             ${{ env.DOCKER_IMAGE }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          # 빌드단계에서 필요하고 공개가능한 키만 미리 주입
+          build-args: |
+            NODE_ENV=${{ secrets.NODE_ENV }}
+            NEXT_PUBLIC_DEBUG=${{ secrets.NEXT_PUBLIC_DEBUG }}
+            NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
+            NEXT_PUBLIC_SERVER_URL=${{ secrets.NEXT_PUBLIC_SERVER_URL }}
+            NEXT_PUBLIC_LOCAL_API_URL=${{ secrets.NEXT_PUBLIC_LOCAL_API_URL }}
+            NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+            NEXT_PUBLIC_GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
 
       # 5. EC2에 SSH로 접속하여 배포 스크립트 실행
       - name: Deploy WEB to EC2
