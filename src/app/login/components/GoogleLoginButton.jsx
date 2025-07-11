@@ -10,7 +10,6 @@ import useAuthStore from '@/store/authStore';
 
 const GoogleLoginButton = () => {
   const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-
   // login 액션 가져오기
   const loginAction = useAuthStore((state) => state.login);
   const router = useRouter();
@@ -49,12 +48,17 @@ const GoogleLoginButton = () => {
   };
 
   return (
-    <GoogleOAuthProvider clientId={clientId}>
-      <GoogleLogin
-        onSuccess={handleLoginSuccess}
-        onFailure={handleLoginFailure}
-      />
-    </GoogleOAuthProvider>
+    <>
+      <p>clientId: {clientId}</p>
+      {clientId && (
+        <GoogleOAuthProvider clientId={clientId} onScriptLoadSuccess={() => console.log('Google OAuth script loaded successfully')} onScriptLoadError={(err) => console.error('Google OAuth script failed to load', err)}>
+          <GoogleLogin
+            onSuccess={handleLoginSuccess}
+            onFailure={handleLoginFailure}
+          />
+        </GoogleOAuthProvider>
+      )}
+    </>
   );
 };
 
