@@ -97,7 +97,6 @@ export default function WriteContainer({ tradeId }) {
     ) {
       return false;
     }
-
     return true;
   }
 
@@ -118,7 +117,6 @@ export default function WriteContainer({ tradeId }) {
     ) {
       return false;
     }
-
     return true;
   }
 

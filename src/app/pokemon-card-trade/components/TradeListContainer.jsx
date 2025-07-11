@@ -43,6 +43,7 @@ import { getMyTcgTradeList, getTcgTradeList } from "@/api/tcgTrade";
 // 로그인 상태 체크
 import useAuthStore from "@/store/authStore";
 import MyCheck from "./Search/MyCheck";
+import { toast } from "sonner";
 
 
 // testMode 체크
@@ -334,8 +335,51 @@ export default function TradeListContainer() {
     }));
   };
 
+  const checkRarity = (selectedCard) => {
+    // 내 카드와의 레어도 비교
+    if (filterParams.myCard?.code &&
+      filterParams.myCard.code.length > 0 &&
+      filterParams.myCard.rarity !== selectedCard.rarity
+    ) {
+      return;
+    }
+    // 원하는 카드와 레어도 비교
+    if (filterParams.wantCard.some(
+      card =>
+        card?.code &&
+        card.code.length > 0 &&
+        card?.rarity !== selectedCard.rarity
+    )
+    ) {
+      return false;
+    }
+    return true;
+  }
+
+  const checkCardCode = (selectedCard) => {
+    if (filterParams.myCard?.code &&
+      filterParams.myCard.code.length > 0 &&
+      filterParams.myCard.code === selectedCard.code
+    ) {
+      return false;
+    }
+
+    if (filterParams.wantCard.some(
+      card =>
+        card?.code &&
+        card.code.length > 0 &&
+        card?.code === selectedCard.code
+    )
+    ) {
+      return false;
+    }
+    return true;
+  }
+
+
   // 카드 선택 핸들러들
   const onFilterCardButton = useCallback((cardData) => {
+    console.log("onFilterCardButton", cardData);
     if (cardData.filterCardType === currentFilterCardType) return;
     setCurrentFilterCardType(cardData.filterCardType);
     setIsCardSearch(true);
@@ -368,6 +412,16 @@ export default function TradeListContainer() {
 
   const onCardClick = useCallback((cardData) => {
     if (!currentFilterCardType || !cardData) return;
+
+    if (!checkRarity(cardData)) {
+      toast.error("레어도가 다른 카드는 선택할 수 없습니다.");
+      return;
+    }
+
+    if (!checkCardCode(cardData)) {
+      toast.error("이미 선택한 카드는 선택할 수 없습니다.");
+      return;
+    }
 
     if (currentFilterCardType === "my") {
       setFilterParams(prev => ({
@@ -416,7 +470,7 @@ export default function TradeListContainer() {
         filterCardComponent={(props) => (
           <FilterCardBox {...props}>
             {/* 내 카드 (my) 섹션 */}
-            <div className="flex flex-col items-center space-y-3">
+            <div className="flex flex-col items-center space-y-3 lg:self-start">
               {filterParams.myCard && (
                 <FilterCard
                   key={filterParams.myCard.code}
@@ -443,20 +497,40 @@ export default function TradeListContainer() {
             <div className="flex flex-col items-center space-y-3">
               <div className="w-full" style={{ maxWidth: '600px' }}>
                 <div className="flex justify-center items-center gap-3 flex-wrap min-h-[180px]">
-                  {filterParams.wantCard.map((card, index) => (
+                  {filterParams.wantCard.filter(card => card.code).map((card, index) => (
                     <FilterCard
-                      key={index}
+                      key={card.code + index}
                       data={card}
                       type={card.filterCardType}
                       onCardClick={onFilterCardButton}
                       onCancelClick={onFilterCardCancel}
                     />
                   ))}
+                  {filterParams.wantCard.filter(card => card.code).length < 3 && (
+                    <FilterCard
+                      data={getWantCardDefault()[filterParams.wantCard.filter(card => card.code).length]}
+                      type={`want${filterParams.wantCard.filter(card => card.code).length + 1}`}
+                      onCardClick={onFilterCardButton}
+                      onCancelClick={onFilterCardCancel}
+                    />
+                  )}
                 </div>
               </div>
               <div className="text-center">
                 <h3 className="text-sm font-semibold text-gray-800 mb-1">원하는 카드</h3>
                 <p className="text-xs text-gray-500">검색할 카드를 선택하세요</p>
+                <div className="flex items-center justify-center gap-1 mt-2">
+                  {[...Array(3)].map((_, i) => (
+                    <div
+                      key={i}
+                      className={`w-2 h-2 rounded-full transition-colors duration-200 ${
+                        i < filterParams.wantCard.filter(card => card.code).length
+                          ? 'bg-purple-500'
+                          : 'bg-gray-300'
+                      }`}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
           </FilterCardBox>

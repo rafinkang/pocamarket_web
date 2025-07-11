@@ -70,7 +70,10 @@ const FilterCard = memo(function FilterCard({
                 border-2 border-dashed hover:shadow-lg hover:scale-105 active:scale-95
                 flex flex-col items-center justify-center rounded-lg
               `}
-              onClick={() => onCardClick(data)}
+              onClick={() => {
+                console.log(data);
+                onCardClick(data);
+              }}
               style={cardSize}
             >
               <CardContent className="p-4 flex flex-col items-center justify-center h-full text-center space-y-4">
