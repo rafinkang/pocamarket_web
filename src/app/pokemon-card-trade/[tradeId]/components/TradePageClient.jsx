@@ -13,7 +13,7 @@ import TraderInfo from "./TraderInfo";
 import { getTcgCodeList, getTradeRequestTcgCode } from "@/api/tcgCode";
 import { postTcgTradeRequest, getTcgTradeRequestList, updateTcgTradeRequestStatus, deleteTcgTradeRequest } from "@/api/tcgTradeRequest";
 import { LOGIN } from "@/constants/path";
-import { REQUEST_PROCESS } from "@/constants/tradeRequestStatus";
+import { REQUEST_COMPLETE, REQUEST_PROCESS } from "@/constants/tradeRequestStatus";
 
 export default function TradePageClient({ tradeId, tradeDetail }) {
 
@@ -110,7 +110,17 @@ export default function TradePageClient({ tradeId, tradeDetail }) {
         status: statusNum,
       });
 
-      await handleSuccessResponse(response, "카드 교환 요청이 수락되었습니다.", "카드 교환 에러");
+      let message = "카드 교환 요청이 거절되었습니다."
+
+      if(response.data === REQUEST_PROCESS) {
+        message = "카드 교환 요청이 수락되었습니다.";
+        response.data = true;
+      } else if(response.data === REQUEST_COMPLETE) {
+        message = "카드 교환 요청이 완료되었습니다.";
+        response.data = true;
+      }
+
+      await handleSuccessResponse(response, message, "카드 교환 에러");
     } catch (error) {
       console.error(error);
     }
