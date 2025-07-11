@@ -51,6 +51,8 @@ jobs:
             NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
             NEXT_PUBLIC_SERVER_URL=${{ secrets.NEXT_PUBLIC_SERVER_URL }}
             NEXT_PUBLIC_LOCAL_API_URL=${{ secrets.NEXT_PUBLIC_LOCAL_API_URL }}
+            NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+            NEXT_PUBLIC_GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
             DATABASE_URL=${{ secrets.DATABASE_URL }}
             CHOKIDAR_USEPOLLING=${{ secrets.CHOKIDAR_USEPOLLING }}
 

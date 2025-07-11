@@ -93,7 +93,7 @@ export default function MyPageContainer() {
         </Card>
 
         {/* 빠른 액션 섹션 */}
-        <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200 shadow-sm">
+        {/* <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200 shadow-sm">
           <CardHeader>
             <CardTitle className="text-center text-xl font-bold text-gray-900">빠른 액션</CardTitle>
             <CardDescription className="text-center text-gray-600">
@@ -128,7 +128,7 @@ export default function MyPageContainer() {
               </button>
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
     </div>
   )

@@ -17,7 +17,7 @@ export default function TradeElement({
   tradeUserNickname = "",
   myCard = null,
   wantedCards = [], // 원하는 카드들의 배열
-  updatedAt = "오래 전",
+  sortedAt = "오래 전",
   status = 1,
   isMyList = false,
   testMode = false,
@@ -29,7 +29,7 @@ export default function TradeElement({
     try {
       e.preventDefault();
       e.stopPropagation();
-      const res = await patchTcgTradeRefresh(tradeCode, { status, updatedAt });
+      const res = await patchTcgTradeRefresh(tradeCode, { status, sortedAt });
       if (res.data && res.success) {
         alert("교환글 갱신 되었습니다.");
         window.location.reload();
@@ -81,7 +81,7 @@ export default function TradeElement({
                 끌어올리기
               </Button>
             )}
-            <p className="text-sm text-gray-600 ml-2">{getTimeDifference(updatedAt)}</p>
+            <p className="text-sm text-gray-600 ml-2">{getTimeDifference(sortedAt)}</p>
           </div>
         </div>
         <div className="flex items-center justify-start gap-4 w-full">

@@ -2,6 +2,8 @@
 
 import { useMemo } from "react"
 import TradeReport from "./TradeReport"
+import { toast } from "sonner"
+import { copyToClipboard } from "@/lib/utils"
 
 /**
  * TraderInfo 컴포넌트
@@ -20,6 +22,13 @@ export default function TraderInfo({ data, isMy, isLogin, openTcgCode }) {
     }
   }, [data])
 
+  const handleCopyTcgCode = (openTcgCode) => {
+    copyToClipboard(openTcgCode, () => {
+      toast.success("친구코드가 복사되었습니다.");
+    }, () => {
+      toast.error("친구코드 복사에 실패했습니다.");
+    });
+  }
 
   // userInfo에서 각 값 추출
   const { tradeCount = 0, reportCount = 0, exp = 0 } = userInfo || {}
@@ -57,7 +66,7 @@ export default function TraderInfo({ data, isMy, isLogin, openTcgCode }) {
             <span className="text-white text-sm font-bold ml-1">{exp}</span>
           </div>
           {openTcgCode && (
-            <div className="flex items-center gap-1 bg-white/10 rounded px-2 py-1 min-w-[80px]">
+            <div className="flex items-center gap-1 bg-white/10 rounded px-2 py-1 min-w-[80px] cursor-pointer" onClick={() => handleCopyTcgCode(openTcgCode)}>
               <span className="text-white text-[1rem]">🔑</span>
               <span className="text-white text-xs">친구코드</span>
               <span className="text-white text-sm font-bold ml-1">{openTcgCode}</span>

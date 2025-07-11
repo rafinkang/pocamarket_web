@@ -19,6 +19,7 @@ const Toaster = ({
           "--normal-border": "var(--border)"
         }
       }
+      position="top-center"
       {...props} />
   );
 }
