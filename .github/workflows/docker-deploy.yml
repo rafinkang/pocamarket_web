@@ -31,6 +31,16 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Create .env file
+        run: |
+          echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .tempenv
+          echo "NEXT_PUBLIC_DEBUG=${{ secrets.NEXT_PUBLIC_DEBUG }}" >> .tempenv
+          echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}" >> .tempenv
+          echo "NEXT_PUBLIC_SERVER_URL=${{ secrets.NEXT_PUBLIC_SERVER_URL }}" >> .tempenv
+          echo "NEXT_PUBLIC_LOCAL_API_URL=${{ secrets.NEXT_PUBLIC_LOCAL_API_URL }}" >> .tempenv
+          echo "NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .tempenv
+          echo "NEXT_PUBLIC_GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .tempenv
+
       # 4. Docker 이미지 빌드 및 Docker Hub에 푸시
       #    - latest: 항상 최신 버전을 가리키는 태그
       #    - ${github.sha}: 각 커밋별 고유 버전을 가리키는 태그
@@ -45,15 +55,6 @@ jobs:
             ${{ env.DOCKER_IMAGE }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          # 빌드단계에서 필요하고 공개가능한 키만 미리 주입
-          build-args: |
-            NODE_ENV=${{ secrets.NODE_ENV }}
-            NEXT_PUBLIC_DEBUG=${{ secrets.NEXT_PUBLIC_DEBUG }}
-            NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
-            NEXT_PUBLIC_SERVER_URL=${{ secrets.NEXT_PUBLIC_SERVER_URL }}
-            NEXT_PUBLIC_LOCAL_API_URL=${{ secrets.NEXT_PUBLIC_LOCAL_API_URL }}
-            NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
-            NEXT_PUBLIC_GOOGLE_CLIENT_SECRET=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET }}
 
       # 5. EC2에 SSH로 접속하여 배포 스크립트 실행
       - name: Deploy WEB to EC2
@@ -70,9 +71,7 @@ jobs:
             # Docker Hub에서 최신 이미지 pull
             docker pull ${{ env.DOCKER_IMAGE }}:latest
             
-            # 환경변수 설정하여 Docker Compose로 'pocamarket-web' 서비스만 재시작
-            DATABASE_URL="${{ secrets.DATABASE_URL }}" \
-            CHOKIDAR_USEPOLLING="${{ secrets.CHOKIDAR_USEPOLLING }}" \
+            # Docker Compose로 'pocamarket-web' 서비스만 재시작
             docker-compose up -d --no-deps pocamarket-web
             
             # 모든 도커 이미지, 컨테이너, 네트워크, 빌드캐시 정리

@@ -4,9 +4,9 @@ import NaverIcon from "@/components/icon/NaverIcon";
 
 const NaverLoginButton = ({theme = 'white'}) => {
   const handleNaverLogin = async () => {
-    const successRedirectUrl = `${process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'}/login/success`;
-    const backendUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/oauth2/authorization/naver?redirect_uri=${encodeURIComponent(successRedirectUrl)}`;
-
+    const successRedirectUrl = process.env.NODE_ENV === "production" ? "https://pocamarket.co.kr/login/success" : 'http://localhost:3000/login/success';
+    const backendUrl = `${process.env.NODE_ENV === "production" ? "https://pocamarket.co.kr/api" : 'http://localhost:8080'}/oauth2/authorization/naver?redirect_uri=${encodeURIComponent(successRedirectUrl)}`;
+    
     window.location.href = backendUrl;
   };
   
