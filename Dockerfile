@@ -13,7 +13,7 @@ RUN npm install
 COPY . .
 # GitHub Actions에서 생성한 .env 파일을 빌드 컨텍스트에 복사
 # Next.js는 이 파일을 자동으로 인식하여 `npm run build`에 사용합니다.
-COPY .env ./.env
+COPY .env .env
 
 # 프로덕션 빌드
 RUN npm run build
