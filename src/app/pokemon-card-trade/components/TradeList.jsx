@@ -5,7 +5,7 @@ import TradeElement from "./TradeElement";
 export default function TradeList({ tradeList, testMode }) {
   return (
     <>
-      <section className="flex flex-col items-center w-full min-w-[360px]">
+      <section className="flex flex-col items-center w-full">
         <div className="w-full px-[4px]">
           {tradeList && tradeList.length > 0 ? (
             <ul className="flex flex-col items-center justify-items-center w-full gap-4">
