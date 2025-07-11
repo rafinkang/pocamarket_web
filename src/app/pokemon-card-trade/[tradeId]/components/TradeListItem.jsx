@@ -8,6 +8,8 @@ import { useState, useEffect } from "react"
 import { REQUEST_DELETED, REQUEST_SUBMITTED, REQUEST_COMPLETE, getTradeRequestStatusName, REQUEST_PROCESS } from "@/constants/tradeRequestStatus"
 import { cn } from "@/lib/utils"
 import { postUserReport } from "@/api/usersReport"
+import { toast } from "sonner"
+import { copyToClipboard } from "@/lib/utils"
 
 const testMode = process.env.NODE_ENV === "development"
 
@@ -34,6 +36,18 @@ export default function TradeItem({ isLogin, isMy, id, card, onRequestCancel, on
     }
     await postUserReport(requestData)
     onOpenOkChange(true)
+  }
+
+  const handleCopyTcgCode = (openTcgCode) => {
+    copyToClipboard(openTcgCode, () => {
+      toast("🎉 친구코드가 복사되었습니다.", {
+        position: "top-center",
+      });
+    }, () => {
+      toast("❌ 친구코드 복사에 실패했습니다.", {
+        position: "top-center",
+      });
+    });
   }
 
   /**
@@ -107,7 +121,7 @@ export default function TradeItem({ isLogin, isMy, id, card, onRequestCancel, on
       </div>
       {/* 친구코드 */}
       {card.tcgCode && card.tcgCode !== '' && (
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 cursor-pointer" onClick={() => handleCopyTcgCode(card.tcgCode)}>
           <span className="text-[1rem]">🔑</span>
           <span className="text-xs text-black">친구코드</span>
           <span className="text-sm font-bold ml-1 text-blue-600">{card.tcgCode}</span>
