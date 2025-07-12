@@ -89,37 +89,47 @@ export default function AboutUsContainer() {
       position: "Frontend Lead",
       experience: "7년차",
       location: "서울 금천구",
-      introduction: "확장 가능한 서버 아키텍처와 데이터베이스 설계에 전문성을 가진 백엔드 개발자입니다. 성능 최적화와 보안을 중시합니다.",
+      introduction: "프론트엔드 개발을 주도하며, 재사용 가능한 공통 컴포넌트 설계를 통해 개발 효율성과 코드 품질을 높이는 것에 중점을 뒀습니다. RESTful API 설계 및 백엔드 개발에 참여하며, 프로젝트 전반적인 프로세스를 경험했습니다.",
       skills: {
         "Frontend": [
           { name: "JavaScript", level: "전문가" },
-          { name: "JQuery", level: "전문가" },
           { name: "Vue.js", level: "전문가" },
-          { name: "React", level: "고급" },
+          { name: "React", level: "중급" },
           { name: "Next.js", level: "중급" },
           { name: "CSS", level: "중급" },
           { name: "AngularJS", level: "초급" },
           { name: "Tailwind CSS", level: "초급" },
+          { name: "Vuetify", level: "중급" },
         ],
         "Backend": [
-          { name: "Java", level: "전문가" },
-          { name: "Spring Boot", level: "전문가" },
-          { name: "MySQL", level: "고급" },
-          { name: "Redis", level: "고급" }
+          { name: "Java", level: "중급" },
+          { name: "Spring Boot", level: "중급" },
+          { name: "MySQL", level: "중급" },
         ],
         "DevOps": [
-          { name: "Docker", level: "고급" },
-          { name: "AWS", level: "중급" }
+          { name: "Git", level: "전문가" },
+          { name: "GitHub Actions", level: "중급" },
+          { name: "Docker", level: "중급" },
+          { name: "Docker Hub", level: "중급" },
+          { name: "AWS", level: "초급" },
+          { name: "Nginx", level: "초급" }
+        ],
+        "기타": [
+          { name: "Notion" },
+          { name: "Discord" },
+          { name: "Figma" },
         ]
       },
       projects: [
         "RESTful API 설계",
-        "마이크로서비스 아키텍처",
-        "실시간 데이터 처리 시스템"
+        "사용자 로그인 구현 및 정보 관리",
+        "Next.js 구조 설계",
+        "Next.js 공통 컴포넌트 관리",
+        "Next.js proxy 구현 및 관리",
       ],
       contact: {
-        email: "developer2@example.com",
-        github: "https://github.com/developer2"
+        email: "jypark2781@gmail.com",
+        github: "https://github.com/wldus904"
       }
     },
     {
