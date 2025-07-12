@@ -107,7 +107,7 @@ export default function PortfolioContainer() {
 
   const logic = [
     {
-      title: "Trade",
+      title: "카드 교환 시스템",
       component: <Trade />
     }
   ]

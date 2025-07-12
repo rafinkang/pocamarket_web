@@ -32,7 +32,7 @@ export default function AboutUsContainer() {
       position: "Project Manager",
       experience: "8년차",
       location: "서울 금천구",
-      introduction: "풀스택 개발 경험을 바탕으로 DevOps와 인프라 관리까지 다 했다. 뭐라고 써야되냐 이거 남사시럽구로",
+      introduction: "풀스택 개발 경험을 바탕으로 프로젝트 전반을 관리하였습니다. 웹 서비스 개발부터 Docker 컨테이너화, AWS 인프라 구축, CI/CD 파이프라인 구성까지 전체 개발 생명주기를 아우르는 통합적인 개발 환경을 구축하였습니다.",
       skills: {
         "Frontend": [
           { name: "JavaScript", level: "전문가" },
@@ -72,7 +72,7 @@ export default function AboutUsContainer() {
         "Docker 컨테이너 관리",
         "AWS 인프라 관리",
         "GitHub Actions CI/CD",
-        "MySQL 데이터베이스 관리",
+        "MariaDB 설계/관리",
         "Nginx 관리",
       ],
       contact: {
@@ -331,7 +331,7 @@ export default function AboutUsContainer() {
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900 font-mono">TEAM WORK</h3>
                   <p className="text-gray-700 font-mono text-sm leading-relaxed">
-                    팀 프로젝트 개발자들 구직중
+                    구직중 (3/3)
                   </p>
                 </div>
               </Link>
