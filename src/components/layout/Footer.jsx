@@ -11,11 +11,11 @@ export function Footer() {
       email: "rkdxodnr07@gmail.com"
     },
     { 
-      name: "Ariel", 
+      name: "Ara", 
       fullName: "박지연",
       role: "Frontend Lead", 
-      github: "https://github.com/developer2",
-      email: "developer2@example.com"
+      github: "https://github.com/wldus904",
+      email: "jypark2781@gmail.com"
     },
     { 
       name: "Sayarn", 
