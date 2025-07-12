@@ -18,7 +18,7 @@ import { ChevronDown, Menu, User, X } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
 
-import { ABOUT_US, LOGIN, MYPAGE, POKEMON_CARD, POKEMON_CARD_TRADE } from "@/constants/path";
+import { ABOUT_US, LOGIN, MYPAGE, POKEMON_CARD, POKEMON_CARD_TRADE, PORTFOLIO } from "@/constants/path";
 import useAuthStore from '@/store/authStore';
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
@@ -29,6 +29,7 @@ const navigationMenus = [
   { title: "홈", href: "/" },
   { title: "포켓몬 카드", href: POKEMON_CARD },
   { title: "카드 교환", href: POKEMON_CARD_TRADE },
+  { title: "Portfolio", href: PORTFOLIO },
   { title: "About Us", href: ABOUT_US },
 ];
 

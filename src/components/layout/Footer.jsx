@@ -11,7 +11,7 @@ export function Footer() {
       email: "rkdxodnr07@gmail.com"
     },
     { 
-      name: "Rala", 
+      name: "Ara", 
       fullName: "박지연",
       role: "Frontend Lead", 
       github: "https://github.com/wldus904",

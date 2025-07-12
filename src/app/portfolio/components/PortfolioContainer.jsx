@@ -31,25 +31,25 @@ export default function PortfolioContainer() {
     "Frontend": [
       { name: "Next.js v15", description: "React 기반 풀스택 프레임워크" },
       { name: "React v19", description: "컴포넌트 기반 UI 라이브러리" },
-      { name: "Tailwind CSS", description: "유틸리티 기반 CSS 프레임워크" },
+      { name: "Zustand", description: "중앙상태관리" },
+      { name: "Tailwind CSS v4", description: "유틸리티 기반 CSS 프레임워크" },
       { name: "Shadcn/ui", description: "재사용 가능한 컴포넌트 라이브러리" },
-      { name: "Zustand", description: "중앙상태관리" }
     ],
     "Backend": [
       { name: "Next.js API Routes", description: "서버사이드 API 엔드포인트" },
       { name: "Spring Boot v3.4.5", description: "Java 기반 프레임워크" },
       { name: "Java v17", description: "Java 기반 프레임워크" },
+      { name: "Spring Security", description: "인증 및 권한 관리" },
+      { name: "JPA, QueryDSL", description: "ORM 프레임워크" },
       { name: "Domain Driven Design", description: "도메인 주도 설계" },
       { name: "Hexagonal Architecture", description: "계층별 설계" },
-      { name: "JPA, QueryDSL", description: "ORM 프레임워크" },
       { name: "MariaDB", description: "관계형 데이터베이스" },
-      { name: "Spring Security", description: "인증 및 권한 관리" },
     ],
     "DevOps": [
-      { name: "AWS", description: "클라우드 인프라" },
+      { name: "AWS - EC2, RDS, S3", description: "EC2, RDS, S3" },
       { name: "Docker", description: "컨테이너화 플랫폼" },
-      { name: "GitHub Actions", description: "CI/CD 자동화" },
       { name: "Nginx", description: "웹 서버 및 리버스 프록시" },
+      { name: "GitHub Actions", description: "CI/CD 자동화" },
     ],
     "Tools": [
       { name: "Git", description: "버전 관리 시스템" },
