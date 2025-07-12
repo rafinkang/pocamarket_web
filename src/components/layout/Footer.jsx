@@ -129,6 +129,13 @@ export function Footer() {
             
             <div className="flex items-center space-x-6 text-sm text-gray-400">
               <a 
+                href="/privacy" 
+                className="hover:text-white transition-colors duration-200 flex items-center"
+              >
+                개인정보처리방침
+                <ExternalLink className="h-3 w-3 ml-1" />
+              </a>
+              <a 
                 href="/about-us" 
                 className="hover:text-white transition-colors duration-200 flex items-center"
               >
