@@ -143,24 +143,27 @@ export default function AboutUsContainer() {
       introduction: `백엔드 풀스택 개발자입니다. 프로젝트에서 백엔드와 프론트엔드, 인프라까지 폭넓게 경험했습니다. 협업과 지속적인 성장에 가치를 두고 있습니다.`,
       skills: {
         "Frontend": [
+          { name: "JavaScript", level: "전문가" },
+          { name: "Svelte", level: "전문가" },
+          { name: "JQuery", level: "전문가" },
           { name: "Next.js", level: "중급" },
           { name: "Tailwind CSS", level: "중급" },
-          { name: "JQuery", level: "전문가" },
-          { name: "Svelte", level: "전문가" },
         ],
         "Backend": [
-          { name: "Java", level: "전문가" },
-          { name: "Spring Boot", level: "전문가" },
           { name: "PHP", level: "전문가" },
           { name: "MariaDB", level: "고급" },
+          { name: "Java", level: "중급" },
+          { name: "Spring Boot", level: "중급" },
         ],
         "DevOps": [
           { name: "Git", level: "고급" },
           { name: "GitHub Actions", level: "중급" },
           { name: "Docker", level: "중급" },
           { name: "AWS", level: "중급" },
-          { name: "Swagger", level: "중급" },
           { name: "Nginx", level: "중급" }
+        ],
+        "Tools": [
+          { name: "Notion" },
         ]
       },
       projects: [
