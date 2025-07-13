@@ -20,6 +20,7 @@ const Toaster = ({
         }
       }
       position="top-center"
+      offset="70px"
       {...props} />
   );
 }
